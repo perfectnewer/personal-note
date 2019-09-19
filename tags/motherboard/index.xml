@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>motherboard on wawo</title>
+    <link>http://perfectnewer.github.io/tags/motherboard/</link>
+    <description>Recent content in motherboard on wawo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Tue, 10 Sep 2019 12:33:08 +0800</lastBuildDate>
+    
+	<atom:link href="http://perfectnewer.github.io/tags/motherboard/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>主板ph接口介绍</title>
+      <link>http://perfectnewer.github.io/post/hardware/mother-ph1-header/</link>
+      <pubDate>Tue, 10 Sep 2019 12:33:08 +0800</pubDate>
+      
+      <guid>http://perfectnewer.github.io/post/hardware/mother-ph1-header/</guid>
+      <description>&lt;p&gt;现在的主板bios芯片基本都是焊死的，不过大都有ph1的接口用来修复bios。&lt;/p&gt;
+
+&lt;p&gt;文章内容来源于爬贴整理，如有侵权可以联系我。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>主板一些接口名词解释</title>
+      <link>http://perfectnewer.github.io/post/hardware/mother-header/</link>
+      <pubDate>Tue, 10 Sep 2019 12:25:19 +0800</pubDate>
+      
+      <guid>http://perfectnewer.github.io/post/hardware/mother-header/</guid>
+      <description>&lt;p&gt;一些主板接口缩写的解释&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
