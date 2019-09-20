@@ -145,10 +145,10 @@
       
       
         <li class="menu-item
-          
+           is-active
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
+          <a href="https://perfectnewer.github.io/personal-note/">Home</a>
         </li>
       
         <li class="menu-item
@@ -203,13 +203,89 @@
   
    <article class="post-entry">
   <header class="post-header">
-    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/" class="post-link">Posts</a></h3>
-    <p class="post-meta">@Simon Wei · Sep 19, 2019 · 0 min read</p>
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/" class="post-link">Build Go for Armv7l</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 19, 2019 · 2 min read</p>
   </header>
   
-  <p class="post-summary"></p>
+  <p class="post-summary">go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。
+</p>
   <footer class="post-footer">
-    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/">Read More →</a>
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/" class="post-link">rt-acrh17</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 17, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">rt-achrh17是我买的第一台昂贵的路由器。之前200rmb多的tp link 5G莫名其妙消失了，终于种草又买了一个。折腾过梅林固件，使用酸酸乳发现没有自定义规则功能，以及使用samba发现usb速度没上过40m，最终还是让它安心的做路由器就好了。毕竟我还有个nanopi，做bt下载和samba服务器，性能要好，对硬盘消耗也少。这里简单记录一下它的一些硬件信息。
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/bash/command-substitution/" class="post-link">Bash 命令替换</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 12, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">做灰度系统的时候，用到了nginx。在创建docker镜像的时候需要根据参数去渲染nginx配置。 简单的使用sed去达到这个目的，不幸的遇到了bash命令替换的问题。
+bash中有两种命令替换的格式 `...` 和 $(...)
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/bash/command-substitution/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/" class="post-link">主板ph接口介绍</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 10, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">现在的主板bios芯片基本都是焊死的，不过大都有ph1的接口用来修复bios。
+文章内容来源于爬贴整理，如有侵权可以联系我。
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/hardware/mother-header/" class="post-link">主板一些接口名词解释</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 10, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">一些主板接口缩写的解释
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/hardware/mother-header/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/git/rm-submodule/" class="post-link">简便删除git submodule的方法</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 9, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">简单的删除: 新的版本使用git rm就可以删除submodule了。
+# 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除 # .git/config 中的配置和 .git/modules 中的文件 git rm &lt;path_to_submodule&gt; git commit -m &#34;xxxxxxx&#34;</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/git/rm-submodule/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/go/structure/" class="post-link">一种合理组织go项目结构的方案</a></h3>
+    <p class="post-meta">@Simon Wei · Feb 27, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。
+为什么要遵循一定的结构呢 总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/go/structure/">Read More →</a>
   </footer>
 </article>
  
