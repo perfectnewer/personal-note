@@ -1,7 +1,7 @@
 baseURL: http://perfectnewer.github.io/
 defaultContentLanguage: zh-cn
 languageCode: zh-cn
-title: wawo
+title: simon's site
 theme: hugo-nuo
 enableRobotsTXT: true
 PygmentsCodeFences: true
