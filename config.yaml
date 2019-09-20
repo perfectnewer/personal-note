@@ -15,8 +15,7 @@ menu:
     - name: Home
       weight: 10
       identifier: home
-      url: /post/
-      # url: /
+      url: /
 
     - name: Post
       weight: 20
