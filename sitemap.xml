@@ -3,111 +3,116 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</loc>
+    <loc>/post/go/build-go-for-armv7l/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/go/</loc>
+    <loc>/tags/go/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/</loc>
+    <loc>/post/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/</loc>
+    <loc>/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/rt-acrh17/</loc>
+    <loc>/tags/rt-acrh17/</loc>
     <lastmod>2019-09-17T17:48:48+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/hardware/acrh17/</loc>
+    <loc>/post/hardware/acrh17/</loc>
     <lastmod>2019-09-17T17:48:48+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/bash/</loc>
+    <loc>/tags/bash/</loc>
     <lastmod>2019-09-12T15:32:23+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/bash/command-substitution/</loc>
+    <loc>/post/bash/command-substitution/</loc>
     <lastmod>2019-09-12T15:32:23+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/motherboard/</loc>
+    <loc>/tags/motherboard/</loc>
     <lastmod>2019-09-10T12:33:08+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/ph-header/</loc>
+    <loc>/tags/ph-header/</loc>
     <lastmod>2019-09-10T12:33:08+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/</loc>
+    <loc>/post/hardware/mother-ph1-header/</loc>
     <lastmod>2019-09-10T12:33:08+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/hardware/mother-header/</loc>
+    <loc>/post/hardware/mother-header/</loc>
     <lastmod>2019-09-10T12:25:19+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/git/</loc>
+    <loc>/tags/git/</loc>
     <lastmod>2019-09-09T14:02:50+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/submodule/</loc>
+    <loc>/tags/submodule/</loc>
     <lastmod>2019-09-09T14:02:50+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/git/rm-submodule/</loc>
+    <loc>/post/git/rm-submodule/</loc>
     <lastmod>2019-09-09T14:02:50+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/about/</loc>
+    <loc>/archive/</loc>
+    <lastmod>2019-09-08T21:46:31+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/</loc>
     <lastmod>2019-09-08T20:45:11+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/structure/</loc>
+    <loc>/tags/structure/</loc>
     <lastmod>2019-02-27T12:14:58+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/go/structure/</loc>
+    <loc>/post/go/structure/</loc>
     <lastmod>2019-02-27T12:14:58+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/media/posts/files/universal_spi_pin_header.pdf/</loc>
+    <loc>/media/posts/files/universal_spi_pin_header.pdf/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/categories/</loc>
+    <loc>/categories/</loc>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/media/</loc>
+    <loc>/media/</loc>
   </url>
   
 </urlset>
