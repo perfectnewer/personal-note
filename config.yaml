@@ -26,12 +26,12 @@ menu:
     - name: Archive
       weight: 30
       identifier: archive
-      url: /archive
+      url: /archive/
     
     - name: About
       weight: 40
       identifier: about
-      url: about
+      url: /about/
 
     - name: Tags
       weight: 50
