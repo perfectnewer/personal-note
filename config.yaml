@@ -12,10 +12,10 @@ copyright: "© This post is licensed under a Creative Commons Attribution-NonCom
 
 menu:
   main:
-    - name: Home
-      weight: 10
-      identifier: home
-      url: /
+    # - name: Home
+    #   weight: 10
+    #   identifier: home
+    #   url: /
 
     - name: Post
       weight: 20
@@ -57,11 +57,11 @@ test:
   - twitter: "twitter_username"
   - linkedin: "linkedin_username"
   - weibo: "weibo_username"
-  - wechat: "images/qrcode.jpg"  # Replace with your wechat qrcode image
+  # - wechat: "images/qrcode.jpg"  # Replace with your wechat qrcode image
   # Changyan Comments (China Only)
-  - changyan: false
-  - changyanId: "cyt3toRiB"
-  - changyanConf: "prod_0908b1cb9a581501753cce1ed074dbe3"
+  # - changyan: false
+  # - changyanId: "cyt3toRiB"
+  # - changyanConf: "prod_0908b1cb9a581501753cce1ed074dbe3"
 
   # facebook: "facebook_username"
   # google: "googlplus_id_number"
