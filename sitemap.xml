@@ -3,27 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</loc>
-    <lastmod>2019-09-19T11:49:22+08:00</lastmod>
+    <loc>https://perfectnewer.github.io/personal-note/tags/go/</loc>
+    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/go/</loc>
-    <lastmod>2019-09-19T11:49:22+08:00</lastmod>
+    <loc>https://perfectnewer.github.io/personal-note/tags/memory-model/</loc>
+    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://perfectnewer.github.io/personal-note/post/</loc>
-    <lastmod>2019-09-19T11:49:22+08:00</lastmod>
+    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://perfectnewer.github.io/personal-note/</loc>
-    <lastmod>2019-09-19T11:49:22+08:00</lastmod>
+    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://perfectnewer.github.io/personal-note/tags/</loc>
+    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</loc>
+    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url>
   

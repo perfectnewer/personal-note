@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Thu, 19 Sep 2019 11:49:22 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 20 Sep 2019 23:56:44 +0800</lastBuildDate>
     
 	<atom:link href="https://perfectnewer.github.io/personal-note/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>go</title>
       <link>https://perfectnewer.github.io/personal-note/tags/go/</link>
-      <pubDate>Thu, 19 Sep 2019 11:49:22 +0800</pubDate>
+      <pubDate>Fri, 20 Sep 2019 23:56:44 +0800</pubDate>
       
       <guid>https://perfectnewer.github.io/personal-note/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memory model</title>
+      <link>https://perfectnewer.github.io/personal-note/tags/memory-model/</link>
+      <pubDate>Fri, 20 Sep 2019 23:56:44 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/tags/memory-model/</guid>
       <description></description>
     </item>
     
