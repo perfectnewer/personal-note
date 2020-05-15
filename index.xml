@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Fri, 20 Sep 2019 23:56:44 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Apr 2020 15:18:20 +0800</lastBuildDate>
     
 	<atom:link href="https://perfectnewer.github.io/personal-note/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Tornado Coroutine</title>
+      <link>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</link>
+      <pubDate>Mon, 27 Apr 2020 15:18:20 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</guid>
+      <description>&lt;p&gt;[TOC]&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>内存模型--对go内存模型深入展开</title>

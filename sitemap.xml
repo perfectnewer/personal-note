@@ -3,22 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://perfectnewer.github.io/personal-note/post/</loc>
+    <lastmod>2020-04-27T15:18:20+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://perfectnewer.github.io/personal-note/</loc>
+    <lastmod>2020-04-27T15:18:20+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</loc>
+    <lastmod>2020-04-27T15:18:20+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://perfectnewer.github.io/personal-note/tags/go/</loc>
     <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://perfectnewer.github.io/personal-note/tags/memory-model/</loc>
-    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://perfectnewer.github.io/personal-note/post/</loc>
-    <lastmod>2019-09-20T23:56:44+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://perfectnewer.github.io/personal-note/</loc>
     <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url>
   
