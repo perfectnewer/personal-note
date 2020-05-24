@@ -6,9 +6,7 @@ tags: []
 date: 2020-04-27T15:18:20+08:00
 ---
 
-[TOC]
-
-<!--more-->
+介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
 
 ### 关系图示
 
@@ -386,9 +384,9 @@ def rename_upload_file_func(answer, seq, q_cid, op_id):
    |        |                |                                           |      +---+-------------------------------+
    |        |                |                                           |          |               
    |        |                |                                           |          |start+----------------------------------------+
-   |        |                |                                           |          +---> | gen.coreutine(rename_upload_file_func) |      
+   |        |                |                                           |          +---> | gen.coroutine(rename_upload_file_func) |      
    |        |                |                                           |          |     +-----------+----------------------------+
-   |        |                |    register callback(runner.set_result)   |          |                 |
+   |        |                |  A register callback(runner.set_result)   |          |                 |
    | <------------------------------------------------------------------------------------------------+                        +-------------------------+
    |        |                |                                           |          |                 +----------------------->| rename_upload_file_func |
    |        |                |                                           |          |                 |                        +----------+--------------+
@@ -398,9 +396,9 @@ def rename_upload_file_func(answer, seq, q_cid, op_id):
    |        |                |                              ^            | <--------+
    |        |                |<-----------------------------|------------+   
    |        |                |                              |                        
-   |        | future         |                   set future |            |           
+   |        | future         |                   set future |                       
    | <------+----------------+                              |            |           
-   |                                         set result/ trigger runner  |           
+   |                            A set result/ trigger runner|            |           
    |-------------------------------------------------------------------->|           
                                                             |            |  +----------+
                                                             | finnal     |  |set answer|
@@ -408,16 +406,16 @@ def rename_upload_file_func(answer, seq, q_cid, op_id):
                                                             +---<--------+
                                                            
                                                            
-```                                                        
-                                                           
+```
+
 </details>                                                 
                                                            
 ### tornado ioloop                                         
-                                                           
-                                                                                                       
+
+
 <details close>                                                                                        
   <summary>code</summary>                                  
-                                                           
+
 ```python                                                  
                                                            
 class PollIOLoop(IOLoop):                                  
@@ -567,6 +565,12 @@ class PollIOLoop(IOLoop):
 ```
 </details>
 
+### 结论
+
+tornado让用户代码的执行在逻辑关系上是异步的。所以，如果函数依赖其他被gen.coroutine装饰过的函数的执行顺序。调用者必须处理好调用关系。比如等待future完成
+
 参考文章:
+
 - [我所理解的 tornado - ioloop 部分](https://juejin.im/entry/58c613762f301e006bc6d700)
+
 - [深入理解 tornado 之底层 ioloop 实现](https://segmentfault.com/a/1190000005659237)
