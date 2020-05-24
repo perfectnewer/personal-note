@@ -18,7 +18,8 @@
       <pubDate>Mon, 27 Apr 2020 15:18:20 +0800</pubDate>
       
       <guid>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</guid>
-      <description>&lt;p&gt;[TOC]&lt;/p&gt;</description>
+      <description>介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
+关系图示 +---------------------------------+ |IOLoop | | | | +----------------------------+ | | |Runner | | | | | | | | +----------------------+ | | | | | gen.Task | | | | | | | | | | | | +------------+ | | | | | | | user func | | | | | | | +------------+ | | | | | +----------------------+ | | | +----------------------------+ | +---------------------------------+ gen.</description>
     </item>
     
     <item>

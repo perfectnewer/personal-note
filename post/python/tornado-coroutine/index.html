@@ -26,24 +26,24 @@
 
   
   <meta name="author" content="Simon Wei">
-  <meta name="description" content="[TOC]
-">
+  <meta name="description" content="介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
+关系图示 &#43;---------------------------------&#43; |IOLoop | | | | &#43;----------------------------&#43; | | |Runner | | | | | | | | &#43;----------------------&#43; | | | | | gen.Task | | | | | | | | | | | | &#43;------------&#43; | | | | | | | user func | | | | | | | &#43;------------&#43; | | | | | &#43;----------------------&#43; | | | &#43;----------------------------&#43; | &#43;---------------------------------&#43; gen.">
 
   
   
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@gohugoio">
     <meta name="twitter:title" content="Tornado Coroutine">
-    <meta name="twitter:description" content="[TOC]
-">
+    <meta name="twitter:description" content="介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
+关系图示 &#43;---------------------------------&#43; |IOLoop | | | | &#43;----------------------------&#43; | | |Runner | | | | | | | | &#43;----------------------&#43; | | | | | gen.Task | | | | | | | | | | | | &#43;------------&#43; | | | | | | | user func | | | | | | | &#43;------------&#43; | | | | | &#43;----------------------&#43; | | | &#43;----------------------------&#43; | &#43;---------------------------------&#43; gen.">
     <meta name="twitter:image" content="/images/avatar.png">
   
 
   
   <meta property="og:type" content="article">
   <meta property="og:title" content="Tornado Coroutine">
-  <meta property="og:description" content="[TOC]
-">
+  <meta property="og:description" content="介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
+关系图示 &#43;---------------------------------&#43; |IOLoop | | | | &#43;----------------------------&#43; | | |Runner | | | | | | | | &#43;----------------------&#43; | | | | | gen.Task | | | | | | | | | | | | &#43;------------&#43; | | | | | | | user func | | | | | | | &#43;------------&#43; | | | | | &#43;----------------------&#43; | | | &#43;----------------------------&#43; | &#43;---------------------------------&#43; gen.">
   <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/">
   <meta property="og:image" content="/images/avatar.png">
 
@@ -206,7 +206,9 @@
       <h1 class="post-title">Tornado Coroutine</h1>
       <p class="post-meta">@Simon Wei · Apr 27, 2020 · 9 min read</p>
     </header>
-    <article class="post-content"><p>[TOC]</p>
+    <article class="post-content">
+
+<p>介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner</p>
 
 <h3 id="关系图示">关系图示</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> +---------------------------------+
@@ -566,9 +568,9 @@
    |        |                |                                           |      +---+-------------------------------+
    |        |                |                                           |          |               
    |        |                |                                           |          |start+----------------------------------------+
-   |        |                |                                           |          +---&gt; | gen.coreutine<span style="color:#f92672">(</span>rename_upload_file_func<span style="color:#f92672">)</span> |      
+   |        |                |                                           |          +---&gt; | gen.coroutine<span style="color:#f92672">(</span>rename_upload_file_func<span style="color:#f92672">)</span> |      
    |        |                |                                           |          |     +-----------+----------------------------+
-   |        |                |    register callback<span style="color:#f92672">(</span>runner.set_result<span style="color:#f92672">)</span>   |          |                 |
+   |        |                |  A register callback<span style="color:#f92672">(</span>runner.set_result<span style="color:#f92672">)</span>   |          |                 |
    | &lt;------------------------------------------------------------------------------------------------+                        +-------------------------+
    |        |                |                                           |          |                 +-----------------------&gt;| rename_upload_file_func |
    |        |                |                                           |          |                 |                        +----------+--------------+
@@ -578,9 +580,9 @@
    |        |                |                              ^            | &lt;--------+
    |        |                |&lt;-----------------------------|------------+   
    |        |                |                              |                        
-   |        | future         |                   set future |            |           
+   |        | future         |                   set future |                       
    | &lt;------+----------------+                              |            |           
-   |                                         set result/ trigger runner  |           
+   |                            A set result/ trigger runner|            |           
    |--------------------------------------------------------------------&gt;|           
                                                             |            |  +----------+
                                                             | finnal     |  |set answer|
@@ -741,9 +743,18 @@
             signal<span style="color:#f92672">.</span>set_wakeup_fd(old_wakeup_fd)</code></pre></div>
 <p></details></p>
 
-<p>参考文章:
-- <a href="https://juejin.im/entry/58c613762f301e006bc6d700">我所理解的 tornado - ioloop 部分</a>
-- <a href="https://segmentfault.com/a/1190000005659237">深入理解 tornado 之底层 ioloop 实现</a></p></article>
+<h3 id="结论">结论</h3>
+
+<p>tornado让用户代码的执行在逻辑关系上是异步的。所以，如果函数依赖其他被gen.coroutine装饰过的函数的执行顺序。调用者必须处理好调用关系。比如等待future完成</p>
+
+<p>参考文章:</p>
+
+<ul>
+<li><p><a href="https://juejin.im/entry/58c613762f301e006bc6d700">我所理解的 tornado - ioloop 部分</a></p></li>
+
+<li><p><a href="https://segmentfault.com/a/1190000005659237">深入理解 tornado 之底层 ioloop 实现</a></p></li>
+</ul>
+</article>
     <footer class="post-footer">
       
       <ul class="post-tags">
