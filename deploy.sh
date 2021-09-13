@@ -5,6 +5,14 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 
 PUBLISH_BRANCH="gh-pages"
+UPSTREAM="origin"
+if [ $# == 1 ]; then
+    UPSTREAM=$1
+fi
+
+if [ $# == 2 ]; then
+    PUBLISH_BRANCH=$2
+fi
 
 if [[ $(git status -s) ]]
 then
@@ -18,7 +26,7 @@ mkdir public
 rm -rf .git/worktrees/public/
 
 echo "Checking out gh-pages branch into public"
-git worktree add -B ${PUBLISH_BRANCH} public origin/${PUBLISH_BRANCH}
+git worktree add -B ${PUBLISH_BRANCH} public ${UPSTREAM}/${PUBLISH_BRANCH}
 
 echo "Removing existing files"
 rm -rf public/*
@@ -30,11 +38,11 @@ echo "Updating gh-pages branch"
 cd public && git add --all && git commit -m "Publishing ${PUBLISH_BRANCH}"
 
 echo "Push to origin"
-git push origin ${PUBLISH_BRANCH}
+git push ${UPSTREAM} ${PUBLISH_BRANCH}
 
 function create_gh() {
-	git checkout --orphan gh-pages
+	git checkout --orphan ${PUBLISH_BRANCH}
 	git rm -fr *
 	git commit --allow-empty -m "Initializing gh-pages branch"
-	git push origin gh-pages
+	git push ${UPSTREAM} ${PUBLISH_BRANCH}
 }
