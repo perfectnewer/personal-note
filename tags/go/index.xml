@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go on simon&#39;s site</title>
+    <link>https://perfectnewer.gitee.io/personal-note/tags/go/</link>
+    <description>Recent content in go on simon&#39;s site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Thu, 19 Sep 2019 11:49:22 +0800</lastBuildDate><atom:link href="https://perfectnewer.gitee.io/personal-note/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Build Go for Armv7l</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/</link>
+      <pubDate>Thu, 19 Sep 2019 11:49:22 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/</guid>
+      <description>&lt;p&gt;go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>一种合理组织go项目结构的方案</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/structure/</link>
+      <pubDate>Wed, 27 Feb 2019 12:14:58 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/structure/</guid>
+      <description>&lt;p&gt;之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。&lt;/p&gt;
+&lt;h3 id=&#34;为什么要遵循一定的结构呢&#34;&gt;为什么要遵循一定的结构呢&lt;/h3&gt;
+&lt;p&gt;总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

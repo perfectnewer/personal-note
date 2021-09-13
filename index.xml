@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>simon&#39;s site</title>
+    <link>https://perfectnewer.gitee.io/personal-note/</link>
+    <description>Recent content on simon&#39;s site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Thu, 19 Sep 2019 11:49:22 +0800</lastBuildDate><atom:link href="https://perfectnewer.gitee.io/personal-note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Build Go for Armv7l</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/</link>
+      <pubDate>Thu, 19 Sep 2019 11:49:22 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/</guid>
+      <description>&lt;p&gt;go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>rt-acrh17</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/acrh17/</link>
+      <pubDate>Tue, 17 Sep 2019 17:48:48 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/acrh17/</guid>
+      <description>&lt;p&gt;rt-achrh17是我买的第一台昂贵的路由器。之前200rmb多的tp link 5G莫名其妙消失了，终于种草又买了一个。折腾过梅林固件，使用酸酸乳发现没有自定义规则功能，以及使用samba发现usb速度没上过40m，最终还是让它安心的做路由器就好了。毕竟我还有个nanopi，做bt下载和samba服务器，性能要好，对硬盘消耗也少。这里简单记录一下它的一些硬件信息。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Bash 命令替换</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/bash/command-substitution/</link>
+      <pubDate>Thu, 12 Sep 2019 15:32:23 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/bash/command-substitution/</guid>
+      <description>&lt;p&gt;做灰度系统的时候，用到了nginx。在创建docker镜像的时候需要根据参数去渲染nginx配置。
+简单的使用sed去达到这个目的，不幸的遇到了bash命令替换的问题。&lt;/p&gt;
+&lt;p&gt;bash中有两种命令替换的格式 &lt;code&gt;`...`&lt;/code&gt; 和 &lt;code&gt;$(...)&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>主板ph接口介绍</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-ph1-header/</link>
+      <pubDate>Tue, 10 Sep 2019 12:33:08 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-ph1-header/</guid>
+      <description>&lt;p&gt;现在的主板bios芯片基本都是焊死的，不过大都有ph1的接口用来修复bios。&lt;/p&gt;
+&lt;p&gt;文章内容来源于爬贴整理，如有侵权可以联系我。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>主板一些接口名词解释</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-header/</link>
+      <pubDate>Tue, 10 Sep 2019 12:25:19 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-header/</guid>
+      <description>&lt;p&gt;一些主板接口缩写的解释&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>简便删除git submodule的方法</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/git/rm-submodule/</link>
+      <pubDate>Mon, 09 Sep 2019 14:02:50 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/git/rm-submodule/</guid>
+      <description>&lt;p&gt;简单的删除: 新的版本使用&lt;code&gt;git rm&lt;/code&gt;就可以删除submodule了。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# .git/config 中的配置和 .git/modules 中的文件&lt;/span&gt;
+git rm &amp;lt;path_to_submodule&amp;gt;
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxxxxxx&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://perfectnewer.gitee.io/personal-note/about/</link>
+      <pubDate>Sun, 08 Sep 2019 20:45:11 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/about/</guid>
+      <description>一个简简单单的程序员</description>
+    </item>
+    
+    <item>
+      <title>一种合理组织go项目结构的方案</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/structure/</link>
+      <pubDate>Wed, 27 Feb 2019 12:14:58 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/structure/</guid>
+      <description>&lt;p&gt;之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。&lt;/p&gt;
+&lt;h3 id=&#34;为什么要遵循一定的结构呢&#34;&gt;为什么要遵循一定的结构呢&lt;/h3&gt;
+&lt;p&gt;总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
