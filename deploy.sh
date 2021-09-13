@@ -3,7 +3,7 @@
 
 PUBLISH_BRANCH="gh-pages"
 UPSTREAM="origin"
-if [ $# -gte 1 ]; then
+if [ $# -ge 1 ]; then
     UPSTREAM=$1
 fi
 
