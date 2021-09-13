@@ -46,6 +46,8 @@ params:
   seotitle: "simon's Blog"
   subtitle: "~ the world is so great ~"
 
+  baiduTongji: "33463cd56e566bdfaae97e1a86218f73"
+
 test:
   - author: "Ritchie Zhu"
   - bg: "images/grey-prism.svg"
@@ -106,10 +108,6 @@ test:
   # 360 Webmaster (China Only)
   # http://zhanzhang.so.com/
   # soSiteVerification: "b7ab3b4c2edbc856642004d1b8c27a91"
-
-  # Baidu Tongji (China Only)
-  # https://tongji.baidu.com/
-  - baiduTongji: "33463cd56e566bdfaae97e1a86218f73"
 
   # ICP Number (China Only)
   # ICP: "苏ICP备16005986号-2"
