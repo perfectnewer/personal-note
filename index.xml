@@ -1,137 +1,135 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>simon&#39;s site</title>
-    <link>https://perfectnewer.github.io/personal-note/</link>
+    <link>https://perfectnewer.gitee.io/personal-note/</link>
     <description>Recent content on simon&#39;s site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Mon, 27 Apr 2020 15:18:20 +0800</lastBuildDate>
-    
-	<atom:link href="https://perfectnewer.github.io/personal-note/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 19 Sep 2021 14:17:14 +0800</lastBuildDate><atom:link href="https://perfectnewer.gitee.io/personal-note/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Tornado Coroutine</title>
-      <link>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</link>
-      <pubDate>Mon, 27 Apr 2020 15:18:20 +0800</pubDate>
+      <title>Python2 Multiprocessing Pool源码解读</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</link>
+      <pubDate>Sun, 19 Sep 2021 14:17:14 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</guid>
-      <description>介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
-关系图示 +---------------------------------+ |IOLoop | | | | +----------------------------+ | | |Runner | | | | | | | | +----------------------+ | | | | | gen.Task | | | | | | | | | | | | +------------+ | | | | | | | user func | | | | | | | +------------+ | | | | | +----------------------+ | | | +----------------------------+ | +---------------------------------+ gen.</description>
-    </item>
-    
-    <item>
-      <title>内存模型--对go内存模型深入展开</title>
-      <link>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</link>
-      <pubDate>Fri, 20 Sep 2019 23:56:44 +0800</pubDate>
-      
-      <guid>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</guid>
-      <description>&lt;p&gt;最近复习，遇到go内存模型的问题，心中一直以为硬件是会保证缓存和内存一致性的。不过看了不少例子有很多困惑，关于happend before之外的困惑。之后就又查了不少硬件内存模型的文章。这里就记录一下一些不错的文章，再对几个例子做一些硬件体系上的汇总，不再详细说明go的内存模型了，毕竟关于go内存模型的文章有很多。&lt;/p&gt;</description>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</guid>
+      <description>&lt;p&gt;因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Build Go for Armv7l</title>
-      <link>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/</link>
       <pubDate>Thu, 19 Sep 2019 11:49:22 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/</guid>
       <description>&lt;p&gt;go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>rt-acrh17</title>
-      <link>https://perfectnewer.github.io/personal-note/post/hardware/acrh17/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/acrh17/</link>
       <pubDate>Tue, 17 Sep 2019 17:48:48 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/hardware/acrh17/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/acrh17/</guid>
       <description>&lt;p&gt;rt-achrh17是我买的第一台昂贵的路由器。之前200rmb多的tp link 5G莫名其妙消失了，终于种草又买了一个。折腾过梅林固件，使用酸酸乳发现没有自定义规则功能，以及使用samba发现usb速度没上过40m，最终还是让它安心的做路由器就好了。毕竟我还有个nanopi，做bt下载和samba服务器，性能要好，对硬盘消耗也少。这里简单记录一下它的一些硬件信息。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Bash 命令替换</title>
-      <link>https://perfectnewer.github.io/personal-note/post/bash/command-substitution/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/bash/command-substitution/</link>
       <pubDate>Thu, 12 Sep 2019 15:32:23 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/bash/command-substitution/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/bash/command-substitution/</guid>
       <description>&lt;p&gt;做灰度系统的时候，用到了nginx。在创建docker镜像的时候需要根据参数去渲染nginx配置。
 简单的使用sed去达到这个目的，不幸的遇到了bash命令替换的问题。&lt;/p&gt;
-
 &lt;p&gt;bash中有两种命令替换的格式 &lt;code&gt;`...`&lt;/code&gt; 和 &lt;code&gt;$(...)&lt;/code&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>主板ph接口介绍</title>
-      <link>https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-ph1-header/</link>
       <pubDate>Tue, 10 Sep 2019 12:33:08 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-ph1-header/</guid>
       <description>&lt;p&gt;现在的主板bios芯片基本都是焊死的，不过大都有ph1的接口用来修复bios。&lt;/p&gt;
-
 &lt;p&gt;文章内容来源于爬贴整理，如有侵权可以联系我。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>主板一些接口名词解释</title>
-      <link>https://perfectnewer.github.io/personal-note/post/hardware/mother-header/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-header/</link>
       <pubDate>Tue, 10 Sep 2019 12:25:19 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/hardware/mother-header/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/mother-header/</guid>
       <description>&lt;p&gt;一些主板接口缩写的解释&lt;/p&gt;</description>
     </item>
     
     <item>
+      <title>Samba</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/hardware/samba/</link>
+      <pubDate>Tue, 10 Sep 2019 11:05:01 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/hardware/samba/</guid>
+      <description>&lt;p&gt;Cut out summary from your post content here.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go Tips</title>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/tips/</link>
+      <pubDate>Tue, 10 Sep 2019 11:01:04 +0800</pubDate>
+      
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/tips/</guid>
+      <description>&lt;p&gt;记录一些go使用过程中的一些小技巧。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;context&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
       <title>简便删除git submodule的方法</title>
-      <link>https://perfectnewer.github.io/personal-note/post/git/rm-submodule/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/git/rm-submodule/</link>
       <pubDate>Mon, 09 Sep 2019 14:02:50 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/git/rm-submodule/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/git/rm-submodule/</guid>
       <description>&lt;p&gt;简单的删除: 新的版本使用&lt;code&gt;git rm&lt;/code&gt;就可以删除submodule了。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# .git/config 中的配置和 .git/modules 中的文件&lt;/span&gt;
 git rm &amp;lt;path_to_submodule&amp;gt;
-git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxxxxxx&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxxxxxx&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>
       <title>Archive</title>
-      <link>https://perfectnewer.github.io/personal-note/archive/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/archive/</link>
       <pubDate>Sun, 08 Sep 2019 21:46:31 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/archive/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/archive/</guid>
       <description></description>
     </item>
     
     <item>
       <title>About</title>
-      <link>https://perfectnewer.github.io/personal-note/about/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/about/</link>
       <pubDate>Sun, 08 Sep 2019 20:45:11 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/about/</guid>
-      <description>一个简简单单的程序员</description>
+      <guid>https://perfectnewer.gitee.io/personal-note/about/</guid>
+      <description>一个简简单单的程序员
+github pages: perfectnewer.gitub.io
+gitee pages: perfectnewer.gitub.io
+csdn: https://blog.csdn.net/perfectnewer</description>
     </item>
     
     <item>
       <title>一种合理组织go项目结构的方案</title>
-      <link>https://perfectnewer.github.io/personal-note/post/go/structure/</link>
+      <link>https://perfectnewer.gitee.io/personal-note/post/go/structure/</link>
       <pubDate>Wed, 27 Feb 2019 12:14:58 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/go/structure/</guid>
+      <guid>https://perfectnewer.gitee.io/personal-note/post/go/structure/</guid>
       <description>&lt;p&gt;之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。&lt;/p&gt;
-
 &lt;h3 id=&#34;为什么要遵循一定的结构呢&#34;&gt;为什么要遵循一定的结构呢&lt;/h3&gt;
-
 &lt;p&gt;总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://perfectnewer.github.io/personal-note/media/posts/files/universal_spi_pin_header.pdf/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://perfectnewer.github.io/personal-note/media/posts/files/universal_spi_pin_header.pdf/</guid>
-      <description>Universal_SPI_Pin_Header.pdf --   缩略图  文档大纲  附件          上一页   下一页    全部高亮显示 区分大小写  字词匹配      演示模式  打开  打印  下载  当前在看   转到第一页  转到最后一页   顺时针旋转  逆时针旋转   文本选择工具  手形工具   垂直滚动  水平滚动  平铺滚动   单页视图  双页视图  书籍视图   文档属性…    切换侧栏   查找  上一页   下一页   / 8  演示模式  打开  打印  下载  当前在看   工具   缩小   放大   自动缩放 实际大小 适合页面 适合页宽  50% 75% 100% 125% 150% 200% 300% 400%               DDDeeedddiiippprrrooogggTTTeeeccchhhnnnooolllooogggyyyCCCooo.</description>
     </item>
     
   </channel>

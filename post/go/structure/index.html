@@ -47,16 +47,16 @@
   <meta property="og:description" content="之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。
 为什么要遵循一定的结构呢 总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。
 ">
-  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/go/structure/">
+  <meta property="og:url" content="https://perfectnewer.gitee.io/personal-note/post/go/structure/">
   <meta property="og:image" content="/images/avatar.png">
 
 
 
 
-<meta name="generator" content="Hugo 0.59.0-DEV">
+<meta name="generator" content="Hugo 0.88.1">
 
 
-<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/go/structure/">
+<link rel="canonical" href="https://perfectnewer.gitee.io/personal-note/post/go/structure/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -81,20 +81,20 @@
 <meta name='msapplication-navbutton-color' content="#02b875">
 <meta name="msapplication-TileColor" content="#02b875">
 <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
-<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
-<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
+<link rel="icon" href="https://perfectnewer.gitee.io/personal-note/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.gitee.io/personal-note/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.gitee.io/personal-note/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="https://perfectnewer.gitee.io/personal-note/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="https://perfectnewer.gitee.io/personal-note/icons/icon-152x152.png">
+<link rel="manifest" href="https://perfectnewer.gitee.io/personal-note/manifest.json">
 
 
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
+<link rel="preload" href="https://perfectnewer.gitee.io/personal-note/styles/main-rendered.min.css" as="style">
 
 
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
+<link rel="preload" href="https://perfectnewer.gitee.io/personal-note/images/avatar.png" as="image">
+<link rel="preload" href="https://perfectnewer.gitee.io/personal-note/images/grey-prism.svg" as="image">
 
 
 <style>
@@ -102,7 +102,7 @@
     background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
   }
 </style>
-<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
+<link rel="stylesheet" href="https://perfectnewer.gitee.io/personal-note/styles/main-rendered.min.css">
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -144,9 +144,9 @@
     
     
   <header class="site-header">
-  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
+  <a href="https://perfectnewer.gitee.io/personal-note/"><img class="avatar" src="https://perfectnewer.gitee.io/personal-note/images/avatar.png" alt="Avatar"></a>
   
-  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
+  <h2 class="title"><a href="https://perfectnewer.gitee.io/personal-note/">simon&#39;s site</a></h2>
   
   <p class="subtitle">~ the world is so great ~</p>
   <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
@@ -163,29 +163,36 @@
         <li class="menu-item
           
           
-          ">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
+           is-active">
+          <a href="https://perfectnewer.gitee.io/personal-note/post/">Home</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/archive/">Archive</a>
+          <a href="https://perfectnewer.gitee.io/personal-note/post/">Post</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/about/">About</a>
+          <a href="https://perfectnewer.gitee.io/personal-note/archive">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
+          <a href="https://perfectnewer.gitee.io/personal-note/about">About</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.gitee.io/personal-note/tags/">Tags</a>
         </li>
       
     </ul>
@@ -209,21 +216,18 @@
       <h1 class="post-title">一种合理组织go项目结构的方案</h1>
       <p class="post-meta">@Simon Wei · Feb 27, 2019 · 1 min read</p>
     </header>
+    
     <article class="post-content"><p>之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。</p>
-
 <h3 id="为什么要遵循一定的结构呢">为什么要遵循一定的结构呢</h3>
-
 <p>总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。</p>
-
-<p>比如说，对于同一个项目:<br />
-1. go get可以安装多个不同的binary。<br />
-2. 你的项目可以作为库方方便的被别人使用。</p>
-
+<p>比如说，对于同一个项目:</p>
+<ol>
+<li>go get可以安装多个不同的binary。</li>
+<li>你的项目可以作为库方方便的被别人使用。</li>
+</ol>
 <h3 id="项目结构示例">项目结构示例</h3>
-
 <p>这里我只截取了一些自己感兴趣的目录，此处有更详细的分类和说明<a href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a>。</p>
-
-<pre><code>├── cmd
+<pre tabindex="0"><code>├── cmd
 │   ├── agent
 │   │   └── app
 │   ├── builder
@@ -241,55 +245,40 @@
 │
 ├── scripts
 ...
-</code></pre>
-
-<h4 id="cmd"><code>/cmd</code></h4>
-
+</code></pre><h4 id="cmd"><code>/cmd</code></h4>
 <p>这个目录用来存放执行程序入口，对于不同名字的执行应该方案不同的二级目录。(e.g. <code>/cmd/agent</code>)。这里不应该有过多的业务逻辑，或者说是程序的功能逻辑，对于可重用的代码应该放在<code>/pkg</code>目录，对于不想被外部使用的代码应该放在<code>/internal</code>目录。</p>
-
 <p>例子：<a href="https://github.com/kubernetes/kubernetes/tree/master/cmd">k8s cmd</a></p>
-
 <h4 id="internal"><code>/internal/</code></h4>
-
 <p>私有的不希望被其他地方使用的代码放在这里，或者import路径中包含<code>/internal/的包中</code>。为何说是不同的地方的呢，因为go的设计中，internal中的包只能被和它有相同父级的包import。例如 <code>.../a/b/c/internal/d/e/f</code> 可以被<code>.../a/b/c</code>中的包使用，不能被<code>.../a/b/g</code>以及其他项目使用。详见 <a href="https://golang.org/doc/go1.4#internalpackages">go doc</a></p>
-
 <p>关于打破internal的限制的文章:<a href="https://colobu.com/2017/05/12/call-private-functions-in-other-packages/">突破限制,访问其它Go package中的私有函数
 </a></p>
-
 <h4 id="pkg"><code>/pkg</code></h4>
-
 <p>可有作为单独库复用的代码可以放在这里，其它项目也可以使用。</p>
-
 <h4 id="vendor"><code>/vendor</code></h4>
-
 <p>不多说，go modules出现之前的常规做法。存放第三方依赖项。</p>
-
-<h4 id="third-party"><code>/third_party</code></h4>
-
+<h4 id="third_party"><code>/third_party</code></h4>
 <p>也是第三方包存放的目录，不同于<code>vendor</code>之处是，你可能对这些包做了一些修改。以及一些第三方工具链也可以放这里。</p>
-
 <h4 id="scripts"><code>/scripts</code></h4>
-
 <p>存放一些脚本。比如一些复杂的build操作，web本地测试启动脚本等等。</p>
-
-<hr />
-
-<p>参考文章：<br />
-- <a href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a><br />
-- <a href="https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091">Structuring Applications in Go</a><br />
-- <a href="https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2">Go Project Layout</a></p></article>
+<hr>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></li>
+<li><a href="https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091">Structuring Applications in Go</a></li>
+<li><a href="https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2">Go Project Layout</a></li>
+</ul></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/go"><span class="tag">Go</span></a></li>
+          <li><a href="https://perfectnewer.gitee.io/personal-note/tags/go"><span class="tag">Go</span></a></li>
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/structure"><span class="tag">Structure</span></a></li>
+          <li><a href="https://perfectnewer.gitee.io/personal-note/tags/structure"><span class="tag">Structure</span></a></li>
         
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>451</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>935</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
@@ -306,7 +295,7 @@
             return;
         }
         var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "simon-7" + '.disqus.com/embed.js';
+        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
@@ -316,9 +305,35 @@
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Wed Feb 27, 2019 </h4>
+      <h5 id="wordcount"> 78 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="https://perfectnewer.gitee.io/personal-note/tagsgo">go</a> </li>
+      
+        <li> <a href="https://perfectnewer.gitee.io/personal-note/tagsstructure">structure</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+        
+          <a class="next" href="https://perfectnewer.gitee.io/personal-note/post/git/rm-submodule/"> 简便删除git submodule的方法</a>
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
-  <p>© 2017-2020 simon&#39;s site</p>
+  <p>© 2017-2021 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>
@@ -358,7 +373,7 @@
 
 
 
-<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
+<script src="https://perfectnewer.gitee.io/personal-note/scripts/index.min.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -377,7 +392,7 @@
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?8467334201490ae35c81ff7d32d009ff";
+  hm.src = "https://hm.baidu.com/hm.js?33463cd56e566bdfaae97e1a86218f73";
   var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
