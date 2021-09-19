@@ -31,12 +31,17 @@ menu:
     - name: About
       weight: 40
       identifier: about
-      url: about
+      url: /about
 
     - name: Tags
       weight: 50
       identifier: tags
       url: /tags/
+
+    # - name: Links
+    #   weight: 60
+    #   identifier: links
+    #   url: /links
 
 params:
   email: "weixipeng@outlook.com"

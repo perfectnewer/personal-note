@@ -1,7 +1,7 @@
 ---
 title: "rt-acrh17"
 author: "Simon Wei"
-tags: ["rt-acrh17"]
+tags: ["rt-acrh17", "router", "hardware"]
 date: 2019-09-17T17:48:48+08:00
 ---
 

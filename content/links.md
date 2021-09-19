@@ -1,22 +1,10 @@
 ---
-title: "{{ replace .TranslationBaseName "-" " " | title }}"
-author: "Simon Wei"
-# cover: "/images/cover.jpg"
-tags: []
-date: {{ .Date }}
-draft: true
+title: "Links"
+date: "2021-09-20"
+layout: "links"
+menu: "main"
+weight: 40
 ---
-
-Cut out summary from your post content here.
-
-<!--more-->
-
-[TOC]
-
-The remaining content of your post.
-
-
-<hr style=" border:solid; width:100px; height:1px;" color=#000000 size=1">
 
 <font color=#999AAA >我的github pages: [perfectnewer.gitub.io](https://perfectnewer.github.io "perfectnewer")
 <font color=#999AAA >我的gitee pages: [perfectnewer.gitub.io](https://perfectnewer.gitee.io "perfectnewer")

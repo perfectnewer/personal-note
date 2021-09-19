@@ -1,8 +1,7 @@
 ---
-title: "Tips"
+title: "Go Tips"
 tags: ["go tips"]
 date: 2019-09-10T11:01:04+08:00
-draft: true
 ---
 
 记录一些go使用过程中的一些小技巧。

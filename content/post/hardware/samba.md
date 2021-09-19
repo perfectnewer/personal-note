@@ -2,7 +2,6 @@
 title: "Samba"
 tags: ["samba"]
 date: 2019-09-10T11:05:01+08:00
-draft: true
 ---
 
 Cut out summary from your post content here.
