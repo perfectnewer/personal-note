@@ -13,8 +13,8 @@ date: 2021-09-19T14:17:14+08:00
 
 ## 逻辑图
 
-![结构导图](/media/posts/mind.svg)
-<img src="/media/posts/mind.svg">
+![结构导图]/media/posts/python-multiprocessing-pool-mind.png)
+<img src="/media/posts/python-multiprocessing-pool-mind.png">
 
 ## 逻辑架构
 
