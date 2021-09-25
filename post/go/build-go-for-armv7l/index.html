@@ -44,7 +44,7 @@
   <meta property="og:title" content="Build Go for Armv7l">
   <meta property="og:description" content="go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。
 ">
-  <meta property="og:url" content="https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/">
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +53,7 @@
 <meta name="generator" content="Hugo 0.88.1">
 
 
-<link rel="canonical" href="https://perfectnewer.gitee.io/personal-note/post/go/build-go-for-armv7l/">
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -78,20 +78,20 @@
 <meta name='msapplication-navbutton-color' content="#02b875">
 <meta name="msapplication-TileColor" content="#02b875">
 <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<link rel="icon" href="https://perfectnewer.gitee.io/personal-note/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.gitee.io/personal-note/icons/icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.gitee.io/personal-note/icons/icon-32x32.png">
-<link rel="icon" sizes="192x192" href="https://perfectnewer.gitee.io/personal-note/icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="https://perfectnewer.gitee.io/personal-note/icons/icon-152x152.png">
-<link rel="manifest" href="https://perfectnewer.gitee.io/personal-note/manifest.json">
+<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
+<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
 
 
-<link rel="preload" href="https://perfectnewer.gitee.io/personal-note/styles/main-rendered.min.css" as="style">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
 
 
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
-<link rel="preload" href="https://perfectnewer.gitee.io/personal-note/images/avatar.png" as="image">
-<link rel="preload" href="https://perfectnewer.gitee.io/personal-note/images/grey-prism.svg" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
 
 
 <style>
@@ -99,7 +99,7 @@
     background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
   }
 </style>
-<link rel="stylesheet" href="https://perfectnewer.gitee.io/personal-note/styles/main-rendered.min.css">
+<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -141,9 +141,9 @@
     
     
   <header class="site-header">
-  <a href="https://perfectnewer.gitee.io/personal-note/"><img class="avatar" src="https://perfectnewer.gitee.io/personal-note/images/avatar.png" alt="Avatar"></a>
+  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
   
-  <h2 class="title"><a href="https://perfectnewer.gitee.io/personal-note/">simon&#39;s site</a></h2>
+  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
   
   <p class="subtitle">~ the world is so great ~</p>
   <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
@@ -161,35 +161,42 @@
           
           
            is-active">
-          <a href="https://perfectnewer.gitee.io/personal-note/post/">Home</a>
+          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.gitee.io/personal-note/post/">Post</a>
+          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.gitee.io/personal-note/archive">Archive</a>
+          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.gitee.io/personal-note/about">About</a>
+          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.gitee.io/personal-note/tags/">Tags</a>
+          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
         </li>
       
     </ul>
@@ -343,12 +350,12 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
       
       <ul class="post-tags">
         
-          <li><a href="https://perfectnewer.gitee.io/personal-note/tags/go"><span class="tag">Go</span></a></li>
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/go"><span class="tag">Go</span></a></li>
         
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>731</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>737</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
@@ -386,17 +393,17 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
     
     <ul id="tags">
       
-        <li> <a href="https://perfectnewer.gitee.io/personal-note/tagsgo">go</a> </li>
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagsgo">go</a> </li>
       
     </ul>
     
     </div>
     <div>
         
-          <a class="previous" href="https://perfectnewer.gitee.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
         
         
-          <a class="next" href="https://perfectnewer.gitee.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
         
     </div>
 </aside>
@@ -443,7 +450,7 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
 
 
 
-<script src="https://perfectnewer.gitee.io/personal-note/scripts/index.min.js"></script>
+<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
