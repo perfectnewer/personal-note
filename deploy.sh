@@ -47,6 +47,7 @@ cd public && git add --all && git commit -m "Publishing ${PUBLISH_BRANCH}"
 echo "Push to ${UPSTREAM} ${PUBLISH_BRANCH}"
 git push ${UPSTREAM} ${PUBLISH_BRANCH}
 
+cd ..
 rm config/production/config.yml
 function create_gh() {
 	git checkout --orphan ${PUBLISH_BRANCH}
