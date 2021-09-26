@@ -30,7 +30,7 @@ git worktree add -B ${PUBLISH_BRANCH} public ${UPSTREAM}/${PUBLISH_BRANCH}
 echo "Removing existing files"
 rm -rf public/*
 
-if ${PUBLISH_BRANCH} = "gh-pages"; then
+if [ ${PUBLISH_BRANCH} = "gh-pages" ]; then
     echo "use github config"
     cp config/config_github.yml config/production/config.yml
 else
