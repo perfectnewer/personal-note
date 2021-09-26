@@ -30,6 +30,14 @@ git worktree add -B ${PUBLISH_BRANCH} public ${UPSTREAM}/${PUBLISH_BRANCH}
 echo "Removing existing files"
 rm -rf public/*
 
+if ${PUBLISH_BRANCH} = "gh-pages"; then
+    echo "use github config"
+    cp config/config_github.yml config/production/config.yml
+else
+    echo "use gitee config"
+    cp config/config_gitee.yml config/production/config.yml
+fi
+
 echo "Generating site"
 hugo
 
@@ -39,6 +47,7 @@ cd public && git add --all && git commit -m "Publishing ${PUBLISH_BRANCH}"
 echo "Push to ${UPSTREAM} ${PUBLISH_BRANCH}"
 git push ${UPSTREAM} ${PUBLISH_BRANCH}
 
+rm config/production/config.yml
 function create_gh() {
 	git checkout --orphan ${PUBLISH_BRANCH}
 	git rm -fr *
