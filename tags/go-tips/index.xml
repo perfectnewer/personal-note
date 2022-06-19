@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go tips on simon&#39;s site</title>
+    <link>https://perfectnewer.github.io/personal-note/tags/go-tips/</link>
+    <description>Recent content in go tips on simon&#39;s site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Tue, 10 Sep 2019 11:01:04 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/go-tips/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Tips</title>
+      <link>https://perfectnewer.github.io/personal-note/post/go/tips/</link>
+      <pubDate>Tue, 10 Sep 2019 11:01:04 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/go/tips/</guid>
+      <description>&lt;p&gt;记录一些go使用过程中的一些小技巧。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;context&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

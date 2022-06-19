@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Python2 Multiprocessing Pool源码解读</title>
+
+  
+  
+  <link href="//cdn.jsdelivr.net" rel="dns-prefetch">
+  <link href="//cdnjs.cloudflare.com" rel="dns-prefetch">
+  
+  <link href="//at.alicdn.com" rel="dns-prefetch">
+  
+  <link href="//fonts.googleapis.com" rel="dns-prefetch">
+  <link href="//fonts.gstatic.com" rel="dns-prefetch">
+  <link href="///disqus.com" rel="dns-prefetch">
+  <link href="//c.disquscdn.com" rel="dns-prefetch">
+  
+  
+  <link href="//hm.baidu.com" rel="dns-prefetch">
+
+  
+
+  
+  <meta name="author" content="Simon Wei">
+  <meta name="description" content="因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码
+">
+
+  
+  
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@gohugoio">
+    <meta name="twitter:title" content="Python2 Multiprocessing Pool源码解读">
+    <meta name="twitter:description" content="因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码
+">
+    <meta name="twitter:image" content="/images/avatar.png">
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Python2 Multiprocessing Pool源码解读">
+  <meta property="og:description" content="因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码
+">
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">
+  <meta property="og:image" content="/images/avatar.png">
+
+
+
+
+<meta name="generator" content="Hugo 0.92.2">
+
+
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">
+
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="format-detection" content="telephone=no,email=no,adress=no">
+<meta http-equiv="Cache-Control" content="no-transform">
+
+
+<meta name="robots" content="index,follow">
+<meta name="referrer" content="origin-when-cross-origin">
+
+
+
+
+
+
+
+<meta name="theme-color" content="#02b875">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="simon&#39;s site">
+<meta name="msapplication-tooltip" content="simon&#39;s site">
+<meta name='msapplication-navbutton-color' content="#02b875">
+<meta name="msapplication-TileColor" content="#02b875">
+<meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
+<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
+
+
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
+
+
+<link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
+
+
+<style>
+  body {
+    background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
+  }
+</style>
+<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.2/dist/medium-zoom.min.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.3.0/dist/video-js.min.css">
+
+
+
+  
+  
+<!--[if lte IE 8]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/videojs-ie8@1.1.2/dist/videojs-ie8.min.js"></script>
+<![endif]-->
+
+<!--[if lte IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20180112/classList.min.js"></script>
+<![endif]-->
+
+
+</head>
+  <body>
+    <div class="suspension">
+      <a role="button" aria-label="Go to top" title="Go to top" class="to-top is-hide"><span class="icon icon-up" aria-hidden="true"></span></a>
+      
+        
+	<a role="button" aria-label="Go to comments" title="Go to comments" class="to-comment" href="#disqus_thread"><span class="icon icon-comment" aria-hidden="true"></span></a>
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
+  
+  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
+  
+  <p class="subtitle">~ the world is so great ~</p>
+  <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
+    <span class="icon icon-menu" aria-hidden="true"></span>
+  </button>
+
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+          
+          
+           is-active">
+          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list"><li class="social-item">
+          <a href="mailto:weixipeng@outlook.com" title="Email" aria-label="Email">
+            <span class="icon icon-email" aria-hidden="true"></span>
+          </a>
+        </li><li class="social-item">
+          <a href="//github.com/perfectnewer" rel="me" title="GitHub" aria-label="GitHub">
+	    <span class="icon icon-github" aria-hidden="true"></span>
+          </a>
+        </li></ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Python2 Multiprocessing Pool源码解读</h1>
+      <p class="post-meta">@Simon Wei · Sep 19, 2021 · 6 min read</p>
+    </header>
+    
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#逻辑图">逻辑图</a></li>
+    <li><a href="#逻辑架构">逻辑架构</a></li>
+    <li><a href="#代码解读">代码解读</a>
+      <ul>
+        <li><a href="#初始化逻辑流程">初始化逻辑流程</a></li>
+        <li><a href="#worker管理线程逻辑_handle_workers">worker管理线程逻辑：<code>_handle_workers</code></a></li>
+        <li><a href="#任务管理线程_handle_tasks">任务管理线程：<code>_handle_tasks</code></a></li>
+        <li><a href="#结果处理线程_handle_result">结果处理线程：<code>_handle_result</code></a></li>
+        <li><a href="#用户apiapply_async">用户api：<code>apply_async</code></a></li>
+        <li><a href="#worker">worker</a></li>
+        <li><a href="#applyresult">ApplyResult</a></li>
+        <li><a href="#poolclose">pool.close</a></li>
+        <li><a href="#poolterminate">pool.terminate</a></li>
+        <li><a href="#pooljoin">pool.join</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    <hr style=" border:none; width:100; height:1px;" color=#EBEBEB size=1>
+    
+    <article class="post-content"><p>因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码</p>
+<h2 id="逻辑图">逻辑图</h2>
+<p><img src="https://perfectnewer.github.io/personal-note/media/posts/python-multiprocessing-pool-mind.png" alt="结构导图">
+<!-- raw HTML omitted --></p>
+<h2 id="逻辑架构">逻辑架构</h2>
+<p><img src="https://perfectnewer.github.io/personal-note/media/posts/python-multiprocessing-pool.png" alt="逻辑架构图">
+<!-- raw HTML omitted --></p>
+<h2 id="代码解读">代码解读</h2>
+<h3 id="初始化逻辑流程">初始化逻辑流程</h3>
+<ol>
+<li>初始化和子进程交互的队列</li>
+<li>初始化存放用户任务的队列</li>
+<li>初始化子进程</li>
+<li>启动进程管理线程</li>
+<li>启动任务管理线程</li>
+<li>启动结果管理进程</li>
+<li>设置清理逻辑</li>
+</ol>
+<!-- raw HTML omitted -->
+
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>class Pool</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Pool</span>(object):
+    <span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="color:#e6db74">    Class which supports an async version of the `apply()` builtin
+</span><span style="color:#e6db74">    &#39;&#39;&#39;</span>
+    Process <span style="color:#f92672">=</span> Process
+
+    <span style="color:#66d9ef">def</span> __init__(self, processes<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, initializer<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, initargs<span style="color:#f92672">=</span>(),
+                 maxtasksperchild<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+        <span style="color:#75715e"># 初始化和worker进程进行交换数据的队列。是对Pipe的一层封装</span>
+        self<span style="color:#f92672">.</span>_setup_queues()
+        <span style="color:#75715e"># 初始化用户任务队列，用来存放用户的任务调用信息，由apply等方法放入</span>
+        self<span style="color:#f92672">.</span>_taskqueue <span style="color:#f92672">=</span> Queue<span style="color:#f92672">.</span>Queue()
+        <span style="color:#75715e"># 用来存放job和对应结果。</span>
+        self<span style="color:#f92672">.</span>_cache <span style="color:#f92672">=</span> {}
+        <span style="color:#75715e"># 记录当前或者说下一步要进入的状态</span>
+        self<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> RUN
+        <span style="color:#75715e"># worker处理多少任务后销毁，创建新的进程</span>
+        self<span style="color:#f92672">.</span>_maxtasksperchild <span style="color:#f92672">=</span> maxtasksperchild
+        self<span style="color:#f92672">.</span>_initializer <span style="color:#f92672">=</span> initializer
+        self<span style="color:#f92672">.</span>_initargs <span style="color:#f92672">=</span> initargs
+    
+        <span style="color:#66d9ef">if</span> processes <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+            <span style="color:#66d9ef">try</span>:
+                processes <span style="color:#f92672">=</span> cpu_count()
+            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">NotImplementedError</span>:
+                processes <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+        <span style="color:#66d9ef">if</span> processes <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span>:
+            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Number of processes must be at least 1&#34;</span>)
+    
+        <span style="color:#66d9ef">if</span> initializer <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> hasattr(initializer, <span style="color:#e6db74">&#39;__call__&#39;</span>):
+            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">TypeError</span>(<span style="color:#e6db74">&#39;initializer must be a callable&#39;</span>)
+    
+        <span style="color:#75715e"># 进程数量，进程池</span>
+        self<span style="color:#f92672">.</span>_processes <span style="color:#f92672">=</span> processes
+        self<span style="color:#f92672">.</span>_pool <span style="color:#f92672">=</span> []
+        <span style="color:#75715e"># 初始化进程池</span>
+        self<span style="color:#f92672">.</span>_repopulate_pool()
+    
+        self<span style="color:#f92672">.</span>_worker_handler <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(
+            target<span style="color:#f92672">=</span>Pool<span style="color:#f92672">.</span>_handle_workers,
+            args<span style="color:#f92672">=</span>(self, )
+            )
+        self<span style="color:#f92672">.</span>_worker_handler<span style="color:#f92672">.</span>daemon <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+        self<span style="color:#f92672">.</span>_worker_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> RUN
+        self<span style="color:#f92672">.</span>_worker_handler<span style="color:#f92672">.</span>start()
+    
+        self<span style="color:#f92672">.</span>_task_handler <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(
+            target<span style="color:#f92672">=</span>Pool<span style="color:#f92672">.</span>_handle_tasks,
+            args<span style="color:#f92672">=</span>(self<span style="color:#f92672">.</span>_taskqueue, self<span style="color:#f92672">.</span>_quick_put, self<span style="color:#f92672">.</span>_outqueue,
+                  self<span style="color:#f92672">.</span>_pool, self<span style="color:#f92672">.</span>_cache)
+            )
+        self<span style="color:#f92672">.</span>_task_handler<span style="color:#f92672">.</span>daemon <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+        self<span style="color:#f92672">.</span>_task_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> RUN
+        self<span style="color:#f92672">.</span>_task_handler<span style="color:#f92672">.</span>start()
+    
+        self<span style="color:#f92672">.</span>_result_handler <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(
+            target<span style="color:#f92672">=</span>Pool<span style="color:#f92672">.</span>_handle_results,
+            args<span style="color:#f92672">=</span>(self<span style="color:#f92672">.</span>_outqueue, self<span style="color:#f92672">.</span>_quick_get, self<span style="color:#f92672">.</span>_cache)
+            )
+        self<span style="color:#f92672">.</span>_result_handler<span style="color:#f92672">.</span>daemon <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+        self<span style="color:#f92672">.</span>_result_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> RUN
+        self<span style="color:#f92672">.</span>_result_handler<span style="color:#f92672">.</span>start()
+    
+        self<span style="color:#f92672">.</span>_terminate <span style="color:#f92672">=</span> Finalize(
+            self, self<span style="color:#f92672">.</span>_terminate_pool,
+            args<span style="color:#f92672">=</span>(self<span style="color:#f92672">.</span>_taskqueue, self<span style="color:#f92672">.</span>_inqueue, self<span style="color:#f92672">.</span>_outqueue, self<span style="color:#f92672">.</span>_pool,
+                  self<span style="color:#f92672">.</span>_worker_handler, self<span style="color:#f92672">.</span>_task_handler,
+                  self<span style="color:#f92672">.</span>_result_handler, self<span style="color:#f92672">.</span>_cache),
+            exitpriority<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span>
+            )
+</code></pre></div>
+</details>
+<!-- raw HTML omitted -->
+<h3 id="worker管理线程逻辑_handle_workers">worker管理线程逻辑：<code>_handle_workers</code></h3>
+<p>它的作用是维护保持进程数量，清理死掉的子进程，拉起新的进程。</p>
+<p>这里要注意的是，如果pool仅仅是close掉了，那么pool中剩余的任务仍然会被执行，并且全部有了结果才会退出这个线程。</p>
+<p><strong>为什么说是有了结果</strong>而不是说worker退出呢，因为如果子进程执行用户代码遇到了没有捕捉到的异常，那么那个用户任务的结果就无法正常设置成功。</p>
+<p>这个维护进程就永远无法退出，直到用户调用<code>pool.terminate()</code></p>
+
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>_handle_wokers</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># 清理死掉的子进程</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_join_exited_workers</span>(self):
+        <span style="color:#e6db74">&#34;&#34;&#34;Cleanup after any worker processes which have exited due to reaching
+</span><span style="color:#e6db74">        their specified lifetime.  Returns True if any workers were cleaned up.
+</span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+        cleaned <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> reversed(range(len(self<span style="color:#f92672">.</span>_pool))):
+            worker <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_pool[i]
+            <span style="color:#66d9ef">if</span> worker<span style="color:#f92672">.</span>exitcode <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+                <span style="color:#75715e"># worker exited</span>
+                debug(<span style="color:#e6db74">&#39;cleaning up worker </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> i)
+                worker<span style="color:#f92672">.</span>join()
+                cleaned <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+                <span style="color:#66d9ef">del</span> self<span style="color:#f92672">.</span>_pool[i]
+        <span style="color:#66d9ef">return</span> cleaned
+
+    <span style="color:#75715e"># 拉起新的子进程，保持进程数为pool大小的数量</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_repopulate_pool</span>(self):
+        <span style="color:#e6db74">&#34;&#34;&#34;Bring the number of pool processes up to the specified number,
+</span><span style="color:#e6db74">        for use after reaping workers which have exited.
+</span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>_processes <span style="color:#f92672">-</span> len(self<span style="color:#f92672">.</span>_pool)):
+            w <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>Process(target<span style="color:#f92672">=</span>worker,
+                             args<span style="color:#f92672">=</span>(self<span style="color:#f92672">.</span>_inqueue, self<span style="color:#f92672">.</span>_outqueue,
+                                   self<span style="color:#f92672">.</span>_initializer,
+                                   self<span style="color:#f92672">.</span>_initargs, self<span style="color:#f92672">.</span>_maxtasksperchild)
+                            )
+            self<span style="color:#f92672">.</span>_pool<span style="color:#f92672">.</span>append(w)
+            w<span style="color:#f92672">.</span>name <span style="color:#f92672">=</span> w<span style="color:#f92672">.</span>name<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;Process&#39;</span>, <span style="color:#e6db74">&#39;PoolWorker&#39;</span>)
+            w<span style="color:#f92672">.</span>daemon <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+            w<span style="color:#f92672">.</span>start()
+            debug(<span style="color:#e6db74">&#39;added worker&#39;</span>)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_maintain_pool</span>(self):
+        <span style="color:#e6db74">&#34;&#34;&#34;Clean up any exited workers and start replacements for them.
+</span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_join_exited_workers():
+            self<span style="color:#f92672">.</span>_repopulate_pool()
+    <span style="color:#75715e"># 维护入口。如果只是close了pool，那么pool里面现存的任务执行完成后才会结束</span>
+    <span style="color:#75715e"># 结束后放None到task队列，通知任务管理进程退出</span>
+    <span style="color:#a6e22e">@staticmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_handle_workers</span>(pool):
+        thread <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>current_thread()
+
+        <span style="color:#75715e"># Keep maintaining workers until the cache gets drained, unless the pool</span>
+        <span style="color:#75715e"># is terminated.</span>
+        <span style="color:#66d9ef">while</span> thread<span style="color:#f92672">.</span>_state <span style="color:#f92672">==</span> RUN <span style="color:#f92672">or</span> (pool<span style="color:#f92672">.</span>_cache <span style="color:#f92672">and</span> thread<span style="color:#f92672">.</span>_state <span style="color:#f92672">!=</span> TERMINATE):
+            pool<span style="color:#f92672">.</span>_maintain_pool()
+            time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">0.1</span>)
+        <span style="color:#75715e"># send sentinel to stop workers</span>
+        pool<span style="color:#f92672">.</span>_taskqueue<span style="color:#f92672">.</span>put(<span style="color:#66d9ef">None</span>)
+        debug(<span style="color:#e6db74">&#39;worker handler exiting&#39;</span>)
+</code></pre></div>
+</details>
+<h3 id="任务管理线程_handle_tasks">任务管理线程：<code>_handle_tasks</code></h3>
+<p>将用户放入的task，转入到子进程监听的队列中。核心就是迭代task queue获取用户任务，然后put到outqueue中。这里之所以代码稍微复杂，是为了统一转化apply、map、imap等函数放任务的格式</p>
+
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>_handle_tasks</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#a6e22e">@staticmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_handle_tasks</span>(taskqueue, put, outqueue, pool, cache):
+        thread <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>current_thread()
+        <span style="color:#75715e"># 从taskqueue中获取数据</span>
+        <span style="color:#75715e"># 数据格式 ([(job, job index|None, func, args, kwargs)], set_length|None)</span>
+        <span style="color:#66d9ef">for</span> taskseq, set_length <span style="color:#f92672">in</span> iter(taskqueue<span style="color:#f92672">.</span>get, <span style="color:#66d9ef">None</span>):
+            task <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+            i <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+            <span style="color:#66d9ef">try</span>:
+                <span style="color:#66d9ef">for</span> i, task <span style="color:#f92672">in</span> enumerate(taskseq):
+                    <span style="color:#66d9ef">if</span> thread<span style="color:#f92672">.</span>_state:
+                        debug(<span style="color:#e6db74">&#39;task handler found thread._state != RUN&#39;</span>)
+                        <span style="color:#66d9ef">break</span>
+                    <span style="color:#66d9ef">try</span>:
+                        put(task)
+                    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+                        job, ind <span style="color:#f92672">=</span> task[:<span style="color:#ae81ff">2</span>]
+                        <span style="color:#66d9ef">try</span>:
+                            cache[job]<span style="color:#f92672">.</span>_set(ind, (<span style="color:#66d9ef">False</span>, e))
+                        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyError</span>:
+                            <span style="color:#66d9ef">pass</span>
+                <span style="color:#66d9ef">else</span>:
+                    <span style="color:#66d9ef">if</span> set_length:
+                        debug(<span style="color:#e6db74">&#39;doing set_length()&#39;</span>)
+                        set_length(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+                    <span style="color:#66d9ef">continue</span>
+                <span style="color:#66d9ef">break</span>
+            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> ex:
+                job, ind <span style="color:#f92672">=</span> task[:<span style="color:#ae81ff">2</span>] <span style="color:#66d9ef">if</span> task <span style="color:#66d9ef">else</span> (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+                <span style="color:#66d9ef">if</span> job <span style="color:#f92672">in</span> cache:
+                    cache[job]<span style="color:#f92672">.</span>_set(ind <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, (<span style="color:#66d9ef">False</span>, ex))
+                <span style="color:#66d9ef">if</span> set_length:
+                    debug(<span style="color:#e6db74">&#39;doing set_length()&#39;</span>)
+                    set_length(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+            <span style="color:#66d9ef">finally</span>:
+                task <span style="color:#f92672">=</span> taskseq <span style="color:#f92672">=</span> job <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        <span style="color:#66d9ef">else</span>:
+            debug(<span style="color:#e6db74">&#39;task handler got sentinel&#39;</span>)
+
+        <span style="color:#66d9ef">try</span>:
+            <span style="color:#75715e"># tell result handler to finish when cache is empty</span>
+            debug(<span style="color:#e6db74">&#39;task handler sending sentinel to result handler&#39;</span>)
+            outqueue<span style="color:#f92672">.</span>put(<span style="color:#66d9ef">None</span>)
+
+            <span style="color:#75715e"># tell workers there is no more work</span>
+            debug(<span style="color:#e6db74">&#39;task handler sending sentinel to workers&#39;</span>)
+            <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pool:
+                put(<span style="color:#66d9ef">None</span>)
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">IOError</span>:
+            debug(<span style="color:#e6db74">&#39;task handler got IOError when sending sentinels&#39;</span>)
+
+        debug(<span style="color:#e6db74">&#39;task handler exiting&#39;</span>)
+</code></pre></div>
+</details>
+<h3 id="结果处理线程_handle_result">结果处理线程：<code>_handle_result</code></h3>
+<p>这里逻辑很简单，单纯的从outqueue中获取子进程的处理结果，将结果设置到对应<code>pool._cache</code>的AsyncResult中。</p>
+<p>最后对outqueue的read是为了防止<code>_handle_task</code>线程因block无法退出</p>
+
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>_handle_result</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+    <span style="color:#a6e22e">@staticmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_handle_results</span>(outqueue, get, cache):
+        thread <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>current_thread()
+
+        <span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
+            <span style="color:#66d9ef">try</span>:
+                task <span style="color:#f92672">=</span> get()
+            <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">IOError</span>, <span style="color:#a6e22e">EOFError</span>):
+                debug(<span style="color:#e6db74">&#39;result handler got EOFError/IOError -- exiting&#39;</span>)
+                <span style="color:#66d9ef">return</span>
+
+            <span style="color:#66d9ef">if</span> thread<span style="color:#f92672">.</span>_state:
+                <span style="color:#66d9ef">assert</span> thread<span style="color:#f92672">.</span>_state <span style="color:#f92672">==</span> TERMINATE
+                debug(<span style="color:#e6db74">&#39;result handler found thread._state=TERMINATE&#39;</span>)
+                <span style="color:#66d9ef">break</span>
+
+            <span style="color:#66d9ef">if</span> task <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                debug(<span style="color:#e6db74">&#39;result handler got sentinel&#39;</span>)
+                <span style="color:#66d9ef">break</span>
+
+            job, i, obj <span style="color:#f92672">=</span> task
+            <span style="color:#66d9ef">try</span>:
+                cache[job]<span style="color:#f92672">.</span>_set(i, obj)
+            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyError</span>:
+                <span style="color:#66d9ef">pass</span>
+            task <span style="color:#f92672">=</span> job <span style="color:#f92672">=</span> obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+
+        <span style="color:#66d9ef">while</span> cache <span style="color:#f92672">and</span> thread<span style="color:#f92672">.</span>_state <span style="color:#f92672">!=</span> TERMINATE:
+            <span style="color:#66d9ef">try</span>:
+                task <span style="color:#f92672">=</span> get()
+            <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">IOError</span>, <span style="color:#a6e22e">EOFError</span>):
+                debug(<span style="color:#e6db74">&#39;result handler got EOFError/IOError -- exiting&#39;</span>)
+                <span style="color:#66d9ef">return</span>
+
+            <span style="color:#66d9ef">if</span> task <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                debug(<span style="color:#e6db74">&#39;result handler ignoring extra sentinel&#39;</span>)
+                <span style="color:#66d9ef">continue</span>
+            job, i, obj <span style="color:#f92672">=</span> task
+            <span style="color:#66d9ef">try</span>:
+                cache[job]<span style="color:#f92672">.</span>_set(i, obj)
+            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyError</span>:
+                <span style="color:#66d9ef">pass</span>
+            task <span style="color:#f92672">=</span> job <span style="color:#f92672">=</span> obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+
+        <span style="color:#66d9ef">if</span> hasattr(outqueue, <span style="color:#e6db74">&#39;_reader&#39;</span>):
+            debug(<span style="color:#e6db74">&#39;ensuring that outqueue is not full&#39;</span>)
+            <span style="color:#75715e"># If we don&#39;t make room available in outqueue then</span>
+            <span style="color:#75715e"># attempts to add the sentinel (None) to outqueue may</span>
+            <span style="color:#75715e"># block.  There is guaranteed to be no more than 2 sentinels.</span>
+            <span style="color:#66d9ef">try</span>:
+                <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> outqueue<span style="color:#f92672">.</span>_reader<span style="color:#f92672">.</span>poll():
+                        <span style="color:#66d9ef">break</span>
+                    get()
+            <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">IOError</span>, <span style="color:#a6e22e">EOFError</span>):
+                <span style="color:#66d9ef">pass</span>
+
+        debug(<span style="color:#e6db74">&#39;result handler exiting: len(cache)=</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">, thread._state=</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span>,
+              len(cache), thread<span style="color:#f92672">.</span>_state)
+
+</code></pre></div>
+</details>
+<h3 id="用户apiapply_async">用户api：<code>apply_async</code></h3>
+<p>这里只看一个<code>apply_async</code>函数，其他函数大同小异。</p>
+<p>这个函数就是简单的将用户任务构造成task的格式，放入task队列。然后返回<code>ApplyResult</code>给用户，作为获取结果的桥梁</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_async</span>(self, func, args<span style="color:#f92672">=</span>(), kwds<span style="color:#f92672">=</span>{}, callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+        <span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="color:#e6db74">        Asynchronous equivalent of `apply()` builtin
+</span><span style="color:#e6db74">        &#39;&#39;&#39;</span>
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>_state <span style="color:#f92672">==</span> RUN
+        result <span style="color:#f92672">=</span> ApplyResult(self<span style="color:#f92672">.</span>_cache, callback)
+        self<span style="color:#f92672">.</span>_taskqueue<span style="color:#f92672">.</span>put(([(result<span style="color:#f92672">.</span>_job, <span style="color:#66d9ef">None</span>, func, args, kwds)], <span style="color:#66d9ef">None</span>))
+        <span style="color:#66d9ef">return</span> result
+</code></pre></div><h3 id="worker">worker</h3>
+<p>worker代码是通过Popen的方式在子进程中运行的。因此我们的function（也就是task）写的时候必须牢记，自己的代码是运行中另一个进程中的。并且这个进程正常情况会一直运行下去，除非设置了<code>maxtasksperchild</code>参数。</p>
+<p>worker逻辑也很清晰：</p>
+<ol>
+<li>执行用户自定义的初始化逻辑。</li>
+<li>然后进入任务循环。</li>
+<li>从inqueue获取任务。</li>
+<li>执行用户代码逻辑。</li>
+<li>将结果放入outqueue。</li>
+</ol>
+
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>worker</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">worker</span>(inqueue, outqueue, initializer<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, initargs<span style="color:#f92672">=</span>(), maxtasks<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+    <span style="color:#66d9ef">assert</span> maxtasks <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">or</span> (type(maxtasks) <span style="color:#f92672">in</span> (int, long) <span style="color:#f92672">and</span> maxtasks <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+    put <span style="color:#f92672">=</span> outqueue<span style="color:#f92672">.</span>put
+    get <span style="color:#f92672">=</span> inqueue<span style="color:#f92672">.</span>get
+    <span style="color:#66d9ef">if</span> hasattr(inqueue, <span style="color:#e6db74">&#39;_writer&#39;</span>):
+        inqueue<span style="color:#f92672">.</span>_writer<span style="color:#f92672">.</span>close()
+        outqueue<span style="color:#f92672">.</span>_reader<span style="color:#f92672">.</span>close()
+
+    <span style="color:#66d9ef">if</span> initializer <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+        initializer(<span style="color:#f92672">*</span>initargs)
+
+    completed <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">while</span> maxtasks <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">or</span> (maxtasks <span style="color:#f92672">and</span> completed <span style="color:#f92672">&lt;</span> maxtasks):
+        <span style="color:#66d9ef">try</span>:
+            task <span style="color:#f92672">=</span> get()
+        <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">EOFError</span>, <span style="color:#a6e22e">IOError</span>):
+            debug(<span style="color:#e6db74">&#39;worker got EOFError or IOError -- exiting&#39;</span>)
+            <span style="color:#66d9ef">break</span>
+
+        <span style="color:#66d9ef">if</span> task <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+            debug(<span style="color:#e6db74">&#39;worker got sentinel -- exiting&#39;</span>)
+            <span style="color:#66d9ef">break</span>
+
+        job, i, func, args, kwds <span style="color:#f92672">=</span> task
+        <span style="color:#66d9ef">try</span>:
+            result <span style="color:#f92672">=</span> (<span style="color:#66d9ef">True</span>, func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwds))
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>, e:
+            result <span style="color:#f92672">=</span> (<span style="color:#66d9ef">False</span>, e)
+        <span style="color:#66d9ef">try</span>:
+            put((job, i, result))
+        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+            wrapped <span style="color:#f92672">=</span> MaybeEncodingError(e, result[<span style="color:#ae81ff">1</span>])
+            debug(<span style="color:#e6db74">&#34;Possible encoding error while sending result: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (
+                wrapped))
+            put((job, i, (<span style="color:#66d9ef">False</span>, wrapped)))
+
+        task <span style="color:#f92672">=</span> job <span style="color:#f92672">=</span> result <span style="color:#f92672">=</span> func <span style="color:#f92672">=</span> args <span style="color:#f92672">=</span> kwds <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+        completed <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    debug(<span style="color:#e6db74">&#39;worker exiting after </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> tasks&#39;</span> <span style="color:#f92672">%</span> completed)
+</code></pre></div>
+</details>
+<h3 id="applyresult">ApplyResult</h3>
+<p>用户获取执行结果的桥梁。</p>
+<p>需要注意的是，如果调用get或者wait不加超时时间，那么进程就会一直block住，直到result被设置。此时无法响应signal。这是python2设计的一个bug，但是并不打算修复。详情：<a href="https://bugs.python.org/issue21913">threading.Condition.wait() is not interruptible in Python 2.7</a></p>
+<blockquote>
+<p>这里就是容易导致进程不响应<code>ctrl-c</code>的地方之一。方案有以下几种</p>
+<ol>
+<li>get添加超时时间</li>
+<li>保证子进程能正常退出。一般是子进程忽略相关signal</li>
+<li>找个合适的途径调用pool.terminate</li>
+</ol>
+</blockquote>
+<p>
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>class ApplyResult</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApplyResult</span>(object):
+
+    <span style="color:#66d9ef">def</span> __init__(self, cache, callback):
+        self<span style="color:#f92672">.</span>_cond <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Condition(threading<span style="color:#f92672">.</span>Lock())
+        self<span style="color:#f92672">.</span>_job <span style="color:#f92672">=</span> job_counter<span style="color:#f92672">.</span>next()
+        self<span style="color:#f92672">.</span>_cache <span style="color:#f92672">=</span> cache
+        self<span style="color:#f92672">.</span>_ready <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+        self<span style="color:#f92672">.</span>_callback <span style="color:#f92672">=</span> callback
+        cache[self<span style="color:#f92672">.</span>_job] <span style="color:#f92672">=</span> self
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ready</span>(self):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_ready
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">successful</span>(self):
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>_ready
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_success
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wait</span>(self, timeout<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+        self<span style="color:#f92672">.</span>_cond<span style="color:#f92672">.</span>acquire()
+        <span style="color:#66d9ef">try</span>:
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>_ready:
+                self<span style="color:#f92672">.</span>_cond<span style="color:#f92672">.</span>wait(timeout)
+        <span style="color:#66d9ef">finally</span>:
+            self<span style="color:#f92672">.</span>_cond<span style="color:#f92672">.</span>release()
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get</span>(self, timeout<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+        self<span style="color:#f92672">.</span>wait(timeout)
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>_ready:
+            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">TimeoutError</span>
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_success:
+            <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>_value
+        <span style="color:#66d9ef">else</span>:
+            <span style="color:#66d9ef">raise</span> self<span style="color:#f92672">.</span>_value
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_set</span>(self, i, obj):
+        self<span style="color:#f92672">.</span>_success, self<span style="color:#f92672">.</span>_value <span style="color:#f92672">=</span> obj
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_callback <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>_success:
+            self<span style="color:#f92672">.</span>_callback(self<span style="color:#f92672">.</span>_value)
+        self<span style="color:#f92672">.</span>_cond<span style="color:#f92672">.</span>acquire()
+        <span style="color:#66d9ef">try</span>:
+            self<span style="color:#f92672">.</span>_ready <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+            self<span style="color:#f92672">.</span>_cond<span style="color:#f92672">.</span>notify()
+        <span style="color:#66d9ef">finally</span>:
+            self<span style="color:#f92672">.</span>_cond<span style="color:#f92672">.</span>release()
+        <span style="color:#66d9ef">del</span> self<span style="color:#f92672">.</span>_cache[self<span style="color:#f92672">.</span>_job]
+
+AsyncResult <span style="color:#f92672">=</span> ApplyResult       <span style="color:#75715e"># create alias -- see #17805</span>
+</code></pre></div>
+</details>}</p>
+<h3 id="poolclose">pool.close</h3>
+<p>close的行为就是单纯的设置pool的状态为close。 此时pool不再接受新的任务。现存的任务仍然会被继续执行</p>
+<blockquote>
+<p>调用close后，执行join也会触发<code>condition.wait</code>。此时也会block进程，无法处理signal</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">close</span>(self):
+        debug(<span style="color:#e6db74">&#39;closing pool&#39;</span>)
+        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_state <span style="color:#f92672">==</span> RUN:
+            self<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> CLOSE
+            self<span style="color:#f92672">.</span>_worker_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> CLOSE
+</code></pre></div><h3 id="poolterminate">pool.terminate</h3>
+<p>设置状态，调用<code>_terminate</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">terminate</span>(self):
+        debug(<span style="color:#e6db74">&#39;terminating pool&#39;</span>)
+        self<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> TERMINATE  
+        self<span style="color:#f92672">.</span>_worker_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> TERMINATE
+        self<span style="color:#f92672">.</span>_terminate()
+</code></pre></div><p><code>_terminate</code>是一个callable的Finalize对象。这个对象通过<code>weakref</code>绑定进程对象。在对象被销毁或者调用Finalize的时候执行<code>pool._terminate_pool</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">        self<span style="color:#f92672">.</span>_terminate <span style="color:#f92672">=</span> Finalize(
+            self, self<span style="color:#f92672">.</span>_terminate_pool,
+            args<span style="color:#f92672">=</span>(self<span style="color:#f92672">.</span>_taskqueue, self<span style="color:#f92672">.</span>_inqueue, self<span style="color:#f92672">.</span>_outqueue, self<span style="color:#f92672">.</span>_pool,
+                  self<span style="color:#f92672">.</span>_worker_handler, self<span style="color:#f92672">.</span>_task_handler,
+                  self<span style="color:#f92672">.</span>_result_handler, self<span style="color:#f92672">.</span>_cache),
+            exitpriority<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span>
+            )
+</code></pre></div><p><code>_terminate_pool</code>:</p>
+
+<details>
+    <summary style="background-color:#f5f5f5;border:1px solid #ccc;padding:5px;">
+        <font color='#c7254e' size='3px'>_terminate_pool</font>
+    </summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#a6e22e">@classmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">_terminate_pool</span>(cls, taskqueue, inqueue, outqueue, pool,
+                        worker_handler, task_handler, result_handler, cache):
+        <span style="color:#75715e"># this is guaranteed to only be called once</span>
+        debug(<span style="color:#e6db74">&#39;finalizing pool&#39;</span>)
+
+        <span style="color:#75715e"># 设置pool的状态为TERMINATE，这样task线程和worker线程在有任务的（pool._cache不为空）情况下依然会退出</span>
+        worker_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> TERMINATE
+        task_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> TERMINATE
+
+        debug(<span style="color:#e6db74">&#39;helping task handler/workers to finish&#39;</span>)
+        <span style="color:#75715e"># 在task线程存活的情况下，清理inqueue，确保子进程不要收到新的任务</span>
+        cls<span style="color:#f92672">.</span>_help_stuff_finish(inqueue, task_handler, len(pool))
+
+        <span style="color:#66d9ef">assert</span> result_handler<span style="color:#f92672">.</span>is_alive() <span style="color:#f92672">or</span> len(cache) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+
+        result_handler<span style="color:#f92672">.</span>_state <span style="color:#f92672">=</span> TERMINATE
+        <span style="color:#75715e"># result handler收到None后会退出result处理循环</span>
+        outqueue<span style="color:#f92672">.</span>put(<span style="color:#66d9ef">None</span>)                  <span style="color:#75715e"># sentinel</span>
+
+        <span style="color:#75715e"># We must wait for the worker handler to exit before terminating</span>
+        <span style="color:#75715e"># workers because we don&#39;t want workers to be restarted behind our back.</span>
+        debug(<span style="color:#e6db74">&#39;joining worker handler&#39;</span>)
+        <span style="color:#66d9ef">if</span> threading<span style="color:#f92672">.</span>current_thread() <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> worker_handler:
+            <span style="color:#75715e"># 等待work handler线程退出。此处加上超时时间，避免无法处理signal</span>
+            worker_handler<span style="color:#f92672">.</span>join(<span style="color:#ae81ff">1e100</span>)
+
+        <span style="color:#75715e"># Terminate workers which haven&#39;t already finished.</span>
+        <span style="color:#66d9ef">if</span> pool <span style="color:#f92672">and</span> hasattr(pool[<span style="color:#ae81ff">0</span>], <span style="color:#e6db74">&#39;terminate&#39;</span>):
+            debug(<span style="color:#e6db74">&#39;terminating workers&#39;</span>)
+            <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pool:
+                <span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>exitcode <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+                    p<span style="color:#f92672">.</span>terminate()
+
+        debug(<span style="color:#e6db74">&#39;joining task handler&#39;</span>)
+        <span style="color:#66d9ef">if</span> threading<span style="color:#f92672">.</span>current_thread() <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> task_handler:
+            <span style="color:#75715e"># 等待task线程接收到None退出执行循环</span>
+            task_handler<span style="color:#f92672">.</span>join(<span style="color:#ae81ff">1e100</span>)
+
+        debug(<span style="color:#e6db74">&#39;joining result handler&#39;</span>)
+        <span style="color:#66d9ef">if</span> threading<span style="color:#f92672">.</span>current_thread() <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> result_handler:
+            <span style="color:#75715e"># 等待result线程接收到None退出执行循环</span>
+            result_handler<span style="color:#f92672">.</span>join(<span style="color:#ae81ff">1e100</span>)
+
+        <span style="color:#75715e"># 再次检查进程池，并等待进程退出</span>
+        <span style="color:#66d9ef">if</span> pool <span style="color:#f92672">and</span> hasattr(pool[<span style="color:#ae81ff">0</span>], <span style="color:#e6db74">&#39;terminate&#39;</span>):
+            debug(<span style="color:#e6db74">&#39;joining pool workers&#39;</span>)
+            <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> pool:
+                <span style="color:#66d9ef">if</span> p<span style="color:#f92672">.</span>is_alive():
+                    <span style="color:#75715e"># worker has not yet exited</span>
+                    debug(<span style="color:#e6db74">&#39;cleaning up worker </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> p<span style="color:#f92672">.</span>pid)
+                    p<span style="color:#f92672">.</span>join()
+</code></pre></div>
+</details>
+<h3 id="pooljoin">pool.join</h3>
+<p>这个方法逻辑简单粗暴。直接依次执行每个handler线程以及pool中子进程的join</p>
+<p>注意这里的join是没有超时时间的，会block住signal。</p>
+<blockquote>
+<p>此处也是会导致ctrl-c后进程无法退出的一个原因。</p>
+<p>如果子此时调用的是close方法，并且进程不能正确处理异常，导致一些进程的执行结果没有设置到ApplyResult，就会导致<code>pool._cache</code>永远不为空，此时worker handler就永远无法退出。主进程就会一直block在<code>self._worker_handler.join()</code></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">join</span>(self):
+        debug(<span style="color:#e6db74">&#39;joining pool&#39;</span>)
+        <span style="color:#66d9ef">assert</span> self<span style="color:#f92672">.</span>_state <span style="color:#f92672">in</span> (CLOSE, TERMINATE)
+        debug(<span style="color:#e6db74">&#39;joining worker handler&#39;</span>)
+        self<span style="color:#f92672">.</span>_worker_handler<span style="color:#f92672">.</span>join()
+        debug(<span style="color:#e6db74">&#34;joining task handler&#34;</span>)
+        self<span style="color:#f92672">.</span>_task_handler<span style="color:#f92672">.</span>join()
+        debug(<span style="color:#e6db74">&#34;joiningg result handler&#34;</span>)
+        self<span style="color:#f92672">.</span>_result_handler<span style="color:#f92672">.</span>join()
+        debug(<span style="color:#e6db74">&#34;joining pools&#34;</span>)
+        <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>_pool:
+            p<span style="color:#f92672">.</span>join()
+</code></pre></div></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/python"><span class="tag">Python</span></a></li>
+        
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/multiprocessing"><span class="tag">Multiprocessing</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>273</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      
+    
+  </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Sun Sep 19, 2021 </h4>
+      <h5 id="wordcount"> 1242 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagspython">python</a> </li>
+      
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagsmultiprocessing">multiprocessing</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/"> Tornado Coroutine</a>
+        
+        
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/"> pve multi bridge: nat for Wlan and bridge for ethernet</a>
+        
+    </div>
+</aside>
+
+  
+<footer class="site-footer">
+  <p>© 2017-2022 simon&#39;s site</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
+  
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/smooth-scroll@15.0.0/dist/smooth-scroll.min.js"></script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/video.js@7.3.0/dist/video.min.js"></script>
+
+
+
+
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    },
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+
+
+<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('\/service-worker.js').then(function() {
+      console.log('[ServiceWorker] Registered');
+    });
+  }
+</script>
+
+
+
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8467334201490ae35c81ff7d32d009ff";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+  </body>
+</html>

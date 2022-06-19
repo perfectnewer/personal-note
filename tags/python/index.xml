@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on simon&#39;s site</title>
+    <link>https://perfectnewer.github.io/personal-note/tags/python/</link>
+    <description>Recent content in python on simon&#39;s site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Sun, 19 Sep 2021 14:17:14 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python2 Multiprocessing Pool源码解读</title>
+      <link>https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</link>
+      <pubDate>Sun, 19 Sep 2021 14:17:14 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</guid>
+      <description>&lt;p&gt;因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
