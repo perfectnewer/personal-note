@@ -45,7 +45,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.88.1">
+<meta name="generator" content="Hugo 0.92.2">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/">
@@ -148,13 +148,6 @@
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
-        </li>
-      
-        <li class="menu-item
-          
-          
-          ">
           <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
         </li>
       
@@ -162,21 +155,14 @@
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
+          <a href="https://perfectnewer.github.io/personal-note/archive/">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
-        </li>
-      
-        <li class="menu-item
-          
-          
-          ">
-          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
+          <a href="https://perfectnewer.github.io/personal-note/about/">About</a>
         </li>
       
         <li class="menu-item
@@ -210,14 +196,38 @@
   
    <article class="post-entry">
   <header class="post-header">
-    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" class="post-link">Python2 Multiprocessing Pool源码解读</a></h3>
-    <p class="post-meta">@Simon Wei · Sep 19, 2021 · 6 min read</p>
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/" class="post-link">pve multi bridge: nat for Wlan and bridge for ethernet</a></h3>
+    <p class="post-meta">@Simon Wei · Jun 19, 2022 · 1 min read</p>
   </header>
   
-  <p class="post-summary">因为踩坑ctrl-c无法退出multiprocessing pool问题，趁机简单解读一下相关代码
+  <p class="post-summary">本文主要介绍了pve在两个外部网络的情况下，使用两个bridge网络的方案。有线网络使用桥接模式，无线网络使用nat模式。
 </p>
   <footer class="post-footer">
-    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">Read More →</a>
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/" class="post-link">Tornado Coroutine</a></h3>
+    <p class="post-meta">@Simon Wei · Apr 27, 2020 · 9 min read</p>
+  </header>
+  
+  <p class="post-summary">介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
+关系图示 &#43;---------------------------------&#43; |IOLoop | | | | &#43;----------------------------&#43; | | |Runner | | | | | | | | &#43;----------------------&#43; | | | | | gen.Task | | | | | | | | | | | | &#43;------------&#43; | | | | | | | user func | | | | | | | &#43;------------&#43; | | | | | &#43;----------------------&#43; | | | &#43;----------------------------&#43; | &#43;---------------------------------&#43; gen.</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/">Read More →</a>
+  </footer>
+</article>
+  <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/" class="post-link">内存模型--对go内存模型深入展开</a></h3>
+    <p class="post-meta">@Simon Wei · Sep 20, 2019 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">最近复习，遇到go内存模型的问题，心中一直以为硬件是会保证缓存和内存一致性的。不过看了不少例子有很多困惑，关于happend before之外的困惑。之后就又查了不少硬件内存模型的文章。这里就记录一下一些不错的文章，再对几个例子做一些硬件体系上的汇总，不再详细说明go的内存模型了，毕竟关于go内存模型的文章有很多。
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/">Read More →</a>
   </footer>
 </article>
   <article class="post-entry">
@@ -284,30 +294,6 @@ bash中有两种命令替换的格式 `...` 和 $(...)
 </article>
   <article class="post-entry">
   <header class="post-header">
-    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/hardware/samba/" class="post-link">Samba</a></h3>
-    <p class="post-meta">@Simon Wei · Sep 10, 2019 · 1 min read</p>
-  </header>
-  
-  <p class="post-summary">Cut out summary from your post content here.
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/hardware/samba/">Read More →</a>
-  </footer>
-</article>
-  <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/go/tips/" class="post-link">Go Tips</a></h3>
-    <p class="post-meta">@Simon Wei · Sep 10, 2019 · 1 min read</p>
-  </header>
-  
-  <p class="post-summary">记录一些go使用过程中的一些小技巧。
- context </p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/go/tips/">Read More →</a>
-  </footer>
-</article>
-  <article class="post-entry">
-  <header class="post-header">
     <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/git/rm-submodule/" class="post-link">简便删除git submodule的方法</a></h3>
     <p class="post-meta">@Simon Wei · Sep 9, 2019 · 1 min read</p>
   </header>
@@ -336,7 +322,7 @@ bash中有两种命令替换的格式 `...` 和 $(...)
 </section>
 
 <footer class="site-footer">
-  <p>© 2017-2021 simon&#39;s site</p>
+  <p>© 2017-2022 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>

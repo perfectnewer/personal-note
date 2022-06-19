@@ -50,7 +50,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.88.1">
+<meta name="generator" content="Hugo 0.92.2">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/git/rm-submodule/">
@@ -160,13 +160,6 @@
         <li class="menu-item
           
           
-           is-active">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
-        </li>
-      
-        <li class="menu-item
-          
-          
           ">
           <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
         </li>
@@ -175,21 +168,14 @@
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
+          <a href="https://perfectnewer.github.io/personal-note/archive/">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
-        </li>
-      
-        <li class="menu-item
-          
-          
-          ">
-          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
+          <a href="https://perfectnewer.github.io/personal-note/about/">About</a>
         </li>
       
         <li class="menu-item
@@ -220,7 +206,6 @@
       <h1 class="post-title">简便删除git submodule的方法</h1>
       <p class="post-meta">@Simon Wei · Sep 9, 2019 · 1 min read</p>
     </header>
-    
     <article class="post-content"><p>简单的删除: 新的版本使用<code>git rm</code>就可以删除submodule了。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除</span>
 <span style="color:#75715e"># .git/config 中的配置和 .git/modules 中的文件</span>
@@ -251,7 +236,7 @@ git commit -m <span style="color:#e6db74">&#34;xxxxxxx&#34;</span>
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>748</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1014</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
@@ -268,7 +253,7 @@ git commit -m <span style="color:#e6db74">&#34;xxxxxxx&#34;</span>
             return;
         }
         var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
+        s.src = '//' + "simon-7" + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
@@ -278,37 +263,9 @@ git commit -m <span style="color:#e6db74">&#34;xxxxxxx&#34;</span>
       
     
   </section>
-
-  <aside id="meta">
-    <div>
-    <section>
-      <h4 id="date"> Mon Sep 9, 2019 </h4>
-      <h5 id="wordcount"> 43 Words </h5>
-    </section>
-    
-    
-    <ul id="tags">
-      
-        <li> <a href="https://perfectnewer.github.io/personal-note/tagsgit">git</a> </li>
-      
-        <li> <a href="https://perfectnewer.github.io/personal-note/tagssubmodule">submodule</a> </li>
-      
-    </ul>
-    
-    </div>
-    <div>
-        
-          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/go/structure/"> 一种合理组织go项目结构的方案</a>
-        
-        
-          <a class="next" href="https://perfectnewer.github.io/personal-note/post/go/tips/"> Go Tips</a>
-        
-    </div>
-</aside>
-
   
 <footer class="site-footer">
-  <p>© 2017-2021 simon&#39;s site</p>
+  <p>© 2017-2022 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>

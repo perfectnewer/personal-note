@@ -50,7 +50,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.88.1">
+<meta name="generator" content="Hugo 0.92.2">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/">
@@ -160,13 +160,6 @@
         <li class="menu-item
           
           
-           is-active">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
-        </li>
-      
-        <li class="menu-item
-          
-          
           ">
           <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
         </li>
@@ -175,21 +168,14 @@
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
+          <a href="https://perfectnewer.github.io/personal-note/archive/">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
-        </li>
-      
-        <li class="menu-item
-          
-          
-          ">
-          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
+          <a href="https://perfectnewer.github.io/personal-note/about/">About</a>
         </li>
       
         <li class="menu-item
@@ -220,18 +206,6 @@
       <h1 class="post-title">Build Go for Armv7l</h1>
       <p class="post-meta">@Simon Wei · Sep 19, 2019 · 2 min read</p>
     </header>
-    
-      <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-    <hr style=" border:none; width:100; height:1px;" color=#EBEBEB size=1>
-    
     <article class="post-content"><p>go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。</p>
 <p>无论是跨平台编译，还是在目标机器（我这里就是nanopi）编译go，都需要首先安装go compiler（编译程序）。官方文档给出了四种安装方式：</p>
 <ol>
@@ -355,7 +329,7 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>738</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1004</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
@@ -372,7 +346,7 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
             return;
         }
         var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
+        s.src = '//' + "simon-7" + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
@@ -382,35 +356,9 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
       
     
   </section>
-
-  <aside id="meta">
-    <div>
-    <section>
-      <h4 id="date"> Thu Sep 19, 2019 </h4>
-      <h5 id="wordcount"> 419 Words </h5>
-    </section>
-    
-    
-    <ul id="tags">
-      
-        <li> <a href="https://perfectnewer.github.io/personal-note/tagsgo">go</a> </li>
-      
-    </ul>
-    
-    </div>
-    <div>
-        
-          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
-        
-        
-          <a class="next" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
-        
-    </div>
-</aside>
-
   
 <footer class="site-footer">
-  <p>© 2017-2021 simon&#39;s site</p>
+  <p>© 2017-2022 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>
