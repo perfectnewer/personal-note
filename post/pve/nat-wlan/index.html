@@ -234,21 +234,21 @@
 <p>debian连接无线的工具有很多，可以参考官方wiki: <a href="https://wiki.debian.org/WiFi/HowToUse">debian wifi</a></p>
 <p>这里我使用connman</p>
 <h3 id="安装">安装</h3>
-<pre tabindex="0"><code># apt install connman
-</code></pre><h3 id="修改配置不然connman自带的dns-server会合dnsmasq冲突">修改配置。不然connman自带的dns server会合dnsmasq冲突</h3>
-<pre tabindex="0"><code># mkdir -p /etc/systemd/system/connman.service.d/
-# cat &lt;&lt; EOF &gt;&gt; /etc/systemd/system/connman.service.d/disable_dns_proxy.conf
-[Service]
-ExecStart=
-ExecStart=/usr/sbin/connmand -n --nodnsproxy
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># apt install connman</span>
+</code></pre></div><h3 id="修改配置不然connman自带的dns-server会合dnsmasq冲突">修改配置。不然connman自带的dns server会合dnsmasq冲突</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># mkdir -p /etc/systemd/system/connman.service.d/</span>
+<span style="color:#75715e"># cat &lt;&lt; EOF &gt;&gt; /etc/systemd/system/connman.service.d/disable_dns_proxy.conf</span>
+<span style="color:#f92672">[</span>Service<span style="color:#f92672">]</span>
+ExecStart<span style="color:#f92672">=</span>
+ExecStart<span style="color:#f92672">=</span>/usr/sbin/connmand -n --nodnsproxy
 EOF
-# systemctl daemon-reload
-# systemctl restart connman
-</code></pre><h3 id="连接无线-1">连接无线</h3>
-<pre tabindex="0"><code>$ connmanctl 
+<span style="color:#75715e"># systemctl daemon-reload</span>
+<span style="color:#75715e"># systemctl restart connman</span>
+</code></pre></div><h3 id="连接无线-1">连接无线</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ connmanctl 
 connmanctl&gt; enable wifi
 connmanctl&gt; scan wifi 
-Scan completed for wifi
+Scan completed <span style="color:#66d9ef">for</span> wifi
 
 connmanctl&gt; services 
 $SSID    wifi_f8d111090ed6_6d617269636f6e5f64655f6d6965726461_managed_psk
@@ -259,41 +259,41 @@ Agent registered
 
 connmanctl&gt; connect wifi_f8d111090ed6_6d617269636f6e5f64655f6d6965726461_managed_psk 
 Agent RequestInput wifi_f8d111090ed6_6d617269636f6e5f64655f6d6965726461_managed_psk
-Passphrase = [ Type=psk, Requirement=mandatory, Alternates=[ WPS ] ]
-WPS = [ Type=wpspin, Requirement=alternate ]
+Passphrase <span style="color:#f92672">=</span> <span style="color:#f92672">[</span> Type<span style="color:#f92672">=</span>psk, Requirement<span style="color:#f92672">=</span>mandatory, Alternates<span style="color:#f92672">=[</span> WPS <span style="color:#f92672">]</span> <span style="color:#f92672">]</span>
+WPS <span style="color:#f92672">=</span> <span style="color:#f92672">[</span> Type<span style="color:#f92672">=</span>wpspin, Requirement<span style="color:#f92672">=</span>alternate <span style="color:#f92672">]</span>
 Passphrase? $PASS
 Connected wifi_f8d111090ed6_6d617269636f6e5f64655f6d6965726461_managed_psk
 
 connmanctl&gt; quit
-</code></pre><h2 id="bridge-配置">bridge 配置</h2>
+</code></pre></div><h2 id="bridge-配置">bridge 配置</h2>
 <p>在<code>/etc/network/interfaces</code>中添加</p>
-<pre tabindex="0"><code>auto vmbr1
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">auto vmbr1
 iface vmbr1 inet static
     address 192.168.10.1/24
     bridge_ports none
     bridge_stp off
-    bridge_fd 0
-    post-up echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+    bridge_fd <span style="color:#ae81ff">0</span>
+    post-up echo <span style="color:#ae81ff">1</span> &gt; /proc/sys/net/ipv4/ip_forward
 	  post-up bash /root/scripts/iptables.config.sh
-</code></pre><p>vmbr1是虚拟bridge的名字，也可以使用其他的。配置的网络是192.168.10.1/24，这里也可以使用其他网段。文件<code>/root/scripts/iptables.config.sh</code>中存放了iptables和route相关的配置，也可以直接写在上面的配置文件里</p>
+</code></pre></div><p>vmbr1是虚拟bridge的名字，也可以使用其他的。配置的网络是192.168.10.1/24，这里也可以使用其他网段。文件<code>/root/scripts/iptables.config.sh</code>中存放了iptables和route相关的配置，也可以直接写在上面的配置文件里</p>
 <h2 id="配置iptables和路由规则">配置iptables和路由规则</h2>
 <p>文件<code>/root/scripts/iptables.config.sh</code>内容</p>
-<pre tabindex="0"><code>iptables -t nat -A POSTROUTING -s '192.168.10.0/24' -o wlp5s0  -j MASQUERADE
-iptables -t raw -I PREROUTING -i fwbr+ -j CT --zone 1  # 参考https://pve.proxmox.com/wiki/Network_Configuration
-ip route add default via 192.168.1.1 dev wlp5s0 table 101
-ip route add 192.168.10.0/24 dev vmbr1 table 101
-ip rule add iif wlp5s0 to 192.168.10.0/24 lookup 101
-ip rule add from 192.168.10.0/24 lookup 101
-ip rule add iif vmbr1 lookup 101
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">iptables -t nat -A POSTROUTING -s <span style="color:#e6db74">&#39;192.168.10.0/24&#39;</span> -o wlp5s0  -j MASQUERADE
+iptables -t raw -I PREROUTING -i fwbr+ -j CT --zone <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># 参考https://pve.proxmox.com/wiki/Network_Configuration</span>
+ip route add default via 192.168.1.1 dev wlp5s0 table <span style="color:#ae81ff">101</span>
+ip route add 192.168.10.0/24 dev vmbr1 table <span style="color:#ae81ff">101</span>
+ip rule add iif wlp5s0 to 192.168.10.0/24 lookup <span style="color:#ae81ff">101</span>
+ip rule add from 192.168.10.0/24 lookup <span style="color:#ae81ff">101</span>
+ip rule add iif vmbr1 lookup <span style="color:#ae81ff">101</span>
 ip route flush cache
-</code></pre><p>这里面网络地址(192.168.10.0/24), 无线网卡(wlp5s0),虚拟bridge(vmbr1)和routing table(101) 可以根据情况进行替换</p>
+</code></pre></div><p>这里面网络地址(192.168.10.0/24), 无线网卡(wlp5s0),虚拟bridge(vmbr1)和routing table(101) 可以根据情况进行替换</p>
 <p>到了这一步，手动配置好虚拟机的网络ip就可以正常上网了。但是我还是比较喜欢不用配置的，那么下一步就是dnsmasq的任务了。</p>
 <h2 id="配置dnsmasq">配置dnsmasq</h2>
 <p>dnsmasq是pve自带的，只要稍微配置就可以了</p>
 <p>编辑<code>/etc/dnsmasq.conf</code>替换以下两行配置。这里的vmbr1根据实际情况修改。其中192.168.10.50为ip池起始地址,192.168.10.200为ip池结束地址,255.255.255.0为网络掩码,72h为dhcp租约有效期</p>
-<pre tabindex="0"><code>interface=vmbr1
-dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
-</code></pre></article>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">interface<span style="color:#f92672">=</span>vmbr1
+dhcp-range<span style="color:#f92672">=</span>192.168.10.50,192.168.10.200,255.255.255.0,72h
+</code></pre></div></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
