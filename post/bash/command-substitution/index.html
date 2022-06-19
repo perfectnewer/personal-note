@@ -20,7 +20,7 @@
   <link href="//c.disquscdn.com" rel="dns-prefetch">
   
   
-  <link href="//hm.baidu.com" rel="dns-prefetch">
+  
 
   
 
@@ -47,7 +47,7 @@ bash中有两种命令替换的格式 `...` 和 $(...)
   <meta property="og:description" content="做灰度系统的时候，用到了nginx。在创建docker镜像的时候需要根据参数去渲染nginx配置。 简单的使用sed去达到这个目的，不幸的遇到了bash命令替换的问题。
 bash中有两种命令替换的格式 `...` 和 $(...)
 ">
-  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/bash/command-substitution/">
+  <meta property="og:url" content="/post/bash/command-substitution/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -56,7 +56,7 @@ bash中有两种命令替换的格式 `...` 和 $(...)
 <meta name="generator" content="Hugo 0.92.2">
 
 
-<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/bash/command-substitution/">
+<link rel="canonical" href="/post/bash/command-substitution/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -81,20 +81,20 @@ bash中有两种命令替换的格式 `...` 和 $(...)
 <meta name='msapplication-navbutton-color' content="#02b875">
 <meta name="msapplication-TileColor" content="#02b875">
 <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
-<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
-<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+<link rel="manifest" href="/manifest.json">
 
 
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
+<link rel="preload" href="/styles/main-rendered.min.css" as="style">
 
 
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
+<link rel="preload" href="/images/avatar.png" as="image">
+<link rel="preload" href="/images/grey-prism.svg" as="image">
 
 
 <style>
@@ -102,7 +102,7 @@ bash中有两种命令替换的格式 `...` 和 $(...)
     background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
   }
 </style>
-<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
+<link rel="stylesheet" href="/styles/main-rendered.min.css">
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -144,9 +144,9 @@ bash中有两种命令替换的格式 `...` 和 $(...)
     
     
   <header class="site-header">
-  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
+  <a href=""><img class="avatar" src="/images/avatar.png" alt="Avatar"></a>
   
-  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
+  <h2 class="title"><a href="">simon&#39;s site</a></h2>
   
   <p class="subtitle">~ the world is so great ~</p>
   <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
@@ -163,29 +163,43 @@ bash中有两种命令替换的格式 `...` 和 $(...)
         <li class="menu-item
           
           
-          ">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
+           is-active">
+          <a href="/post/">Home</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/archive/">Archive</a>
+          <a href="/post/">Post</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/about/">About</a>
+          <a href="/archive">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
+          <a href="/about">About</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="/links/">Links</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="/tags/">Tags</a>
         </li>
       
     </ul>
@@ -209,6 +223,7 @@ bash中有两种命令替换的格式 `...` 和 $(...)
       <h1 class="post-title">Bash 命令替换</h1>
       <p class="post-meta">@Simon Wei · Sep 12, 2019 · 1 min read</p>
     </header>
+    
     <article class="post-content"><p>做灰度系统的时候，用到了nginx。在创建docker镜像的时候需要根据参数去渲染nginx配置。
 简单的使用sed去达到这个目的，不幸的遇到了bash命令替换的问题。</p>
 <p>bash中有两种命令替换的格式 <code>`...`</code> 和 <code>$(...)</code></p>
@@ -252,7 +267,7 @@ The remaining content of your post.</p></article>
       
       <ul class="post-tags">
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/bash"><span class="tag">Bash</span></a></li>
+          <li><a href="/tags/bash"><span class="tag">Bash</span></a></li>
         
       </ul>
       
@@ -274,7 +289,7 @@ The remaining content of your post.</p></article>
             return;
         }
         var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "simon-7" + '.disqus.com/embed.js';
+        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
@@ -284,6 +299,32 @@ The remaining content of your post.</p></article>
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Thu Sep 12, 2019 </h4>
+      <h5 id="wordcount"> 106 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="tagsbash">bash</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="/post/hardware/mother-ph1-header/"> 主板ph接口介绍</a>
+        
+        
+          <a class="next" href="/post/hardware/acrh17/"> rt-acrh17</a>
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
   <p>© 2017-2022 simon&#39;s site</p>
@@ -326,7 +367,7 @@ The remaining content of your post.</p></article>
 
 
 
-<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
+<script src="/scripts/index.min.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -340,16 +381,6 @@ The remaining content of your post.</p></article>
 
 
 
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?8467334201490ae35c81ff7d32d009ff";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 
 
 

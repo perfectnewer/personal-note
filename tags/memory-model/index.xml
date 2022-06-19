@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>memory model on simon&#39;s site</title>
-    <link>https://perfectnewer.github.io/personal-note/tags/memory-model/</link>
+    <link>/tags/memory-model/</link>
     <description>Recent content in memory model on simon&#39;s site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Fri, 20 Sep 2019 23:56:44 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/memory-model/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Sep 2019 23:56:44 +0800</lastBuildDate><atom:link href="/tags/memory-model/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>内存模型--对go内存模型深入展开</title>
-      <link>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</link>
+      <link>/post/hardware/memory-model/</link>
       <pubDate>Fri, 20 Sep 2019 23:56:44 +0800</pubDate>
       
-      <guid>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</guid>
+      <guid>/post/hardware/memory-model/</guid>
       <description>&lt;p&gt;最近复习，遇到go内存模型的问题，心中一直以为硬件是会保证缓存和内存一致性的。不过看了不少例子有很多困惑，关于happend before之外的困惑。之后就又查了不少硬件内存模型的文章。这里就记录一下一些不错的文章，再对几个例子做一些硬件体系上的汇总，不再详细说明go的内存模型了，毕竟关于go内存模型的文章有很多。&lt;/p&gt;</description>
     </item>
     

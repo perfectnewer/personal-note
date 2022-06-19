@@ -20,7 +20,7 @@
   <link href="//c.disquscdn.com" rel="dns-prefetch">
   
   
-  <link href="//hm.baidu.com" rel="dns-prefetch">
+  
 
   
 
@@ -44,7 +44,7 @@
   <meta property="og:title" content="pve multi bridge: nat for Wlan and bridge for ethernet">
   <meta property="og:description" content="本文主要介绍了pve在两个外部网络的情况下，使用两个bridge网络的方案。有线网络使用桥接模式，无线网络使用nat模式。
 ">
-  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/">
+  <meta property="og:url" content="/post/pve/nat-wlan/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +53,7 @@
 <meta name="generator" content="Hugo 0.92.2">
 
 
-<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/">
+<link rel="canonical" href="/post/pve/nat-wlan/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -78,20 +78,20 @@
 <meta name='msapplication-navbutton-color' content="#02b875">
 <meta name="msapplication-TileColor" content="#02b875">
 <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
-<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
-<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+<link rel="manifest" href="/manifest.json">
 
 
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
+<link rel="preload" href="/styles/main-rendered.min.css" as="style">
 
 
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
-<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
+<link rel="preload" href="/images/avatar.png" as="image">
+<link rel="preload" href="/images/grey-prism.svg" as="image">
 
 
 <style>
@@ -99,7 +99,7 @@
     background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
   }
 </style>
-<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
+<link rel="stylesheet" href="/styles/main-rendered.min.css">
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -141,9 +141,9 @@
     
     
   <header class="site-header">
-  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
+  <a href=""><img class="avatar" src="/images/avatar.png" alt="Avatar"></a>
   
-  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
+  <h2 class="title"><a href="">simon&#39;s site</a></h2>
   
   <p class="subtitle">~ the world is so great ~</p>
   <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
@@ -160,29 +160,43 @@
         <li class="menu-item
           
           
-          ">
-          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
+           is-active">
+          <a href="/post/">Home</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/archive/">Archive</a>
+          <a href="/post/">Post</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/about/">About</a>
+          <a href="/archive">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
+          <a href="/about">About</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="/links/">Links</a>
+        </li>
+      
+        <li class="menu-item
+          
+          
+          ">
+          <a href="/tags/">Tags</a>
         </li>
       
     </ul>
@@ -206,6 +220,7 @@
       <h1 class="post-title">pve multi bridge: nat for Wlan and bridge for ethernet</h1>
       <p class="post-meta">@Simon Wei · Jun 19, 2022 · 1 min read</p>
     </header>
+    
     <article class="post-content"><p>本文主要介绍了pve在两个外部网络的情况下，使用两个bridge网络的方案。有线网络使用桥接模式，无线网络使用nat模式。</p>
 <h2 id="前言">前言</h2>
 <p>网上有很多pve使用nat和桥接网络上网的设置。但是呢，我是有一个有线网外加一个无线网。一个长城一个移动，期望一些虚拟机走无线网，一些走有线网。几乎没有找到一个完整的可以配置一个桥接网络和一个nat网络使用wifi的方案。还好有耐心最终成功了。
@@ -283,9 +298,9 @@ dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
       
       <ul class="post-tags">
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/pve"><span class="tag">Pve</span></a></li>
+          <li><a href="/tags/pve"><span class="tag">Pve</span></a></li>
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/nat"><span class="tag">Nat</span></a></li>
+          <li><a href="/tags/nat"><span class="tag">Nat</span></a></li>
         
       </ul>
       
@@ -307,7 +322,7 @@ dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
             return;
         }
         var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "simon-7" + '.disqus.com/embed.js';
+        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
@@ -317,6 +332,32 @@ dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Sun Jun 19, 2022 </h4>
+      <h5 id="wordcount"> 204 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="tagspve">pve</a> </li>
+      
+        <li> <a href="tagsnat">nat</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
+        
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
   <p>© 2017-2022 simon&#39;s site</p>
@@ -359,7 +400,7 @@ dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
 
 
 
-<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
+<script src="/scripts/index.min.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -373,16 +414,6 @@ dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
 
 
 
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?8467334201490ae35c81ff7d32d009ff";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 
 
 
