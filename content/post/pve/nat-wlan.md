@@ -30,13 +30,13 @@ debian连接无线的工具有很多，可以参考官方wiki: [debian wifi](htt
 
 ### 安装
 
-```
+```bash
 # apt install connman
 ```
 
 ### 修改配置。不然connman自带的dns server会合dnsmasq冲突
 
-```
+```bash
 # mkdir -p /etc/systemd/system/connman.service.d/
 # cat << EOF >> /etc/systemd/system/connman.service.d/disable_dns_proxy.conf
 [Service]
@@ -49,7 +49,7 @@ EOF
 
 ### 连接无线
 
-```
+```bash
 $ connmanctl 
 connmanctl> enable wifi
 connmanctl> scan wifi 
@@ -76,7 +76,7 @@ connmanctl> quit
 
 在`/etc/network/interfaces`中添加
 
-```
+```bash
 auto vmbr1
 iface vmbr1 inet static
     address 192.168.10.1/24
@@ -92,7 +92,7 @@ vmbr1是虚拟bridge的名字，也可以使用其他的。配置的网络是192
 ## 配置iptables和路由规则
 
 文件`/root/scripts/iptables.config.sh`内容
-```
+```bash
 iptables -t nat -A POSTROUTING -s '192.168.10.0/24' -o wlp5s0  -j MASQUERADE
 iptables -t raw -I PREROUTING -i fwbr+ -j CT --zone 1  # 参考https://pve.proxmox.com/wiki/Network_Configuration
 ip route add default via 192.168.1.1 dev wlp5s0 table 101
@@ -112,7 +112,7 @@ ip route flush cache
 dnsmasq是pve自带的，只要稍微配置就可以了
 
 编辑`/etc/dnsmasq.conf`替换以下两行配置。这里的vmbr1根据实际情况修改。其中192.168.10.50为ip池起始地址,192.168.10.200为ip池结束地址,255.255.255.0为网络掩码,72h为dhcp租约有效期
-```
+```bash
 interface=vmbr1
 dhcp-range=192.168.10.50,192.168.10.200,255.255.255.0,72h
 ```
