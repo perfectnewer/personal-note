@@ -2,36 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>go on simon&#39;s site</title>
-    <link>/tags/go/</link>
+    <link>https://perfectnewer.github.io/personal-note/tags/go/</link>
     <description>Recent content in go on simon&#39;s site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Fri, 20 Sep 2019 23:56:44 +0800</lastBuildDate><atom:link href="/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Sep 2019 23:56:44 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/go/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>内存模型--对go内存模型深入展开</title>
-      <link>/post/hardware/memory-model/</link>
+      <link>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</link>
       <pubDate>Fri, 20 Sep 2019 23:56:44 +0800</pubDate>
       
-      <guid>/post/hardware/memory-model/</guid>
+      <guid>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</guid>
       <description>&lt;p&gt;最近复习，遇到go内存模型的问题，心中一直以为硬件是会保证缓存和内存一致性的。不过看了不少例子有很多困惑，关于happend before之外的困惑。之后就又查了不少硬件内存模型的文章。这里就记录一下一些不错的文章，再对几个例子做一些硬件体系上的汇总，不再详细说明go的内存模型了，毕竟关于go内存模型的文章有很多。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Build Go for Armv7l</title>
-      <link>/post/go/build-go-for-armv7l/</link>
+      <link>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</link>
       <pubDate>Thu, 19 Sep 2019 11:49:22 +0800</pubDate>
       
-      <guid>/post/go/build-go-for-armv7l/</guid>
+      <guid>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</guid>
       <description>&lt;p&gt;go1.13发布了，看module管理也更方便，准备转战go1.13。对于我的nanopi是armv7l的，官方只有armv6l,想着编译一个armv7l的自用。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>一种合理组织go项目结构的方案</title>
-      <link>/post/go/structure/</link>
+      <link>https://perfectnewer.github.io/personal-note/post/go/structure/</link>
       <pubDate>Wed, 27 Feb 2019 12:14:58 +0800</pubDate>
       
-      <guid>/post/go/structure/</guid>
+      <guid>https://perfectnewer.github.io/personal-note/post/go/structure/</guid>
       <description>&lt;p&gt;之前有看到一种感觉比较合理的组织go项目结构的方案，现在重新整理记录一下。&lt;/p&gt;
 &lt;h3 id=&#34;为什么要遵循一定的结构呢&#34;&gt;为什么要遵循一定的结构呢&lt;/h3&gt;
 &lt;p&gt;总的来讲，小的项目或者说自己的一些玩具项目确实没有必要。但是当项目越来越大，功能越来越多，依赖和被依赖的情况也越来越多的时候，合理的组织项目结构在维护和使用上会有很多好处。&lt;/p&gt;</description>

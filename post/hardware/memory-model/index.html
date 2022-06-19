@@ -20,7 +20,7 @@
   <link href="//c.disquscdn.com" rel="dns-prefetch">
   
   
-  
+  <link href="//hm.baidu.com" rel="dns-prefetch">
 
   
 
@@ -44,7 +44,7 @@
   <meta property="og:title" content="内存模型--对go内存模型深入展开">
   <meta property="og:description" content="最近复习，遇到go内存模型的问题，心中一直以为硬件是会保证缓存和内存一致性的。不过看了不少例子有很多困惑，关于happend before之外的困惑。之后就又查了不少硬件内存模型的文章。这里就记录一下一些不错的文章，再对几个例子做一些硬件体系上的汇总，不再详细说明go的内存模型了，毕竟关于go内存模型的文章有很多。
 ">
-  <meta property="og:url" content="/post/hardware/memory-model/">
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +53,7 @@
 <meta name="generator" content="Hugo 0.92.2">
 
 
-<link rel="canonical" href="/post/hardware/memory-model/">
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -78,20 +78,20 @@
 <meta name='msapplication-navbutton-color' content="#02b875">
 <meta name="msapplication-TileColor" content="#02b875">
 <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<link rel="icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
-<link rel="icon" sizes="192x192" href="/icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="/icons/icon-152x152.png">
-<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
+<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
 
 
-<link rel="preload" href="/styles/main-rendered.min.css" as="style">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
 
 
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
-<link rel="preload" href="/images/avatar.png" as="image">
-<link rel="preload" href="/images/grey-prism.svg" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
 
 
 <style>
@@ -99,7 +99,7 @@
     background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
   }
 </style>
-<link rel="stylesheet" href="/styles/main-rendered.min.css">
+<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -141,9 +141,9 @@
     
     
   <header class="site-header">
-  <a href=""><img class="avatar" src="/images/avatar.png" alt="Avatar"></a>
+  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
   
-  <h2 class="title"><a href="">simon&#39;s site</a></h2>
+  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
   
   <p class="subtitle">~ the world is so great ~</p>
   <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
@@ -161,42 +161,42 @@
           
           
            is-active">
-          <a href="/post/">Home</a>
+          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/post/">Post</a>
+          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/archive">Archive</a>
+          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/about">About</a>
+          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/links/">Links</a>
+          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/tags/">Tags</a>
+          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
         </li>
       
     </ul>
@@ -308,7 +308,7 @@ detected 20 run times 60790
 <li>x86：可以。原因是什么呢，当线程1和2运行在两个核心的时候，在cpu的流水线内部，x和r1，y和r2的顺序是无法保证的，是否和上面1的例子冲突了呢？并没有，cpu会保证输出结果的一致性，但不保证执行顺序一致。这里r1获取y的操作结果会排在x获取1之后，但是因为执行乱序的原因，两个核心分别先执行r1和r2的赋值，再执行x和y的赋值，那么结果就会是r1 == r2 == 0。</li>
 </ul>
 <p>下面来个图示：</p>
-<p><img src="/media/posts/memory-model-example.png" alt="eg"></p>
+<p><img src="https://perfectnewer.github.io/personal-note/media/posts/memory-model-example.png" alt="eg"></p>
 <p><a href="http://preshing.com/files/ordering.zip">一份c++示例代码</a></p>
 <p>此时再返回到go内存模型，这个时候就已经是语言层面提供的内存一致性保证了（由编译器保证），脱离了硬件层面的差异。总之，Don&rsquo;t be clever，写代码老老实实把可能会并发读写的变量串行化访问就好了。</p>
 <p>参考文章:</p>
@@ -322,9 +322,9 @@ detected 20 run times 60790
       
       <ul class="post-tags">
         
-          <li><a href="/tags/go"><span class="tag">Go</span></a></li>
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/go"><span class="tag">Go</span></a></li>
         
-          <li><a href="/tags/memory-model"><span class="tag">Memory Model</span></a></li>
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/memory-model"><span class="tag">Memory Model</span></a></li>
         
       </ul>
       
@@ -367,19 +367,19 @@ detected 20 run times 60790
     
     <ul id="tags">
       
-        <li> <a href="tagsgo">go</a> </li>
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagsgo">go</a> </li>
       
-        <li> <a href="tagsmemory-model">memory model</a> </li>
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagsmemory-model">memory model</a> </li>
       
     </ul>
     
     </div>
     <div>
         
-          <a class="previous" href="/post/go/build-go-for-armv7l/"> Build Go for Armv7l</a>
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/"> Build Go for Armv7l</a>
         
         
-          <a class="next" href="/post/python/tornado-coroutine/"> Tornado Coroutine</a>
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/"> Tornado Coroutine</a>
         
     </div>
 </aside>
@@ -426,7 +426,7 @@ detected 20 run times 60790
 
 
 
-<script src="/scripts/index.min.js"></script>
+<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -440,6 +440,16 @@ detected 20 run times 60790
 
 
 
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8467334201490ae35c81ff7d32d009ff";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 
 
 

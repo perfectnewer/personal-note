@@ -20,7 +20,7 @@
   <link href="//c.disquscdn.com" rel="dns-prefetch">
   
   
-  
+  <link href="//hm.baidu.com" rel="dns-prefetch">
 
   
 
@@ -44,7 +44,7 @@
   <meta property="og:title" content="Tornado Coroutine">
   <meta property="og:description" content="介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner
 关系图示 &#43;---------------------------------&#43; |IOLoop | | | | &#43;----------------------------&#43; | | |Runner | | | | | | | | &#43;----------------------&#43; | | | | | gen.Task | | | | | | | | | | | | &#43;------------&#43; | | | | | | | user func | | | | | | | &#43;------------&#43; | | | | | &#43;----------------------&#43; | | | &#43;----------------------------&#43; | &#43;---------------------------------&#43; gen.">
-  <meta property="og:url" content="/post/python/tornado-coroutine/">
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +53,7 @@
 <meta name="generator" content="Hugo 0.92.2">
 
 
-<link rel="canonical" href="/post/python/tornado-coroutine/">
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -78,20 +78,20 @@
 <meta name='msapplication-navbutton-color' content="#02b875">
 <meta name="msapplication-TileColor" content="#02b875">
 <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
-<link rel="icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
-<link rel="icon" sizes="192x192" href="/icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="/icons/icon-152x152.png">
-<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="https://perfectnewer.github.io/personal-note/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://perfectnewer.github.io/personal-note/icons/icon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://perfectnewer.github.io/personal-note/icons/icon-32x32.png">
+<link rel="icon" sizes="192x192" href="https://perfectnewer.github.io/personal-note/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="https://perfectnewer.github.io/personal-note/icons/icon-152x152.png">
+<link rel="manifest" href="https://perfectnewer.github.io/personal-note/manifest.json">
 
 
-<link rel="preload" href="/styles/main-rendered.min.css" as="style">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css" as="style">
 
 
 <link rel="preload" href="https://fonts.googleapis.com/css?family=Lobster" as="style">
-<link rel="preload" href="/images/avatar.png" as="image">
-<link rel="preload" href="/images/grey-prism.svg" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/avatar.png" as="image">
+<link rel="preload" href="https://perfectnewer.github.io/personal-note/images/grey-prism.svg" as="image">
 
 
 <style>
@@ -99,7 +99,7 @@
     background: rgb(244, 243, 241) url('/images/grey-prism.svg') repeat fixed;
   }
 </style>
-<link rel="stylesheet" href="/styles/main-rendered.min.css">
+<link rel="stylesheet" href="https://perfectnewer.github.io/personal-note/styles/main-rendered.min.css">
 
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lobster">
@@ -141,9 +141,9 @@
     
     
   <header class="site-header">
-  <a href=""><img class="avatar" src="/images/avatar.png" alt="Avatar"></a>
+  <a href="https://perfectnewer.github.io/personal-note/"><img class="avatar" src="https://perfectnewer.github.io/personal-note/images/avatar.png" alt="Avatar"></a>
   
-  <h2 class="title"><a href="">simon&#39;s site</a></h2>
+  <h2 class="title"><a href="https://perfectnewer.github.io/personal-note/">simon&#39;s site</a></h2>
   
   <p class="subtitle">~ the world is so great ~</p>
   <button class="menu-toggle" type="button" aria-label="Main Menu" aria-expanded="false" tab-index="0">
@@ -161,42 +161,42 @@
           
           
            is-active">
-          <a href="/post/">Home</a>
+          <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/post/">Post</a>
+          <a href="https://perfectnewer.github.io/personal-note/post/">Post</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/archive">Archive</a>
+          <a href="https://perfectnewer.github.io/personal-note/archive">Archive</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/about">About</a>
+          <a href="https://perfectnewer.github.io/personal-note/about">About</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/links/">Links</a>
+          <a href="https://perfectnewer.github.io/personal-note/links/">Links</a>
         </li>
       
         <li class="menu-item
           
           
           ">
-          <a href="/tags/">Tags</a>
+          <a href="https://perfectnewer.github.io/personal-note/tags/">Tags</a>
         </li>
       
     </ul>
@@ -806,10 +806,10 @@
     </div>
     <div>
         
-          <a class="previous" href="/post/hardware/memory-model/"> 内存模型--对go内存模型深入展开</a>
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/"> 内存模型--对go内存模型深入展开</a>
         
         
-          <a class="next" href="/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
         
     </div>
 </aside>
@@ -856,7 +856,7 @@
 
 
 
-<script src="/scripts/index.min.js"></script>
+<script src="https://perfectnewer.github.io/personal-note/scripts/index.min.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
@@ -870,6 +870,16 @@
 
 
 
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8467334201490ae35c81ff7d32d009ff";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 
 
 

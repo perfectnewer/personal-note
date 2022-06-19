@@ -2,114 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/links/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/links/</loc>
     <lastmod>2021-09-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/tags/nat/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/nat/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>/post/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>/tags/pve/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/pve/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>/post/pve/nat-wlan/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>/tags/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>/tags/multiprocessing/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/multiprocessing/</loc>
     <lastmod>2021-09-19T14:17:14+08:00</lastmod>
   </url><url>
-    <loc>/tags/python/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/python/</loc>
     <lastmod>2021-09-19T14:17:14+08:00</lastmod>
   </url><url>
-    <loc>/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/</loc>
     <lastmod>2021-09-19T14:17:14+08:00</lastmod>
   </url><url>
-    <loc>/post/python/tornado-coroutine/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/</loc>
     <lastmod>2020-04-27T15:18:20+08:00</lastmod>
   </url><url>
-    <loc>/tags/go/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/go/</loc>
     <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url><url>
-    <loc>/tags/memory-model/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/memory-model/</loc>
     <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url><url>
-    <loc>/post/hardware/memory-model/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/hardware/memory-model/</loc>
     <lastmod>2019-09-20T23:56:44+08:00</lastmod>
   </url><url>
-    <loc>/post/go/build-go-for-armv7l/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/</loc>
     <lastmod>2019-09-19T11:49:22+08:00</lastmod>
   </url><url>
-    <loc>/tags/hardware/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/hardware/</loc>
     <lastmod>2019-09-17T17:48:48+08:00</lastmod>
   </url><url>
-    <loc>/tags/router/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/router/</loc>
     <lastmod>2019-09-17T17:48:48+08:00</lastmod>
   </url><url>
-    <loc>/tags/rt-acrh17/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/rt-acrh17/</loc>
     <lastmod>2019-09-17T17:48:48+08:00</lastmod>
   </url><url>
-    <loc>/post/hardware/acrh17/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/hardware/acrh17/</loc>
     <lastmod>2019-09-17T17:48:48+08:00</lastmod>
   </url><url>
-    <loc>/tags/bash/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/bash/</loc>
     <lastmod>2019-09-12T15:32:23+08:00</lastmod>
   </url><url>
-    <loc>/post/bash/command-substitution/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/bash/command-substitution/</loc>
     <lastmod>2019-09-12T15:32:23+08:00</lastmod>
   </url><url>
-    <loc>/tags/motherboard/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/motherboard/</loc>
     <lastmod>2019-09-10T12:33:08+08:00</lastmod>
   </url><url>
-    <loc>/tags/ph-header/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/ph-header/</loc>
     <lastmod>2019-09-10T12:33:08+08:00</lastmod>
   </url><url>
-    <loc>/post/hardware/mother-ph1-header/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/</loc>
     <lastmod>2019-09-10T12:33:08+08:00</lastmod>
   </url><url>
-    <loc>/post/hardware/mother-header/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/hardware/mother-header/</loc>
     <lastmod>2019-09-10T12:25:19+08:00</lastmod>
   </url><url>
-    <loc>/post/hardware/samba/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/hardware/samba/</loc>
     <lastmod>2019-09-10T11:05:01+08:00</lastmod>
   </url><url>
-    <loc>/tags/samba/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/samba/</loc>
     <lastmod>2019-09-10T11:05:01+08:00</lastmod>
   </url><url>
-    <loc>/post/go/tips/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/go/tips/</loc>
     <lastmod>2019-09-10T11:01:04+08:00</lastmod>
   </url><url>
-    <loc>/tags/go-tips/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/go-tips/</loc>
     <lastmod>2019-09-10T11:01:04+08:00</lastmod>
   </url><url>
-    <loc>/tags/git/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/git/</loc>
     <lastmod>2019-09-09T14:02:50+08:00</lastmod>
   </url><url>
-    <loc>/tags/submodule/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/submodule/</loc>
     <lastmod>2019-09-09T14:02:50+08:00</lastmod>
   </url><url>
-    <loc>/post/git/rm-submodule/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/git/rm-submodule/</loc>
     <lastmod>2019-09-09T14:02:50+08:00</lastmod>
   </url><url>
-    <loc>/archive/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/archive/</loc>
     <lastmod>2019-09-08T21:46:31+08:00</lastmod>
   </url><url>
-    <loc>/about/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/about/</loc>
     <lastmod>2019-09-08T20:45:11+08:00</lastmod>
   </url><url>
-    <loc>/tags/structure/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/structure/</loc>
     <lastmod>2019-02-27T12:14:58+08:00</lastmod>
   </url><url>
-    <loc>/post/go/structure/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/post/go/structure/</loc>
     <lastmod>2019-02-27T12:14:58+08:00</lastmod>
   </url><url>
-    <loc>/categories/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/categories/</loc>
   </url>
 </urlset>
