@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
 
   
-  <title>Go Tips</title>
+  <title>Python2 pandas import error on ubuntu22</title>
 
   
   
@@ -25,26 +25,26 @@
   
 
   
-  
-  <meta name="description" content="记录一些go使用过程中的一些小技巧。
- context ">
+  <meta name="author" content="Simon Wei">
+  <meta name="description" content="pandas/lib.so: undefined symbol: is_complex_object
+">
 
   
   
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@gohugoio">
-    <meta name="twitter:title" content="Go Tips">
-    <meta name="twitter:description" content="记录一些go使用过程中的一些小技巧。
- context ">
+    <meta name="twitter:title" content="Python2 pandas import error on ubuntu22">
+    <meta name="twitter:description" content="pandas/lib.so: undefined symbol: is_complex_object
+">
     <meta name="twitter:image" content="/images/avatar.png">
   
 
   
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Go Tips">
-  <meta property="og:description" content="记录一些go使用过程中的一些小技巧。
- context ">
-  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/go/tips/">
+  <meta property="og:title" content="Python2 pandas import error on ubuntu22">
+  <meta property="og:description" content="pandas/lib.so: undefined symbol: is_complex_object
+">
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +53,7 @@
 <meta name="generator" content="Hugo 0.92.2" />
 
 
-<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/go/tips/">
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -225,74 +225,54 @@
 
   <section class="main post-detail">
     <header class="post-header">
-      <h1 class="post-title">Go Tips</h1>
-      <p class="post-meta">@Simon Wei · Sep 10, 2019 · 68 Words · 1 min read</p>
+      <h1 class="post-title">Python2 pandas import error on ubuntu22</h1>
+      <p class="post-meta">@Simon Wei · Jun 28, 2022 · 134 Words · 1 min read</p>
     </header>
     
-    <article class="post-content"><p>记录一些go使用过程中的一些小技巧。</p>
-<ul>
-<li>context</li>
-</ul>
-<h2 id="context">context</h2>
-<blockquote>
-<p>context的使用也有一定负面影响，比如会创建过多的对象。</p>
-</blockquote>
-<ul>
-<li>不要把Context放在结构体中，要以参数的方式传递，parent Context一般为context.Background</li>
-<li>应该要把Context作为第一个参数传递给入口请求和出口请求链路上的每一个函数，放在第一位，变量名建议都统一，如ctx。</li>
-<li>给一个函数方法传递Context的时候，不要传递nil，否则在tarce追踪的时候，trace链路就会断开。</li>
-<li>Context不应该作为扩展参数的途径，不能为了方便把上下文链路无关的参数放进Context，其Value的相关方法只能传递必须的参数。</li>
-<li>Context是线程安全的，可以放心的在多个goroutine中传递</li>
-<li>可以把一个 Context 对象传递给任意个数的 gorotuine，对它执行 取消 操作时，所有 goroutine 都会接收到取消信号。</li>
-</ul>
-<h2 id="struct-with-syncmutex">struct with sync.Mutex</h2>
-<p>如果你的结构体包含<code>sync.Mutex</code>属性，或者内嵌了<code>sync.Mutex</code>，那么这个struct的函数receiver应该定义为指针类型，以防函数调用复制了<code>sync.Mutex</code>发送非预期的影响。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;fmt&#34;</span>
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;sync&#34;</span>
-<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;time&#34;</span>
-
-<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">tMutext</span> <span style="color:#66d9ef">struct</span> {
-	<span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Mutex</span>
-}
-
-<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">tMutext</span>) <span style="color:#a6e22e">LOne</span>() {
-	<span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Lock</span>()
-	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Unlock</span>()
-	<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
-}
-
-<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">tMutext</span>) <span style="color:#a6e22e">LTwo</span>() {
-	<span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Lock</span>()
-	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Unlock</span>()
-	<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
-}
-
-<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">tMutext</span>{}
-	<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Lock</span>()
-	<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">LOne</span>()
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;vim-go&#34;</span>)
-}
-</code></pre></div><h2 id="简化函数名称">简化函数名称</h2>
-<p>当一个package的函数返回值是pkg.Pkg,*pkg.Pkg，函数名可以省略类型名而不会让用户困惑。</p></article>
+    <article class="post-content"><p>pandas/lib.so: undefined symbol: is_complex_object</p>
+<p>先啰嗦两句，起因是最近更新到了ubuntu22，然后我司的python2项目安装了python2后无法启动。报错如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
+Traceback <span style="color:#f92672">(</span>most recent call last<span style="color:#f92672">)</span>:
+  File <span style="color:#e6db74">&#34;main.py&#34;</span>, line 10, in &lt;module&gt;
+    import urls
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/urls.py&#34;</span>, line 5, in &lt;module&gt;
+    import auth.views
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/auth/views.py&#34;</span>, line 18, in &lt;module&gt;
+    from admin.admin_utils import CommerceEmailContactsDao
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/admin/admin_utils.py&#34;</span>, line 19, in &lt;module&gt;
+    from mailtask.utils import _base_get_model_data as base_get_model_data
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/mailtask/utils.py&#34;</span>, line 19, in &lt;module&gt;
+    from wj_tasks.tasks import send_wx_audit_msg
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/tasks.py&#34;</span>, line 8, in &lt;module&gt;
+    from wj_tasks.all_tasks.cron_tasks import *
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/all_tasks/cron_tasks.py&#34;</span>, line 7, in &lt;module&gt;
+    from tools.notify_new_member_rspd_count import main as notify_new_member_rspd_count_script
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/tools/notify_new_member_rspd_count.py&#34;</span>, line 12, in &lt;module&gt;
+    from report import report_utils
+  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/report/report_utils.py&#34;</span>, line 17, in &lt;module&gt;
+    import pandas as pd
+  File <span style="color:#e6db74">&#34;/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/__init__.py&#34;</span>, line 6, in &lt;module&gt;
+    from . import hashtable, tslib, lib
+ImportError: /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
+</code></pre></div><p>各种重装，重新build from source都无法解决。最后终于在相似的问题中找到了解决方案。主要原因是ubuntu 22中gcc默认使用新的标准，导致pands中inline函数编译不正确。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">CFLAGS<span style="color:#f92672">=</span>-fgnu89-inline pip install --force-reinstall --no-cache --only-binary :all: --global-option<span style="color:#f92672">=</span>build_ext pandas<span style="color:#f92672">==</span>0.11.0
+</code></pre></div><!-- raw HTML omitted --></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/go-tips"><span class="tag">Go Tips</span></a></li>
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/python3"><span class="tag">Python3</span></a></li>
+        
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/pandas"><span class="tag">Pandas</span></a></li>
         
       </ul>
       
       
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/git/rm-submodule/"> 简便删除git submodule的方法</a>
+        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/"> pve multi bridge: nat for Wlan and bridge for ethernet</a>
       
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/hardware/samba/"> Samba</a>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1022</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
       </p>
     </footer>
     

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pandas on simon&#39;s site</title>
+    <link>https://perfectnewer.github.io/personal-note/tags/pandas/</link>
+    <description>Recent content in pandas on simon&#39;s site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Tue, 28 Jun 2022 22:35:50 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/pandas/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python2 pandas import error on ubuntu22</title>
+      <link>https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/</link>
+      <pubDate>Tue, 28 Jun 2022 22:35:50 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/</guid>
+      <description>&lt;p&gt;pandas/lib.so: undefined symbol: is_complex_object&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
