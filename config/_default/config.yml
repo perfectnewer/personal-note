@@ -47,6 +47,8 @@ params:
   author: "Simon Wei"
   paginate: 10
   github: "perfectnewer"
+  csdn: "perfectnewer"
+  gitee: "perfectnewer"
   seotitle: "simon's Blog"
   subtitle: "~ the world is so great ~"
   bg: "images/grey-prism.svg"
