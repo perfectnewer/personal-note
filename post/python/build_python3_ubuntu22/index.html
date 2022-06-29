@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
 
   
-  <title>Python2 pandas import error on ubuntu22</title>
+  <title>ubuntu 22.04 build python 3.x missing openssl solution</title>
 
   
   
@@ -26,25 +26,25 @@
 
   
   <meta name="author" content="Simon Wei">
-  <meta name="description" content="pandas/lib.so: undefined symbol: is_complex_object
+  <meta name="description" content="ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
 ">
 
   
   
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@gohugoio">
-    <meta name="twitter:title" content="Python2 pandas import error on ubuntu22">
-    <meta name="twitter:description" content="pandas/lib.so: undefined symbol: is_complex_object
+    <meta name="twitter:title" content="ubuntu 22.04 build python 3.x missing openssl solution">
+    <meta name="twitter:description" content="ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
 ">
     <meta name="twitter:image" content="/images/avatar.png">
   
 
   
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Python2 pandas import error on ubuntu22">
-  <meta property="og:description" content="pandas/lib.so: undefined symbol: is_complex_object
+  <meta property="og:title" content="ubuntu 22.04 build python 3.x missing openssl solution">
+  <meta property="og:description" content="ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
 ">
-  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/">
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +53,7 @@
 <meta name="generator" content="Hugo 0.92.2" />
 
 
-<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/">
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -225,53 +225,45 @@
 
   <section class="main post-detail">
     <header class="post-header">
-      <h1 class="post-title">Python2 pandas import error on ubuntu22</h1>
-      <p class="post-meta">@Simon Wei · Jun 28, 2022 · 134 Words · 1 min read</p>
+      <h1 class="post-title">ubuntu 22.04 build python 3.x missing openssl solution</h1>
+      <p class="post-meta">@Simon Wei · Jun 29, 2022 · 96 Words · 1 min read</p>
     </header>
     
-    <article class="post-content"><p>pandas/lib.so: undefined symbol: is_complex_object</p>
-<p>先啰嗦两句，起因是最近更新到了ubuntu22，然后我司的python2项目安装了python2后无法启动。报错如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
-Traceback <span style="color:#f92672">(</span>most recent call last<span style="color:#f92672">)</span>:
-  File <span style="color:#e6db74">&#34;main.py&#34;</span>, line 10, in &lt;module&gt;
-    import urls
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/urls.py&#34;</span>, line 5, in &lt;module&gt;
-    import auth.views
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/auth/views.py&#34;</span>, line 18, in &lt;module&gt;
-    from admin.admin_utils import CommerceEmailContactsDao
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/admin/admin_utils.py&#34;</span>, line 19, in &lt;module&gt;
-    from mailtask.utils import _base_get_model_data as base_get_model_data
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/mailtask/utils.py&#34;</span>, line 19, in &lt;module&gt;
-    from wj_tasks.tasks import send_wx_audit_msg
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/tasks.py&#34;</span>, line 8, in &lt;module&gt;
-    from wj_tasks.all_tasks.cron_tasks import *
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/all_tasks/cron_tasks.py&#34;</span>, line 7, in &lt;module&gt;
-    from tools.notify_new_member_rspd_count import main as notify_new_member_rspd_count_script
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/tools/notify_new_member_rspd_count.py&#34;</span>, line 12, in &lt;module&gt;
-    from report import report_utils
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/report/report_utils.py&#34;</span>, line 17, in &lt;module&gt;
-    import pandas as pd
-  File <span style="color:#e6db74">&#34;/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/__init__.py&#34;</span>, line 6, in &lt;module&gt;
-    from . import hashtable, tslib, lib
-ImportError: /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
-</code></pre></div><p>各种重装，重新build from source都无法解决。最后终于在相似的问题中找到了解决方案。主要原因是ubuntu 22中gcc默认使用新的标准，导致pands中inline函数编译不正确。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">CFLAGS<span style="color:#f92672">=</span>-fgnu89-inline pip install --force-reinstall --no-cache --only-binary :all: --global-option<span style="color:#f92672">=</span>build_ext pandas<span style="color:#f92672">==</span>0.11.0
+    <article class="post-content"><p>ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</p>
+<h3 id="error-the-python-ssl-extension-was-not-compiled-missing-the-openssl-lib">ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</h3>
+<p>ubuntu 22.04 build python 3.x error:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
+
+Please consult to the Wiki page to fix the problem.
+https://github.com/pyenv/pyenv/wiki/Common-build-problems
+
+
+BUILD FAILED <span style="color:#f92672">(</span>Ubuntu 22.04 using python-build 20180424<span style="color:#f92672">)</span>
+
+Inspect or clean up the working tree at /tmp/python-build.20220629172729.3400406
+Results logged to /tmp/python-build.20220629172729.3400406.log
+</code></pre></div><ol>
+<li>使用自己下载编译的openssl库</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-L/opt/openssl/lib -L/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib&#34;</span> CONFIGURE_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--with-openssl=/opt/openssl --enable-optimizations&#34;</span> pyenv install 3.10.4
+</code></pre></div><ol start="2">
+<li>使用brew安装的openssl库</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-Wl,-rpath,</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74">/lib -Wl,-rpath,=</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74">/lib&#34;</span> CONFIGURE_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--with-openssl=</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74"> --enable-optimizations&#34;</span> pyenv install 3.10.0
 </code></pre></div><!-- raw HTML omitted --></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/python3"><span class="tag">Python3</span></a></li>
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/build-python"><span class="tag">Build Python</span></a></li>
         
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/pandas"><span class="tag">Pandas</span></a></li>
+          <li><a href="https://perfectnewer.github.io/personal-note/tags/ubuntu"><span class="tag">Ubuntu</span></a></li>
         
       </ul>
       
       
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/"> pve multi bridge: nat for Wlan and bridge for ethernet</a>
+        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/"> Python2 pandas import error on ubuntu22</a>
       
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/"> ubuntu 22.04 build python 3.x missing openssl solution</a>
       
       <p class="post-copyright">
         © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.

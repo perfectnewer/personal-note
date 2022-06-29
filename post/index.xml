@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Tue, 28 Jun 2022 22:35:50 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 29 Jun 2022 17:28:25 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ubuntu 22.04 build python 3.x missing openssl solution</title>
+      <link>https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/</link>
+      <pubDate>Wed, 29 Jun 2022 17:28:25 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/</guid>
+      <description>&lt;p&gt;ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Python2 pandas import error on ubuntu22</title>
       <link>https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/</link>
