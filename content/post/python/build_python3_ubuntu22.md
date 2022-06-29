@@ -31,13 +31,13 @@ Results logged to /tmp/python-build.20220629172729.3400406.log
 1. 使用自己下载编译的openssl库
 
 ```bash
-LDFLAGS="-L/opt/openssl/lib -L/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib" CONFIGURE_OPTS="--with-openssl=/opt/openssl --enable-optimizations" pyenv install 3.10.4
+LDFLAGS="-L/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib" CONFIGURE_OPTS="--with-openssl=/opt/openssl --enable-optimizations" pyenv install 3.10.4
 ```
 
 2. 使用brew安装的openssl库
 
 ```bash
-LDFLAGS="-Wl,-rpath,$(brew --prefix openssl@1.1)/lib -Wl,-rpath,=$(brew --prefix openssl@1.1)/lib" CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl@1.1) --enable-optimizations" pyenv install 3.10.0
+LDFLAGS="-Wl,-rpath,=$(brew --prefix openssl@1.1)/lib" CONFIGURE_OPTS="--with-openssl=$(brew --prefix openssl@1.1) --enable-optimizations" pyenv install 3.10.0
 ```
 
 <hr style=" border:solid; width:100px; height:1px;" color=#000000 size=1">
