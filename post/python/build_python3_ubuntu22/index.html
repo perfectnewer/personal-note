@@ -226,7 +226,7 @@
   <section class="main post-detail">
     <header class="post-header">
       <h1 class="post-title">ubuntu 22.04 build python 3.x missing openssl solution</h1>
-      <p class="post-meta">@Simon Wei · Jun 29, 2022 · 96 Words · 1 min read</p>
+      <p class="post-meta">@Simon Wei · Jun 29, 2022 · 91 Words · 1 min read</p>
     </header>
     
     <article class="post-content"><p>ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</p>
@@ -245,11 +245,11 @@ Results logged to /tmp/python-build.20220629172729.3400406.log
 </code></pre></div><ol>
 <li>使用自己下载编译的openssl库</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-L/opt/openssl/lib -L/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib&#34;</span> CONFIGURE_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--with-openssl=/opt/openssl --enable-optimizations&#34;</span> pyenv install 3.10.4
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-L/opt/openssl/lib -Wl,-rpath,/opt/openssl/lib&#34;</span> CONFIGURE_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--with-openssl=/opt/openssl --enable-optimizations&#34;</span> pyenv install 3.10.4
 </code></pre></div><ol start="2">
 <li>使用brew安装的openssl库</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-Wl,-rpath,</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74">/lib -Wl,-rpath,=</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74">/lib&#34;</span> CONFIGURE_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--with-openssl=</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74"> --enable-optimizations&#34;</span> pyenv install 3.10.0
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">LDFLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-Wl,-rpath,=</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74">/lib&#34;</span> CONFIGURE_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--with-openssl=</span><span style="color:#66d9ef">$(</span>brew --prefix openssl@1.1<span style="color:#66d9ef">)</span><span style="color:#e6db74"> --enable-optimizations&#34;</span> pyenv install 3.10.0
 </code></pre></div><!-- raw HTML omitted --></article>
     <footer class="post-footer">
       
