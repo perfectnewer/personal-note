@@ -12,7 +12,7 @@ pandas/lib.so: undefined symbol: is_complex_object
 <!--more-->
 
 
-先啰嗦两句，起因是最近更新到了ubuntu22，然后我司的python2项目安装了python2后无法启动。报错如下
+先啰嗦两句，起因是最近更新到了ubuntu22，然后我司的python2项目安装了pandas后无法启动。报错如下
 
 ```bash
 /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
