@@ -2,7 +2,7 @@
 title: "pve multi bridge: nat for Wlan and bridge for ethernet"
 author: "Simon Wei"
 # cover: "/images/cover.jpg"
-tags: ["pve", "nat"]
+tags: ["pve", "nat", "hostonly", "lxc metric"]
 date: 2022-06-19T18:40:29+08:00
 draft: false
 ---

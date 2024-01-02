@@ -1,10 +1,10 @@
 ---
-title: "Hostonly"
+title: "pve 内部网络：添加hostonly网络"
 author: "Simon Wei"
 # cover: "/images/cover.jpg"
-tags: []
+tags: ["pve", "net"]
 date: 2024-01-02T17:09:28+08:00
-draft: true
+draft: false
 ---
 
 pve nat network, host only, and set metric for lxc
@@ -13,7 +13,6 @@ pve nat network, host only, and set metric for lxc
 
 [TOC]
 
-@[TOC](pve 内部网络：添加hostonly网络)
 ### 起因
 
 起初在pve添加了个container，用来跑qbittorrent和samba，用win10解压大文件的时候感觉奇慢。我的win10也是显卡直通后的虚拟机。
