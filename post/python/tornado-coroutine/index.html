@@ -50,7 +50,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.111.3">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/tornado-coroutine/">
@@ -211,22 +211,14 @@
           <a href="//github.com/perfectnewer" rel="me" title="GitHub" aria-label="GitHub">
 	    <span class="icon icon-github" aria-hidden="true"></span>
           </a>
-        </li><li class="social-item">
-        <a rel="me" href="//blog.csdn.net//perfectnewer" title="csdn" aria-label="csdn">
-          <span class="csdnIcon" aria-hidden="true"> <p>csdn</p>
-        </a>
-      </li><li class="social-item">
-        <a rel="me" href="///perfectnewer.gitee.io" title="gitee" aria-label="gitee">
-          <span class="gitee" aria-hidden="true"> <p>gitee</p>
-        </a>
-      </li></ul>
+        </li></ul>
   </nav>
 </header>
 
   <section class="main post-detail">
     <header class="post-header">
       <h1 class="post-title">Tornado Coroutine</h1>
-      <p class="post-meta">@Simon Wei · Apr 27, 2020 · 1856 Words · 9 min read</p>
+      <p class="post-meta">@Simon Wei · Apr 27, 2020 · 9 min read</p>
     </header>
     
       <nav id="TableOfContents">
@@ -247,515 +239,515 @@
     
     <article class="post-content"><p>介绍Tornado相关的几个装饰器。gen.coroutine, gen.Task, gen.Runner</p>
 <h3 id="关系图示">关系图示</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> +---------------------------------+
- |IOLoop                           |
- |                                 |
- |  +----------------------------+ |
- |  |Runner                      | |
- |  |                            | |
- |  |   +----------------------+ | |
- |  |   | gen.Task             | | |
- |  |   |                      | | |
- |  |   |       +------------+ | | |
- |  |   |       |  user func | | | |
- |  |   |       +------------+ | | |
- |  |   +----------------------+ | |
- |  +----------------------------+ |
- +---------------------------------+
-</code></pre></div><h3 id="gencoroutine">gen.coroutine</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> +---------------------------------+
+</span></span><span style="display:flex;"><span> |IOLoop                           |
+</span></span><span style="display:flex;"><span> |                                 |
+</span></span><span style="display:flex;"><span> |  +----------------------------+ |
+</span></span><span style="display:flex;"><span> |  |Runner                      | |
+</span></span><span style="display:flex;"><span> |  |                            | |
+</span></span><span style="display:flex;"><span> |  |   +----------------------+ | |
+</span></span><span style="display:flex;"><span> |  |   | gen.Task             | | |
+</span></span><span style="display:flex;"><span> |  |   |                      | | |
+</span></span><span style="display:flex;"><span> |  |   |       +------------+ | | |
+</span></span><span style="display:flex;"><span> |  |   |       |  user func | | | |
+</span></span><span style="display:flex;"><span> |  |   |       +------------+ | | |
+</span></span><span style="display:flex;"><span> |  |   +----------------------+ | |
+</span></span><span style="display:flex;"><span> |  +----------------------------+ |
+</span></span><span style="display:flex;"><span> +---------------------------------+
+</span></span></code></pre></div><h3 id="gencoroutine">gen.coroutine</h3>
 <ol>
 <li>处理返回值</li>
 <li>创建runner，运行gen.Task</li>
 <li>配合gen.Task让同步的代码呈现异步的效果</li>
 </ol>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">coroutine</span>(func):
-    <span style="color:#e6db74">&#34;&#34;&#34;Decorator for asynchronous generators.
-</span><span style="color:#e6db74">    ...
-</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-    <span style="color:#a6e22e">@functools</span><span style="color:#f92672">.</span>wraps(func)
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-        runner <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        future <span style="color:#f92672">=</span> TracebackFuture()
-
-        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;callback&#39;</span> <span style="color:#f92672">in</span> kwargs:  <span style="color:#75715e"># e.g. gen.Task(gen.coroutine(func), ....)</span>
-            callback <span style="color:#f92672">=</span> kwargs<span style="color:#f92672">.</span>pop(<span style="color:#e6db74">&#39;callback&#39;</span>)
-            IOLoop<span style="color:#f92672">.</span>current()<span style="color:#f92672">.</span>add_future(
-                future, <span style="color:#66d9ef">lambda</span> future: callback(future<span style="color:#f92672">.</span>result()))
-
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_exception</span>(typ, value, tb):
-            <span style="color:#66d9ef">try</span>:
-                <span style="color:#66d9ef">if</span> runner <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> runner<span style="color:#f92672">.</span>handle_exception(typ, value, tb):
-                    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
-            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
-                typ, value, tb <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>exc_info()
-            future<span style="color:#f92672">.</span>set_exc_info((typ, value, tb))
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
-        <span style="color:#66d9ef">with</span> ExceptionStackContext(handle_exception) <span style="color:#66d9ef">as</span> deactivate:
-            <span style="color:#66d9ef">try</span>:
-                result <span style="color:#f92672">=</span> func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
-            <span style="color:#66d9ef">except</span> (Return, <span style="color:#a6e22e">StopIteration</span>) <span style="color:#66d9ef">as</span> e:
-                result <span style="color:#f92672">=</span> getattr(e, <span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#66d9ef">None</span>)
-            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
-                deactivate()
-                future<span style="color:#f92672">.</span>set_exc_info(sys<span style="color:#f92672">.</span>exc_info())
-                <span style="color:#66d9ef">return</span> future
-            <span style="color:#66d9ef">else</span>:
-                <span style="color:#66d9ef">if</span> isinstance(result, types<span style="color:#f92672">.</span>GeneratorType):
-                    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">final_callback</span>(value):
-                        deactivate()
-                        future<span style="color:#f92672">.</span>set_result(value)
-                    runner <span style="color:#f92672">=</span> Runner(result, final_callback)
-                    runner<span style="color:#f92672">.</span>run()
-                    <span style="color:#66d9ef">return</span> future
-            deactivate()
-            future<span style="color:#f92672">.</span>set_result(result)
-        <span style="color:#66d9ef">return</span> future
-    <span style="color:#66d9ef">return</span> wrapper
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">coroutine</span>(func):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Decorator for asynchronous generators.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ...
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@functools.wraps</span>(func)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        runner <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        future <span style="color:#f92672">=</span> TracebackFuture()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;callback&#39;</span> <span style="color:#f92672">in</span> kwargs:  <span style="color:#75715e"># e.g. gen.Task(gen.coroutine(func), ....)</span>
+</span></span><span style="display:flex;"><span>            callback <span style="color:#f92672">=</span> kwargs<span style="color:#f92672">.</span>pop(<span style="color:#e6db74">&#39;callback&#39;</span>)
+</span></span><span style="display:flex;"><span>            IOLoop<span style="color:#f92672">.</span>current()<span style="color:#f92672">.</span>add_future(
+</span></span><span style="display:flex;"><span>                future, <span style="color:#66d9ef">lambda</span> future: callback(future<span style="color:#f92672">.</span>result()))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_exception</span>(typ, value, tb):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> runner <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span> <span style="color:#f92672">and</span> runner<span style="color:#f92672">.</span>handle_exception(typ, value, tb):
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                typ, value, tb <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>exc_info()
+</span></span><span style="display:flex;"><span>            future<span style="color:#f92672">.</span>set_exc_info((typ, value, tb))
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> ExceptionStackContext(handle_exception) <span style="color:#66d9ef">as</span> deactivate:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> func(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> (Return, <span style="color:#a6e22e">StopIteration</span>) <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> getattr(e, <span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                deactivate()
+</span></span><span style="display:flex;"><span>                future<span style="color:#f92672">.</span>set_exc_info(sys<span style="color:#f92672">.</span>exc_info())
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> future
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> isinstance(result, types<span style="color:#f92672">.</span>GeneratorType):
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">final_callback</span>(value):
+</span></span><span style="display:flex;"><span>                        deactivate()
+</span></span><span style="display:flex;"><span>                        future<span style="color:#f92672">.</span>set_result(value)
+</span></span><span style="display:flex;"><span>                    runner <span style="color:#f92672">=</span> Runner(result, final_callback)
+</span></span><span style="display:flex;"><span>                    runner<span style="color:#f92672">.</span>run()
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> future
+</span></span><span style="display:flex;"><span>            deactivate()
+</span></span><span style="display:flex;"><span>            future<span style="color:#f92672">.</span>set_result(result)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> future
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> wrapper
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h3 id="runner">Runner</h3>
 <ol>
 <li>运行gen.Task</li>
 <li>记录generator运行状态</li>
 </ol>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Runner</span>(object):
-    <span style="color:#e6db74">&#34;&#34;&#34;Internal implementation of `tornado.gen.engine`.
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">    Maintains information about pending callbacks and their results.
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">    ``final_callback`` is run after the generator exits.
-</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-    <span style="color:#66d9ef">def</span> __init__(self, gen, final_callback):
-        self<span style="color:#f92672">.</span>gen <span style="color:#f92672">=</span> gen            <span style="color:#75715e"># generator, gen.Task, subclass of gen.YieldPoint</span>
-        self<span style="color:#f92672">.</span>final_callback <span style="color:#f92672">=</span> final_callback   <span style="color:#75715e"># final_callback: 设置返回值到future</span>
-        self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> _null_yield_point  <span style="color:#75715e"># read-&gt;True, result-&gt;None</span>
-        self<span style="color:#f92672">.</span>pending_callbacks <span style="color:#f92672">=</span> set()
-        self<span style="color:#f92672">.</span>results <span style="color:#f92672">=</span> {}
-        self<span style="color:#f92672">.</span>running <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-        self<span style="color:#f92672">.</span>finished <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        self<span style="color:#f92672">.</span>had_exception <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">register_callback</span>(self, key):
-        <span style="color:#e6db74">&#34;&#34;&#34;Adds ``key`` to the list of callbacks.&#34;&#34;&#34;</span>
-        <span style="color:#66d9ef">if</span> key <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>pending_callbacks:
-            <span style="color:#66d9ef">raise</span> KeyReuseError(<span style="color:#e6db74">&#34;key </span><span style="color:#e6db74">%r</span><span style="color:#e6db74"> is already pending&#34;</span> <span style="color:#f92672">%</span> (key,))
-        self<span style="color:#f92672">.</span>pending_callbacks<span style="color:#f92672">.</span>add(key)
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_ready</span>(self, key):
-        <span style="color:#e6db74">&#34;&#34;&#34;Returns true if a result is available for ``key``.&#34;&#34;&#34;</span>
-        <span style="color:#66d9ef">if</span> key <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>pending_callbacks:
-            <span style="color:#66d9ef">raise</span> UnknownKeyError(<span style="color:#e6db74">&#34;key </span><span style="color:#e6db74">%r</span><span style="color:#e6db74"> is not pending&#34;</span> <span style="color:#f92672">%</span> (key,))
-        <span style="color:#66d9ef">return</span> key <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>results
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_result</span>(self, key, result):
-        <span style="color:#e6db74">&#34;&#34;&#34;Sets the result for ``key`` and attempts to resume the generator.&#34;&#34;&#34;</span>
-        self<span style="color:#f92672">.</span>results[key] <span style="color:#f92672">=</span> result
-        self<span style="color:#f92672">.</span>run()
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pop_result</span>(self, key):
-        <span style="color:#e6db74">&#34;&#34;&#34;Returns the result for ``key`` and unregisters it.&#34;&#34;&#34;</span>
-        self<span style="color:#f92672">.</span>pending_callbacks<span style="color:#f92672">.</span>remove(key)
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>results<span style="color:#f92672">.</span>pop(key)
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
-        <span style="color:#e6db74">&#34;&#34;&#34;Starts or resumes the generator, running until it reaches a
-</span><span style="color:#e6db74">        yield point that is not ready.
-</span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
-        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>running <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>finished:
-            <span style="color:#66d9ef">return</span>
-        <span style="color:#66d9ef">try</span>:
-            self<span style="color:#f92672">.</span>running <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
-                <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
-                    <span style="color:#66d9ef">try</span>:
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>yield_point<span style="color:#f92672">.</span>is_ready():
-                            <span style="color:#66d9ef">return</span>
-                        next <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>yield_point<span style="color:#f92672">.</span>get_result()
-                        self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-                    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
-                        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>exc_info()
-                <span style="color:#66d9ef">try</span>:
-                    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
-                        self<span style="color:#f92672">.</span>had_exception <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-                        exc_info <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>exc_info
-                        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-                        yielded <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>gen<span style="color:#f92672">.</span>throw(<span style="color:#f92672">*</span>exc_info)   <span style="color:#75715e"># 标准迭代器用法</span>
-                    <span style="color:#66d9ef">else</span>:
-                        yielded <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>gen<span style="color:#f92672">.</span>send(next)      <span style="color:#75715e"># 迭代器用法。generator.send(None) == generator.next()</span>
-                <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">StopIteration</span>, Return) <span style="color:#66d9ef">as</span> e:
-                    self<span style="color:#f92672">.</span>finished <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-                    self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> _null_yield_point
-                    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>pending_callbacks <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>had_exception:
-                        <span style="color:#75715e"># If we ran cleanly without waiting on all callbacks</span>
-                        <span style="color:#75715e"># raise an error (really more of a warning).  If we</span>
-                        <span style="color:#75715e"># had an exception then some callbacks may have been</span>
-                        <span style="color:#75715e"># orphaned, so skip the check in that case.</span>
-                        <span style="color:#66d9ef">raise</span> LeakedCallbackError(
-                            <span style="color:#e6db74">&#34;finished without waiting for callbacks </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span>
-                            self<span style="color:#f92672">.</span>pending_callbacks)
-                    self<span style="color:#f92672">.</span>final_callback(getattr(e, <span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#66d9ef">None</span>))    <span style="color:#75715e"># 回传运行结果</span>
-                    self<span style="color:#f92672">.</span>final_callback <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-                    <span style="color:#66d9ef">return</span>
-                <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
-                    self<span style="color:#f92672">.</span>finished <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
-                    self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> _null_yield_point
-                    <span style="color:#66d9ef">raise</span>
-                <span style="color:#66d9ef">if</span> isinstance(yielded, list):
-                    yielded <span style="color:#f92672">=</span> Multi(yielded)
-                <span style="color:#66d9ef">elif</span> isinstance(yielded, Future):
-                    yielded <span style="color:#f92672">=</span> YieldFuture(yielded)
-                <span style="color:#66d9ef">if</span> isinstance(yielded, YieldPoint):   <span style="color:#75715e"># e.g. gen.Task</span>
-                    self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> yielded
-                    <span style="color:#66d9ef">try</span>:
-                        self<span style="color:#f92672">.</span>yield_point<span style="color:#f92672">.</span>start(self)  <span style="color:#75715e"># run gen.Task</span>
-                    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
-                        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>exc_info()
-                <span style="color:#66d9ef">else</span>:
-                    self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> (BadYieldError(
-                        <span style="color:#e6db74">&#34;yielded unknown object </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (yielded,)),)
-        <span style="color:#66d9ef">finally</span>:
-            self<span style="color:#f92672">.</span>running <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">result_callback</span>(self, key):
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">inner</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-            <span style="color:#66d9ef">if</span> kwargs <span style="color:#f92672">or</span> len(args) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>:
-                result <span style="color:#f92672">=</span> Arguments(args, kwargs)
-            <span style="color:#66d9ef">elif</span> args:
-                result <span style="color:#f92672">=</span> args[<span style="color:#ae81ff">0</span>]
-            <span style="color:#66d9ef">else</span>:
-                result <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-            self<span style="color:#f92672">.</span>set_result(key, result)
-        <span style="color:#66d9ef">return</span> wrap(inner)
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_exception</span>(self, typ, value, tb):
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>running <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>finished:
-            self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> (typ, value, tb)
-            self<span style="color:#f92672">.</span>run()
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
-        <span style="color:#66d9ef">else</span>:
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Runner</span>(object):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Internal implementation of `tornado.gen.engine`.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Maintains information about pending callbacks and their results.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ``final_callback`` is run after the generator exits.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, gen, final_callback):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>gen <span style="color:#f92672">=</span> gen            <span style="color:#75715e"># generator, gen.Task, subclass of gen.YieldPoint</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>final_callback <span style="color:#f92672">=</span> final_callback   <span style="color:#75715e"># final_callback: 设置返回值到future</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> _null_yield_point  <span style="color:#75715e"># read-&gt;True, result-&gt;None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>pending_callbacks <span style="color:#f92672">=</span> set()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>results <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>running <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>finished <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>had_exception <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">register_callback</span>(self, key):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;Adds ``key`` to the list of callbacks.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> key <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>pending_callbacks:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> KeyReuseError(<span style="color:#e6db74">&#34;key </span><span style="color:#e6db74">%r</span><span style="color:#e6db74"> is already pending&#34;</span> <span style="color:#f92672">%</span> (key,))
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>pending_callbacks<span style="color:#f92672">.</span>add(key)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_ready</span>(self, key):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;Returns true if a result is available for ``key``.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> key <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>pending_callbacks:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> UnknownKeyError(<span style="color:#e6db74">&#34;key </span><span style="color:#e6db74">%r</span><span style="color:#e6db74"> is not pending&#34;</span> <span style="color:#f92672">%</span> (key,))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> key <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>results
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_result</span>(self, key, result):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;Sets the result for ``key`` and attempts to resume the generator.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>results[key] <span style="color:#f92672">=</span> result
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>run()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pop_result</span>(self, key):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;Returns the result for ``key`` and unregisters it.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>pending_callbacks<span style="color:#f92672">.</span>remove(key)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>results<span style="color:#f92672">.</span>pop(key)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;Starts or resumes the generator, running until it reaches a
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        yield point that is not ready.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>running <span style="color:#f92672">or</span> self<span style="color:#f92672">.</span>finished:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>running <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>yield_point<span style="color:#f92672">.</span>is_ready():
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>                        next <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>yield_point<span style="color:#f92672">.</span>get_result()
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>exc_info()
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>had_exception <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>                        exc_info <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>exc_info
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>                        yielded <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>gen<span style="color:#f92672">.</span>throw(<span style="color:#f92672">*</span>exc_info)   <span style="color:#75715e"># 标准迭代器用法</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                        yielded <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>gen<span style="color:#f92672">.</span>send(next)      <span style="color:#75715e"># 迭代器用法。generator.send(None) == generator.next()</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">StopIteration</span>, Return) <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>finished <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> _null_yield_point
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>pending_callbacks <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>had_exception:
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># If we ran cleanly without waiting on all callbacks</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># raise an error (really more of a warning).  If we</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># had an exception then some callbacks may have been</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># orphaned, so skip the check in that case.</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">raise</span> LeakedCallbackError(
+</span></span><span style="display:flex;"><span>                            <span style="color:#e6db74">&#34;finished without waiting for callbacks </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span>
+</span></span><span style="display:flex;"><span>                            self<span style="color:#f92672">.</span>pending_callbacks)
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>final_callback(getattr(e, <span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#66d9ef">None</span>))    <span style="color:#75715e"># 回传运行结果</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>final_callback <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>finished <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> _null_yield_point
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">raise</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> isinstance(yielded, list):
+</span></span><span style="display:flex;"><span>                    yielded <span style="color:#f92672">=</span> Multi(yielded)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">elif</span> isinstance(yielded, Future):
+</span></span><span style="display:flex;"><span>                    yielded <span style="color:#f92672">=</span> YieldFuture(yielded)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> isinstance(yielded, YieldPoint):   <span style="color:#75715e"># e.g. gen.Task</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>yield_point <span style="color:#f92672">=</span> yielded
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>yield_point<span style="color:#f92672">.</span>start(self)  <span style="color:#75715e"># run gen.Task</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> sys<span style="color:#f92672">.</span>exc_info()
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> (BadYieldError(
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;yielded unknown object </span><span style="color:#e6db74">%r</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (yielded,)),)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">finally</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>running <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">result_callback</span>(self, key):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">inner</span>(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> kwargs <span style="color:#f92672">or</span> len(args) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> Arguments(args, kwargs)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> args:
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> args[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                result <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>set_result(key, result)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> wrap(inner)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_exception</span>(self, typ, value, tb):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>running <span style="color:#f92672">and</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>finished:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>exc_info <span style="color:#f92672">=</span> (typ, value, tb)
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>run()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h4 id="yield-point">yield point</h4>
 <p>记录运行栈，运行的任务信息。</p>
 <h5 id="gentask">gen.Task</h5>
 <p>包装用户代码</p>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Task</span>(YieldPoint):
-    <span style="color:#e6db74">&#34;&#34;&#34;Runs a single asynchronous operation.
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">    Takes a function (and optional additional arguments) and runs it with
-</span><span style="color:#e6db74">    those arguments plus a ``callback`` keyword argument.  The argument passed
-</span><span style="color:#e6db74">    to the callback is returned as the result of the yield expression.
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">    A `Task` is equivalent to a `Callback`/`Wait` pair (with a unique
-</span><span style="color:#e6db74">    key generated automatically)::
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">        result = yield gen.Task(func, args)
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">        func(args, callback=(yield gen.Callback(key)))
-</span><span style="color:#e6db74">        result = yield gen.Wait(key)
-</span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-    <span style="color:#66d9ef">def</span> __init__(self, func, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
-        <span style="color:#66d9ef">assert</span> <span style="color:#e6db74">&#34;callback&#34;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> kwargs
-        self<span style="color:#f92672">.</span>args <span style="color:#f92672">=</span> args
-        self<span style="color:#f92672">.</span>kwargs <span style="color:#f92672">=</span> kwargs
-        self<span style="color:#f92672">.</span>func <span style="color:#f92672">=</span> func
-
-    <span style="color:#75715e"># 依赖注入，控制反转</span>
-    <span style="color:#75715e">#   https://zhuanlan.zhihu.com/p/33492169</span>
-    <span style="color:#75715e">#   https://segmentfault.com/a/1190000015173300</span>
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>(self, runner):
-        self<span style="color:#f92672">.</span>runner <span style="color:#f92672">=</span> runner
-        self<span style="color:#f92672">.</span>key <span style="color:#f92672">=</span> object()
-        runner<span style="color:#f92672">.</span>register_callback(self<span style="color:#f92672">.</span>key)
-        self<span style="color:#f92672">.</span>kwargs[<span style="color:#e6db74">&#34;callback&#34;</span>] <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>result_callback(self<span style="color:#f92672">.</span>key)
-        self<span style="color:#f92672">.</span>func(<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>args, <span style="color:#f92672">**</span>self<span style="color:#f92672">.</span>kwargs)
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_ready</span>(self):
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>runner<span style="color:#f92672">.</span>is_ready(self<span style="color:#f92672">.</span>key)
-
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_result</span>(self):
-        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>runner<span style="color:#f92672">.</span>pop_result(self<span style="color:#f92672">.</span>key)
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Task</span>(YieldPoint):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Runs a single asynchronous operation.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Takes a function (and optional additional arguments) and runs it with
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    those arguments plus a ``callback`` keyword argument.  The argument passed
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    to the callback is returned as the result of the yield expression.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    A `Task` is equivalent to a `Callback`/`Wait` pair (with a unique
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    key generated automatically)::
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        result = yield gen.Task(func, args)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        func(args, callback=(yield gen.Callback(key)))
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        result = yield gen.Wait(key)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, func, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span> <span style="color:#e6db74">&#34;callback&#34;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> kwargs
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>args <span style="color:#f92672">=</span> args
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>kwargs <span style="color:#f92672">=</span> kwargs
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>func <span style="color:#f92672">=</span> func
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 依赖注入，控制反转</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#   https://zhuanlan.zhihu.com/p/33492169</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#   https://segmentfault.com/a/1190000015173300</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>(self, runner):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>runner <span style="color:#f92672">=</span> runner
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>key <span style="color:#f92672">=</span> object()
+</span></span><span style="display:flex;"><span>        runner<span style="color:#f92672">.</span>register_callback(self<span style="color:#f92672">.</span>key)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>kwargs[<span style="color:#e6db74">&#34;callback&#34;</span>] <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>result_callback(self<span style="color:#f92672">.</span>key)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>func(<span style="color:#f92672">*</span>self<span style="color:#f92672">.</span>args, <span style="color:#f92672">**</span>self<span style="color:#f92672">.</span>kwargs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_ready</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>runner<span style="color:#f92672">.</span>is_ready(self<span style="color:#f92672">.</span>key)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_result</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>runner<span style="color:#f92672">.</span>pop_result(self<span style="color:#f92672">.</span>key)
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h3 id="遇到的问题">遇到的问题</h3>
 <p>旧的代码逻辑，会在<code>upload_file_handel</code>后向redis缓存<code>total_answer</code>的值，保存的是旧的值而不是内层函数更新后的值。</p>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AssessHandler</span>(BaseHandler):
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_result_processor</span>(self, rid, total_answer, rst_map):    <span style="color:#75715e"># 加入callback</span>
-        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_redis_when_done</span>(rid, total_answer, future_rst_map, future):
-            v <span style="color:#f92672">=</span> future_rst_map<span style="color:#f92672">.</span>pop(future)
-            exc_info <span style="color:#f92672">=</span> future<span style="color:#f92672">.</span>exc_info()
-            <span style="color:#66d9ef">if</span> exc_info:
-                log<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;rename upload for rid:</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> answer:</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> err&#34;</span><span style="color:#f92672">.</span>format(rid, v), {<span style="color:#e6db74">&#39;exception&#39;</span>: exc_info[<span style="color:#ae81ff">1</span>]})
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> future_rst_map:
-                key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;assess_total_answer:</span><span style="color:#e6db74">{rid}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(rid<span style="color:#f92672">=</span>rid)
-                redis_client<span style="color:#f92672">.</span>set_key(key, json<span style="color:#f92672">.</span>dumps(total_answer), <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3600</span>)
-
-        future_rst_map <span style="color:#f92672">=</span> {v: k <span style="color:#66d9ef">for</span> k, v <span style="color:#f92672">in</span> rst_map<span style="color:#f92672">.</span>iteritems()}
-        call_back <span style="color:#f92672">=</span> functools<span style="color:#f92672">.</span>partial(set_redis_when_done, rid, total_answer, future_rst_map)
-        <span style="color:#66d9ef">for</span> future <span style="color:#f92672">in</span> future_rst_map<span style="color:#f92672">.</span>keys():
-            future<span style="color:#f92672">.</span>add_done_callback(call_back)
-
-    <span style="color:#a6e22e">@web</span><span style="color:#f92672">.</span>asynchronous
-    <span style="color:#a6e22e">@gen</span><span style="color:#f92672">.</span>coroutine
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">post</span>(self, short_id):
-    	<span style="color:#f92672">...</span>
-	upload_file_handel(total_answer, rspd, respondent,
-                           functools<span style="color:#f92672">.</span>partial(self<span style="color:#f92672">.</span>upload_result_processor, rid, total_answer))   <span style="color:#75715e"># 加入callback</span>
-	<span style="color:#f92672">...</span>
-    
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_file_handel</span>(total_answer, rspd, respondent, result_processer<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
-    upload_rst <span style="color:#f92672">=</span> {}             <span style="color:#75715e"># 加入callback</span>
-    <span style="color:#66d9ef">for</span> qid, answer <span style="color:#f92672">in</span> total_answer<span style="color:#f92672">.</span>items():
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> answer:
-            <span style="color:#66d9ef">continue</span>
-
-        question <span style="color:#f92672">=</span> survey_utils<span style="color:#f92672">.</span>get_question(qid)
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> hasattr(question, <span style="color:#e6db74">&#39;custom_attr&#39;</span>):
-            <span style="color:#66d9ef">continue</span>
-
-        <span style="color:#66d9ef">if</span> question<span style="color:#f92672">.</span>custom_attr<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;disp_type&#39;</span>) <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;upload_file&#39;</span>:
-            <span style="color:#66d9ef">continue</span>
-
-        answers <span style="color:#f92672">=</span> answer<span style="color:#f92672">.</span>values()[<span style="color:#ae81ff">0</span>]
-        option_id <span style="color:#f92672">=</span> answer<span style="color:#f92672">.</span>keys()[<span style="color:#ae81ff">0</span>]
-        answer_list <span style="color:#f92672">=</span> [temp_answer <span style="color:#66d9ef">for</span> temp_answer <span style="color:#f92672">in</span> answers<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;,&#39;</span>) <span style="color:#66d9ef">if</span> temp_answer]
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> answer_list:
-            <span style="color:#66d9ef">continue</span>
-
-        rst <span style="color:#f92672">=</span> rename_upload_file(answer_list[<span style="color:#ae81ff">0</span>], total_answer, rspd, respondent, question, option_id)
-	upload_rst[<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(question<span style="color:#f92672">.</span>oid, option_id)] <span style="color:#f92672">=</span> rst
-
-
-    <span style="color:#66d9ef">if</span> callable(result_processer):         <span style="color:#75715e"># 加入callback</span>
-        result_processer(upload_rst)       <span style="color:#75715e"># 加入callback</span>
-
-
-<span style="color:#a6e22e">@gen</span><span style="color:#f92672">.</span>coroutine
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rename_upload_file</span>(answer, total_answer, rspd, respondent, question, option_id):
-    new_answer <span style="color:#f92672">=</span> <span style="color:#66d9ef">yield</span> gen<span style="color:#f92672">.</span>Task(rename_upload_file_func, answer, respondent<span style="color:#f92672">.</span>seq, question<span style="color:#f92672">.</span>cid, option_id)
-
-    <span style="color:#66d9ef">if</span> new_answer:
-        rspd<span style="color:#f92672">.</span>set_answer(question<span style="color:#f92672">.</span>oid, {option_id: new_answer}, <span style="color:#66d9ef">True</span>)
-        total_answer[question<span style="color:#f92672">.</span>oid] <span style="color:#f92672">=</span> {option_id: new_answer}
-        <span style="color:#75715e"># 图片、视频需审核</span>
-        <span style="color:#66d9ef">if</span> form_utils<span style="color:#f92672">.</span>is_video_or_image(new_answer):
-            key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">||</span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">||</span><span style="color:#e6db74">{2}</span><span style="color:#e6db74">||</span><span style="color:#e6db74">{3}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(question<span style="color:#f92672">.</span>project_id, question<span style="color:#f92672">.</span>oid, respondent<span style="color:#f92672">.</span>oid, new_answer)
-            redis_queue_client<span style="color:#f92672">.</span>rpush(<span style="color:#e6db74">&#34;upload_file_check_task_queue&#34;</span>, key)
-
-
-<span style="color:#a6e22e">@gen</span><span style="color:#f92672">.</span>coroutine
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rename_upload_file_func</span>(answer, seq, q_cid, op_id):
-    <span style="color:#75715e"># 切分七牛文件名和原文件名</span>
-    orig_key, orig_fname <span style="color:#f92672">=</span> answer<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;|&#39;</span>)
-    name, suffiix <span style="color:#f92672">=</span> orig_fname<span style="color:#f92672">.</span>rsplit(<span style="color:#e6db74">&#39;.&#39;</span>, <span style="color:#ae81ff">1</span>)
-    random_num <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">999999</span>)
-    dest_key <span style="color:#f92672">=</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">{2}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">{3}</span><span style="color:#e6db74">.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(seq, q_cid, name, random_num, suffiix)
-
-    encode_uri <span style="color:#f92672">=</span> form_utils<span style="color:#f92672">.</span>get_remove_encode_uri(orig_key, dest_key, del_prefix<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
-    path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (<span style="color:#e6db74">&#39;http://rs.qiniu.com&#39;</span>, encode_uri)
-    token <span style="color:#f92672">=</span> form_utils<span style="color:#f92672">.</span>get_request_token(encode_uri)
-
-    res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(path, headers<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;Authorization&#39;</span>: <span style="color:#e6db74">&#39;QBox </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> token}, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>)
-    <span style="color:#66d9ef">raise</span> gen<span style="color:#f92672">.</span>Return(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(dest_key, orig_fname))
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AssessHandler</span>(BaseHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_result_processor</span>(self, rid, total_answer, rst_map):    <span style="color:#75715e"># 加入callback</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_redis_when_done</span>(rid, total_answer, future_rst_map, future):
+</span></span><span style="display:flex;"><span>            v <span style="color:#f92672">=</span> future_rst_map<span style="color:#f92672">.</span>pop(future)
+</span></span><span style="display:flex;"><span>            exc_info <span style="color:#f92672">=</span> future<span style="color:#f92672">.</span>exc_info()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> exc_info:
+</span></span><span style="display:flex;"><span>                log<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;rename upload for rid:</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> answer:</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> err&#34;</span><span style="color:#f92672">.</span>format(rid, v), {<span style="color:#e6db74">&#39;exception&#39;</span>: exc_info[<span style="color:#ae81ff">1</span>]})
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> future_rst_map:
+</span></span><span style="display:flex;"><span>                key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;assess_total_answer:</span><span style="color:#e6db74">{rid}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(rid<span style="color:#f92672">=</span>rid)
+</span></span><span style="display:flex;"><span>                redis_client<span style="color:#f92672">.</span>set_key(key, json<span style="color:#f92672">.</span>dumps(total_answer), <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3600</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        future_rst_map <span style="color:#f92672">=</span> {v: k <span style="color:#66d9ef">for</span> k, v <span style="color:#f92672">in</span> rst_map<span style="color:#f92672">.</span>iteritems()}
+</span></span><span style="display:flex;"><span>        call_back <span style="color:#f92672">=</span> functools<span style="color:#f92672">.</span>partial(set_redis_when_done, rid, total_answer, future_rst_map)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> future <span style="color:#f92672">in</span> future_rst_map<span style="color:#f92672">.</span>keys():
+</span></span><span style="display:flex;"><span>            future<span style="color:#f92672">.</span>add_done_callback(call_back)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@web.asynchronous</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@gen.coroutine</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">post</span>(self, short_id):
+</span></span><span style="display:flex;"><span>    	<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>	upload_file_handel(total_answer, rspd, respondent,
+</span></span><span style="display:flex;"><span>                           functools<span style="color:#f92672">.</span>partial(self<span style="color:#f92672">.</span>upload_result_processor, rid, total_answer))   <span style="color:#75715e"># 加入callback</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_file_handel</span>(total_answer, rspd, respondent, result_processer<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    upload_rst <span style="color:#f92672">=</span> {}             <span style="color:#75715e"># 加入callback</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> qid, answer <span style="color:#f92672">in</span> total_answer<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> answer:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        question <span style="color:#f92672">=</span> survey_utils<span style="color:#f92672">.</span>get_question(qid)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> hasattr(question, <span style="color:#e6db74">&#39;custom_attr&#39;</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> question<span style="color:#f92672">.</span>custom_attr<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;disp_type&#39;</span>) <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;upload_file&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        answers <span style="color:#f92672">=</span> answer<span style="color:#f92672">.</span>values()[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        option_id <span style="color:#f92672">=</span> answer<span style="color:#f92672">.</span>keys()[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>        answer_list <span style="color:#f92672">=</span> [temp_answer <span style="color:#66d9ef">for</span> temp_answer <span style="color:#f92672">in</span> answers<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;,&#39;</span>) <span style="color:#66d9ef">if</span> temp_answer]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> answer_list:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        rst <span style="color:#f92672">=</span> rename_upload_file(answer_list[<span style="color:#ae81ff">0</span>], total_answer, rspd, respondent, question, option_id)
+</span></span><span style="display:flex;"><span>	upload_rst[<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(question<span style="color:#f92672">.</span>oid, option_id)] <span style="color:#f92672">=</span> rst
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> callable(result_processer):         <span style="color:#75715e"># 加入callback</span>
+</span></span><span style="display:flex;"><span>        result_processer(upload_rst)       <span style="color:#75715e"># 加入callback</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@gen.coroutine</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rename_upload_file</span>(answer, total_answer, rspd, respondent, question, option_id):
+</span></span><span style="display:flex;"><span>    new_answer <span style="color:#f92672">=</span> <span style="color:#66d9ef">yield</span> gen<span style="color:#f92672">.</span>Task(rename_upload_file_func, answer, respondent<span style="color:#f92672">.</span>seq, question<span style="color:#f92672">.</span>cid, option_id)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> new_answer:
+</span></span><span style="display:flex;"><span>        rspd<span style="color:#f92672">.</span>set_answer(question<span style="color:#f92672">.</span>oid, {option_id: new_answer}, <span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        total_answer[question<span style="color:#f92672">.</span>oid] <span style="color:#f92672">=</span> {option_id: new_answer}
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 图片、视频需审核</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> form_utils<span style="color:#f92672">.</span>is_video_or_image(new_answer):
+</span></span><span style="display:flex;"><span>            key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">||</span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">||</span><span style="color:#e6db74">{2}</span><span style="color:#e6db74">||</span><span style="color:#e6db74">{3}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(question<span style="color:#f92672">.</span>project_id, question<span style="color:#f92672">.</span>oid, respondent<span style="color:#f92672">.</span>oid, new_answer)
+</span></span><span style="display:flex;"><span>            redis_queue_client<span style="color:#f92672">.</span>rpush(<span style="color:#e6db74">&#34;upload_file_check_task_queue&#34;</span>, key)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@gen.coroutine</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">rename_upload_file_func</span>(answer, seq, q_cid, op_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 切分七牛文件名和原文件名</span>
+</span></span><span style="display:flex;"><span>    orig_key, orig_fname <span style="color:#f92672">=</span> answer<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;|&#39;</span>)
+</span></span><span style="display:flex;"><span>    name, suffiix <span style="color:#f92672">=</span> orig_fname<span style="color:#f92672">.</span>rsplit(<span style="color:#e6db74">&#39;.&#39;</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    random_num <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">999999</span>)
+</span></span><span style="display:flex;"><span>    dest_key <span style="color:#f92672">=</span> <span style="color:#e6db74">u</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">{2}</span><span style="color:#e6db74">-</span><span style="color:#e6db74">{3}</span><span style="color:#e6db74">.</span><span style="color:#e6db74">{4}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(seq, q_cid, name, random_num, suffiix)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    encode_uri <span style="color:#f92672">=</span> form_utils<span style="color:#f92672">.</span>get_remove_encode_uri(orig_key, dest_key, del_prefix<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>    path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (<span style="color:#e6db74">&#39;http://rs.qiniu.com&#39;</span>, encode_uri)
+</span></span><span style="display:flex;"><span>    token <span style="color:#f92672">=</span> form_utils<span style="color:#f92672">.</span>get_request_token(encode_uri)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(path, headers<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;Authorization&#39;</span>: <span style="color:#e6db74">&#39;QBox </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> token}, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">raise</span> gen<span style="color:#f92672">.</span>Return(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74">|</span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(dest_key, orig_fname))
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">+-------+ 
-|IOLoop | 
-+--+----+ 
-   |  +-----------------------------+
-   |  | gen.coroutine<span style="color:#f92672">(</span>post handler<span style="color:#f92672">)</span> |
-   |  +-----+-----------------------+
-   |        |
-   |        +----&gt;+--------------------+      +--------------------------------+
-   |        |     | upload_file_handel +-----&gt;|gen.coroutine:rename_upload_file|
-   |        |     +----------+---------+      +--------------+-----------------+
-   |        |                |                               |
-   |        |                |                               | generator <span style="color:#f92672">(</span>rename_upload_file<span style="color:#f92672">)</span>
-   |        |                |                               |                    |
-   |        |                |                               +-----&gt;+---------+   |
-   |        |                |                                      |  runner |&lt;--+
-   |        |                |                                      +----+----+
-   |        |                |                                           |
-   |        |                |                                           |  next+-----------------------------------+
-   |        |                |                                           +-----&gt;| gen.Task<span style="color:#f92672">(</span>rename_upload_file_func<span style="color:#f92672">)</span> |
-   |        |                |                                           |      +---+-------------------------------+
-   |        |                |                                           |          |               
-   |        |                |                                           |          |start+----------------------------------------+
-   |        |                |                                           |          +---&gt; | gen.coroutine<span style="color:#f92672">(</span>rename_upload_file_func<span style="color:#f92672">)</span> |      
-   |        |                |                                           |          |     +-----------+----------------------------+
-   |        |                |  A register callback<span style="color:#f92672">(</span>runner.set_result<span style="color:#f92672">)</span>   |          |                 |
-   | &lt;------------------------------------------------------------------------------------------------+                        +-------------------------+
-   |        |                |                                           |          |                 +-----------------------&gt;| rename_upload_file_func |
-   |        |                |                                           |          |                 |                        +----------+--------------+
-   |        |                |                                           |          |                 |               raise Return        |
-   |        |                |                                           |          |     future      |&lt;----------------------------------+
-   |        |                |                            future         | not ready|  &lt;--------------+
-   |        |                |                              ^            | &lt;--------+
-   |        |                |&lt;-----------------------------|------------+   
-   |        |                |                              |                        
-   |        | future         |                   set future |                       
-   | &lt;------+----------------+                              |            |           
-   |                            A set result/ trigger runner|            |           
-   |--------------------------------------------------------------------&gt;|           
-                                                            |            |  +----------+
-                                                            | finnal     |  |set answer|
-                                                            | callback   |  +----------+
-                                                            +---&lt;--------+
-                                                           
-                                                           
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>+-------+ 
+</span></span><span style="display:flex;"><span>|IOLoop | 
+</span></span><span style="display:flex;"><span>+--+----+ 
+</span></span><span style="display:flex;"><span>   |  +-----------------------------+
+</span></span><span style="display:flex;"><span>   |  | gen.coroutine<span style="color:#f92672">(</span>post handler<span style="color:#f92672">)</span> |
+</span></span><span style="display:flex;"><span>   |  +-----+-----------------------+
+</span></span><span style="display:flex;"><span>   |        |
+</span></span><span style="display:flex;"><span>   |        +----&gt;+--------------------+      +--------------------------------+
+</span></span><span style="display:flex;"><span>   |        |     | upload_file_handel +-----&gt;|gen.coroutine:rename_upload_file|
+</span></span><span style="display:flex;"><span>   |        |     +----------+---------+      +--------------+-----------------+
+</span></span><span style="display:flex;"><span>   |        |                |                               |
+</span></span><span style="display:flex;"><span>   |        |                |                               | generator <span style="color:#f92672">(</span>rename_upload_file<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   |        |                |                               |                    |
+</span></span><span style="display:flex;"><span>   |        |                |                               +-----&gt;+---------+   |
+</span></span><span style="display:flex;"><span>   |        |                |                                      |  runner |&lt;--+
+</span></span><span style="display:flex;"><span>   |        |                |                                      +----+----+
+</span></span><span style="display:flex;"><span>   |        |                |                                           |
+</span></span><span style="display:flex;"><span>   |        |                |                                           |  next+-----------------------------------+
+</span></span><span style="display:flex;"><span>   |        |                |                                           +-----&gt;| gen.Task<span style="color:#f92672">(</span>rename_upload_file_func<span style="color:#f92672">)</span> |
+</span></span><span style="display:flex;"><span>   |        |                |                                           |      +---+-------------------------------+
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |               
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |start+----------------------------------------+
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          +---&gt; | gen.coroutine<span style="color:#f92672">(</span>rename_upload_file_func<span style="color:#f92672">)</span> |      
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |     +-----------+----------------------------+
+</span></span><span style="display:flex;"><span>   |        |                |  A register callback<span style="color:#f92672">(</span>runner.set_result<span style="color:#f92672">)</span>   |          |                 |
+</span></span><span style="display:flex;"><span>   | &lt;------------------------------------------------------------------------------------------------+                        +-------------------------+
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |                 +-----------------------&gt;| rename_upload_file_func |
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |                 |                        +----------+--------------+
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |                 |               raise Return        |
+</span></span><span style="display:flex;"><span>   |        |                |                                           |          |     future      |&lt;----------------------------------+
+</span></span><span style="display:flex;"><span>   |        |                |                            future         | not ready|  &lt;--------------+
+</span></span><span style="display:flex;"><span>   |        |                |                              ^            | &lt;--------+
+</span></span><span style="display:flex;"><span>   |        |                |&lt;-----------------------------|------------+   
+</span></span><span style="display:flex;"><span>   |        |                |                              |                        
+</span></span><span style="display:flex;"><span>   |        | future         |                   set future |                       
+</span></span><span style="display:flex;"><span>   | &lt;------+----------------+                              |            |           
+</span></span><span style="display:flex;"><span>   |                            A set result/ trigger runner|            |           
+</span></span><span style="display:flex;"><span>   |--------------------------------------------------------------------&gt;|           
+</span></span><span style="display:flex;"><span>                                                            |            |  +----------+
+</span></span><span style="display:flex;"><span>                                                            | finnal     |  |set answer|
+</span></span><span style="display:flex;"><span>                                                            | callback   |  +----------+
+</span></span><span style="display:flex;"><span>                                                            +---&lt;--------+
+</span></span><span style="display:flex;"><span>                                                           
+</span></span><span style="display:flex;"><span>                                                           
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h3 id="tornado-ioloop">tornado ioloop</h3>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">                                                           
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PollIOLoop</span>(IOLoop):                                  
-    <span style="color:#f92672">....</span>                                                   
-                                                           
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>(self):                                       
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> logging<span style="color:#f92672">.</span>getLogger()<span style="color:#f92672">.</span>handlers:               
-            <span style="color:#75715e"># The IOLoop catches and logs exceptions, so i &#39;s</span>
-            <span style="color:#75715e"># important that log output be visible.  Howev r, python&#39;s</span>
-            <span style="color:#75715e"># default behavior for non-root loggers (prior to python</span>
-            <span style="color:#75715e"># 3.2) is to print an unhelpful &#34;no handlers c uld be</span>
-            <span style="color:#75715e"># found&#34; message rather than the actual log en ry, so we</span>
-            <span style="color:#75715e"># must explicitly configure logging if we&#39;ve m de it this</span>
-            <span style="color:#75715e"># far without anything.                        </span>
-            logging<span style="color:#f92672">.</span>basicConfig()                          
-        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_stopped:                                  
-            self<span style="color:#f92672">.</span>_stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>                          
-            <span style="color:#66d9ef">return</span>                                         
-        old_current <span style="color:#f92672">=</span> getattr(IOLoop<span style="color:#f92672">.</span>_current, <span style="color:#e6db74">&#34;instance&#34;</span>, <span style="color:#66d9ef">None</span>)
-        IOLoop<span style="color:#f92672">.</span>_current<span style="color:#f92672">.</span>instance <span style="color:#f92672">=</span> self                    
-        self<span style="color:#f92672">.</span>_thread_ident <span style="color:#f92672">=</span> thread<span style="color:#f92672">.</span>get_ident()            
-        self<span style="color:#f92672">.</span>_running <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>                               
-                                                           
-        <span style="color:#75715e"># signal.set_wakeup_fd closes a race condition in  vent loops:</span>
-        <span style="color:#75715e"># a signal may arrive at the beginning of select/p ll/etc</span>
-        <span style="color:#75715e"># before it goes into its interruptible sleep, so  he signal</span>
-        <span style="color:#75715e"># will be consumed without waking the select.  The solution is</span>
-        <span style="color:#75715e"># for the (C, synchronous) signal handler to write to a pipe,</span>
-        <span style="color:#75715e"># which will then be seen by select.               </span>
-        <span style="color:#75715e">#                                                  </span>
-        <span style="color:#75715e"># In python&#39;s signal handling semantics, this only matters on the</span>
-        <span style="color:#75715e"># main thread (fortunately, set_wakeup_fd only works on the main</span>
-        <span style="color:#75715e"># thread and will raise a ValueError otherwise).</span>
-        <span style="color:#75715e">#</span>
-        <span style="color:#75715e"># If someone has already set a wakeup fd, we don&#39;t want to</span>
-        <span style="color:#75715e"># disturb it.  This is an issue for twisted, which does its</span>
-        <span style="color:#75715e"># SIGCHILD processing in response to its own wakeup fd being</span>
-        <span style="color:#75715e"># written to.  As long as the wakeup fd is registered on the IOLoop,</span>
-        <span style="color:#75715e"># the loop will still wake up and everything should work.</span>
-        old_wakeup_fd <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-        <span style="color:#66d9ef">if</span> hasattr(signal, <span style="color:#e6db74">&#39;set_wakeup_fd&#39;</span>) <span style="color:#f92672">and</span> os<span style="color:#f92672">.</span>name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;posix&#39;</span>:
-            <span style="color:#75715e"># requires python 2.6+, unix.  set_wakeup_fd exists but crashes</span>
-            <span style="color:#75715e"># the python process on windows.</span>
-            <span style="color:#66d9ef">try</span>:
-                old_wakeup_fd <span style="color:#f92672">=</span> signal<span style="color:#f92672">.</span>set_wakeup_fd(self<span style="color:#f92672">.</span>_waker<span style="color:#f92672">.</span>write_fileno())
-                <span style="color:#66d9ef">if</span> old_wakeup_fd <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
-                    <span style="color:#75715e"># Already set, restore previous value.  This is a little racy,</span>
-                    <span style="color:#75715e"># but there&#39;s no clean get_wakeup_fd and in real use the</span>
-                    <span style="color:#75715e"># IOLoop is just started once at the beginning.</span>
-                    signal<span style="color:#f92672">.</span>set_wakeup_fd(old_wakeup_fd)
-                    old_wakeup_fd <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
-            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:  <span style="color:#75715e"># non-main thread</span>
-                <span style="color:#66d9ef">pass</span>
-
-        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
-            poll_timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">3600.0</span>
-
-            <span style="color:#75715e"># Prevent IO event starvation by delaying new callbacks</span>
-            <span style="color:#75715e"># to the next iteration of the event loop.</span>
-            <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>_callback_lock:
-                callbacks <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_callbacks
-                self<span style="color:#f92672">.</span>_callbacks <span style="color:#f92672">=</span> []
-            <span style="color:#66d9ef">for</span> callback <span style="color:#f92672">in</span> callbacks:
-                self<span style="color:#f92672">.</span>_run_callback(callback)
-
-            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_timeouts:
-                now <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>time()
-                <span style="color:#66d9ef">while</span> self<span style="color:#f92672">.</span>_timeouts:
-                    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_timeouts[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>callback <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
-                        <span style="color:#75715e"># the timeout was cancelled</span>
-                        heapq<span style="color:#f92672">.</span>heappop(self<span style="color:#f92672">.</span>_timeouts)
-                        self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-                    <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>_timeouts[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>deadline <span style="color:#f92672">&lt;=</span> now:
-                        timeout <span style="color:#f92672">=</span> heapq<span style="color:#f92672">.</span>heappop(self<span style="color:#f92672">.</span>_timeouts)
-                        self<span style="color:#f92672">.</span>_run_callback(timeout<span style="color:#f92672">.</span>callback)
-                    <span style="color:#66d9ef">else</span>:
-                        seconds <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_timeouts[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>deadline <span style="color:#f92672">-</span> now
-                        poll_timeout <span style="color:#f92672">=</span> min(seconds, poll_timeout)
-                        <span style="color:#66d9ef">break</span>
-                <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">512</span>
-                        <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">&gt;</span> (len(self<span style="color:#f92672">.</span>_timeouts) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>)):
-                    <span style="color:#75715e"># Clean up the timeout queue when it gets large and it&#39;s</span>
-                    <span style="color:#75715e"># more than half cancellations.</span>
-                    self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-                    self<span style="color:#f92672">.</span>_timeouts <span style="color:#f92672">=</span> [x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>_timeouts
-                                      <span style="color:#66d9ef">if</span> x<span style="color:#f92672">.</span>callback <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>]
-                    heapq<span style="color:#f92672">.</span>heapify(self<span style="color:#f92672">.</span>_timeouts)
-
-            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_callbacks:
-                <span style="color:#75715e"># If any callbacks or timeouts called add_callback,</span>
-                <span style="color:#75715e"># we don&#39;t want to wait in poll() before we run them.</span>
-                poll_timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>_running:
-                <span style="color:#66d9ef">break</span>
-
-            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_blocking_signal_threshold <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
-                <span style="color:#75715e"># clear alarm so it doesn&#39;t fire while poll is waiting for</span>
-                <span style="color:#75715e"># events.</span>
-                signal<span style="color:#f92672">.</span>setitimer(signal<span style="color:#f92672">.</span>ITIMER_REAL, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
-
-            <span style="color:#66d9ef">try</span>:
-                event_pairs <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_impl<span style="color:#f92672">.</span>poll(poll_timeout)
-            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
-                <span style="color:#75715e"># Depending on python version and IOLoop implementation,</span>
-                <span style="color:#75715e"># different exception types may be thrown and there are</span>
-                <span style="color:#75715e"># two ways EINTR might be signaled:</span>
-                <span style="color:#75715e"># * e.errno == errno.EINTR</span>
-                <span style="color:#75715e"># * e.args is like (errno.EINTR, &#39;Interrupted system call&#39;)</span>
-                <span style="color:#66d9ef">if</span> (getattr(e, <span style="color:#e6db74">&#39;errno&#39;</span>, <span style="color:#66d9ef">None</span>) <span style="color:#f92672">==</span> errno<span style="color:#f92672">.</span>EINTR <span style="color:#f92672">or</span>
-                    (isinstance(getattr(e, <span style="color:#e6db74">&#39;args&#39;</span>, <span style="color:#66d9ef">None</span>), tuple) <span style="color:#f92672">and</span>
-                     len(e<span style="color:#f92672">.</span>args) <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> e<span style="color:#f92672">.</span>args[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> errno<span style="color:#f92672">.</span>EINTR)):
-                    <span style="color:#66d9ef">continue</span>
-                <span style="color:#66d9ef">else</span>:
-                    <span style="color:#66d9ef">raise</span>
-
-            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_blocking_signal_threshold <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
-                signal<span style="color:#f92672">.</span>setitimer(signal<span style="color:#f92672">.</span>ITIMER_REAL,
-                                 self<span style="color:#f92672">.</span>_blocking_signal_threshold, <span style="color:#ae81ff">0</span>)
-
-            <span style="color:#75715e"># Pop one fd at a time from the set of pending fds and run</span>
-            <span style="color:#75715e"># its handler. Since that handler may perform actions on</span>
-            <span style="color:#75715e"># other file descriptors, there may be reentrant calls to</span>
-            <span style="color:#75715e"># this IOLoop that update self._events</span>
-            self<span style="color:#f92672">.</span>_events<span style="color:#f92672">.</span>update(event_pairs)
-            <span style="color:#66d9ef">while</span> self<span style="color:#f92672">.</span>_events:
-                fd, events <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_events<span style="color:#f92672">.</span>popitem()
-                <span style="color:#66d9ef">try</span>:
-                    self<span style="color:#f92672">.</span>_handlers[fd](fd, events)
-                <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">OSError</span>, <span style="color:#a6e22e">IOError</span>) <span style="color:#66d9ef">as</span> e:
-                    <span style="color:#66d9ef">if</span> e<span style="color:#f92672">.</span>args[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> errno<span style="color:#f92672">.</span>EPIPE:
-                        <span style="color:#75715e"># Happens when the client closes the connection</span>
-                        <span style="color:#66d9ef">pass</span>
-                    <span style="color:#66d9ef">else</span>:
-                        app_log<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;Exception in I/O handler for fd </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span>,
-                                      fd, exc_info<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-                <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
-                    app_log<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;Exception in I/O handler for fd </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span>,
-                                  fd, exc_info<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-        <span style="color:#75715e"># reset the stopped flag so another start/stop pair can be issued</span>
-        self<span style="color:#f92672">.</span>_stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
-        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_blocking_signal_threshold <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
-            signal<span style="color:#f92672">.</span>setitimer(signal<span style="color:#f92672">.</span>ITIMER_REAL, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
-        IOLoop<span style="color:#f92672">.</span>_current<span style="color:#f92672">.</span>instance <span style="color:#f92672">=</span> old_current
-        <span style="color:#66d9ef">if</span> old_wakeup_fd <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
-            signal<span style="color:#f92672">.</span>set_wakeup_fd(old_wakeup_fd)
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>                                                           
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PollIOLoop</span>(IOLoop):                                  
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">....</span>                                                   
+</span></span><span style="display:flex;"><span>                                                           
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>(self):                                       
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> logging<span style="color:#f92672">.</span>getLogger()<span style="color:#f92672">.</span>handlers:               
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># The IOLoop catches and logs exceptions, so i &#39;s</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># important that log output be visible.  Howev r, python&#39;s</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># default behavior for non-root loggers (prior to python</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 3.2) is to print an unhelpful &#34;no handlers c uld be</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># found&#34; message rather than the actual log en ry, so we</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># must explicitly configure logging if we&#39;ve m de it this</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># far without anything.                        </span>
+</span></span><span style="display:flex;"><span>            logging<span style="color:#f92672">.</span>basicConfig()                          
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_stopped:                                  
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>                          
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>                                         
+</span></span><span style="display:flex;"><span>        old_current <span style="color:#f92672">=</span> getattr(IOLoop<span style="color:#f92672">.</span>_current, <span style="color:#e6db74">&#34;instance&#34;</span>, <span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>        IOLoop<span style="color:#f92672">.</span>_current<span style="color:#f92672">.</span>instance <span style="color:#f92672">=</span> self                    
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_thread_ident <span style="color:#f92672">=</span> thread<span style="color:#f92672">.</span>get_ident()            
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_running <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>                               
+</span></span><span style="display:flex;"><span>                                                           
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># signal.set_wakeup_fd closes a race condition in  vent loops:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># a signal may arrive at the beginning of select/p ll/etc</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># before it goes into its interruptible sleep, so  he signal</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># will be consumed without waking the select.  The solution is</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># for the (C, synchronous) signal handler to write to a pipe,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># which will then be seen by select.               </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#                                                  </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># In python&#39;s signal handling semantics, this only matters on the</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># main thread (fortunately, set_wakeup_fd only works on the main</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># thread and will raise a ValueError otherwise).</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># If someone has already set a wakeup fd, we don&#39;t want to</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># disturb it.  This is an issue for twisted, which does its</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># SIGCHILD processing in response to its own wakeup fd being</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># written to.  As long as the wakeup fd is registered on the IOLoop,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># the loop will still wake up and everything should work.</span>
+</span></span><span style="display:flex;"><span>        old_wakeup_fd <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> hasattr(signal, <span style="color:#e6db74">&#39;set_wakeup_fd&#39;</span>) <span style="color:#f92672">and</span> os<span style="color:#f92672">.</span>name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;posix&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># requires python 2.6+, unix.  set_wakeup_fd exists but crashes</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># the python process on windows.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                old_wakeup_fd <span style="color:#f92672">=</span> signal<span style="color:#f92672">.</span>set_wakeup_fd(self<span style="color:#f92672">.</span>_waker<span style="color:#f92672">.</span>write_fileno())
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> old_wakeup_fd <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># Already set, restore previous value.  This is a little racy,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># but there&#39;s no clean get_wakeup_fd and in real use the</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># IOLoop is just started once at the beginning.</span>
+</span></span><span style="display:flex;"><span>                    signal<span style="color:#f92672">.</span>set_wakeup_fd(old_wakeup_fd)
+</span></span><span style="display:flex;"><span>                    old_wakeup_fd <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:  <span style="color:#75715e"># non-main thread</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>            poll_timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">3600.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Prevent IO event starvation by delaying new callbacks</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># to the next iteration of the event loop.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">with</span> self<span style="color:#f92672">.</span>_callback_lock:
+</span></span><span style="display:flex;"><span>                callbacks <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_callbacks
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>_callbacks <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> callback <span style="color:#f92672">in</span> callbacks:
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>_run_callback(callback)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_timeouts:
+</span></span><span style="display:flex;"><span>                now <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span> self<span style="color:#f92672">.</span>_timeouts:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_timeouts[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>callback <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># the timeout was cancelled</span>
+</span></span><span style="display:flex;"><span>                        heapq<span style="color:#f92672">.</span>heappop(self<span style="color:#f92672">.</span>_timeouts)
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">elif</span> self<span style="color:#f92672">.</span>_timeouts[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>deadline <span style="color:#f92672">&lt;=</span> now:
+</span></span><span style="display:flex;"><span>                        timeout <span style="color:#f92672">=</span> heapq<span style="color:#f92672">.</span>heappop(self<span style="color:#f92672">.</span>_timeouts)
+</span></span><span style="display:flex;"><span>                        self<span style="color:#f92672">.</span>_run_callback(timeout<span style="color:#f92672">.</span>callback)
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                        seconds <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_timeouts[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>deadline <span style="color:#f92672">-</span> now
+</span></span><span style="display:flex;"><span>                        poll_timeout <span style="color:#f92672">=</span> min(seconds, poll_timeout)
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">512</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">&gt;</span> (len(self<span style="color:#f92672">.</span>_timeouts) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>)):
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># Clean up the timeout queue when it gets large and it&#39;s</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># more than half cancellations.</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>_cancellations <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>_timeouts <span style="color:#f92672">=</span> [x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>_timeouts
+</span></span><span style="display:flex;"><span>                                      <span style="color:#66d9ef">if</span> x<span style="color:#f92672">.</span>callback <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>]
+</span></span><span style="display:flex;"><span>                    heapq<span style="color:#f92672">.</span>heapify(self<span style="color:#f92672">.</span>_timeouts)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_callbacks:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># If any callbacks or timeouts called add_callback,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># we don&#39;t want to wait in poll() before we run them.</span>
+</span></span><span style="display:flex;"><span>                poll_timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>_running:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_blocking_signal_threshold <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># clear alarm so it doesn&#39;t fire while poll is waiting for</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># events.</span>
+</span></span><span style="display:flex;"><span>                signal<span style="color:#f92672">.</span>setitimer(signal<span style="color:#f92672">.</span>ITIMER_REAL, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                event_pairs <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_impl<span style="color:#f92672">.</span>poll(poll_timeout)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Depending on python version and IOLoop implementation,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># different exception types may be thrown and there are</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># two ways EINTR might be signaled:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># * e.errno == errno.EINTR</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># * e.args is like (errno.EINTR, &#39;Interrupted system call&#39;)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (getattr(e, <span style="color:#e6db74">&#39;errno&#39;</span>, <span style="color:#66d9ef">None</span>) <span style="color:#f92672">==</span> errno<span style="color:#f92672">.</span>EINTR <span style="color:#f92672">or</span>
+</span></span><span style="display:flex;"><span>                    (isinstance(getattr(e, <span style="color:#e6db74">&#39;args&#39;</span>, <span style="color:#66d9ef">None</span>), tuple) <span style="color:#f92672">and</span>
+</span></span><span style="display:flex;"><span>                     len(e<span style="color:#f92672">.</span>args) <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> e<span style="color:#f92672">.</span>args[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> errno<span style="color:#f92672">.</span>EINTR)):
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">raise</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_blocking_signal_threshold <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                signal<span style="color:#f92672">.</span>setitimer(signal<span style="color:#f92672">.</span>ITIMER_REAL,
+</span></span><span style="display:flex;"><span>                                 self<span style="color:#f92672">.</span>_blocking_signal_threshold, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># Pop one fd at a time from the set of pending fds and run</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># its handler. Since that handler may perform actions on</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># other file descriptors, there may be reentrant calls to</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># this IOLoop that update self._events</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>_events<span style="color:#f92672">.</span>update(event_pairs)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> self<span style="color:#f92672">.</span>_events:
+</span></span><span style="display:flex;"><span>                fd, events <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_events<span style="color:#f92672">.</span>popitem()
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>_handlers[fd](fd, events)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">OSError</span>, <span style="color:#a6e22e">IOError</span>) <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> e<span style="color:#f92672">.</span>args[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> errno<span style="color:#f92672">.</span>EPIPE:
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># Happens when the client closes the connection</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                        app_log<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;Exception in I/O handler for fd </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>                                      fd, exc_info<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                    app_log<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;Exception in I/O handler for fd </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>                                  fd, exc_info<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># reset the stopped flag so another start/stop pair can be issued</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>_stopped <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>_blocking_signal_threshold <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            signal<span style="color:#f92672">.</span>setitimer(signal<span style="color:#f92672">.</span>ITIMER_REAL, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        IOLoop<span style="color:#f92672">.</span>_current<span style="color:#f92672">.</span>instance <span style="color:#f92672">=</span> old_current
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> old_wakeup_fd <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            signal<span style="color:#f92672">.</span>set_wakeup_fd(old_wakeup_fd)
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h3 id="结论">结论</h3>
 <p>tornado让用户代码的执行在逻辑关系上是异步的。所以，如果函数依赖其他被gen.coroutine装饰过的函数的执行顺序。调用者必须处理好调用关系。比如等待future完成</p>
 <p>参考文章:</p>
@@ -774,20 +766,14 @@
         
       </ul>
       
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/"> 内存模型--对go内存模型深入展开</a>
-      
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
-      
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>793</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1345</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
       <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -808,9 +794,29 @@
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Mon Apr 27, 2020 </h4>
+      <h5 id="wordcount"> 1861 Words </h5>
+    </section>
+    
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/"> 内存模型--对go内存模型深入展开</a>
+        
+        
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/python/python2-multiprocessing-pool%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/"> Python2 Multiprocessing Pool源码解读</a>
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
-  <p>© 2017-2022 simon&#39;s site</p>
+  <p>© 2017-2024 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>

@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Wed, 29 Jun 2022 17:28:25 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 21 Aug 2022 16:30:28 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Disable wifi log</title>
+      <link>https://perfectnewer.github.io/personal-note/post/mac/disable_wifi_log/</link>
+      <pubDate>Sun, 21 Aug 2022 16:30:28 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/mac/disable_wifi_log/</guid>
+      <description>&lt;p&gt;disable wifi log&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Spotlight, mds</title>
+      <link>https://perfectnewer.github.io/personal-note/post/mac/spotlight_mds/</link>
+      <pubDate>Sun, 21 Aug 2022 16:26:00 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/mac/spotlight_mds/</guid>
+      <description>&lt;p&gt;spotlight &amp;amp; mds 排除目录&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>ubuntu 22.04 build python 3.x missing openssl solution</title>
       <link>https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/</link>
@@ -139,11 +157,11 @@
       
       <guid>https://perfectnewer.github.io/personal-note/post/git/rm-submodule/</guid>
       <description>&lt;p&gt;简单的删除: 新的版本使用&lt;code&gt;git rm&lt;/code&gt;就可以删除submodule了。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;# .git/config 中的配置和 .git/modules 中的文件&lt;/span&gt;
-git rm &amp;lt;path_to_submodule&amp;gt;
-git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxxxxxx&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 这样删除的submodule会附带删除.gitmodules里面的相关section，但是不会删除&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# .git/config 中的配置和 .git/modules 中的文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git rm &amp;lt;path_to_submodule&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxxxxxx&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>

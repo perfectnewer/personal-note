@@ -50,7 +50,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.111.3">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/python/python2_pandas_ubuntu22/">
@@ -211,52 +211,44 @@
           <a href="//github.com/perfectnewer" rel="me" title="GitHub" aria-label="GitHub">
 	    <span class="icon icon-github" aria-hidden="true"></span>
           </a>
-        </li><li class="social-item">
-        <a rel="me" href="//blog.csdn.net//perfectnewer" title="csdn" aria-label="csdn">
-          <span class="csdnIcon" aria-hidden="true"> <p>csdn</p>
-        </a>
-      </li><li class="social-item">
-        <a rel="me" href="///perfectnewer.gitee.io" title="gitee" aria-label="gitee">
-          <span class="gitee" aria-hidden="true"> <p>gitee</p>
-        </a>
-      </li></ul>
+        </li></ul>
   </nav>
 </header>
 
   <section class="main post-detail">
     <header class="post-header">
       <h1 class="post-title">Python2 pandas import error on ubuntu22</h1>
-      <p class="post-meta">@Simon Wei · Jun 28, 2022 · 134 Words · 1 min read</p>
+      <p class="post-meta">@Simon Wei · Jun 28, 2022 · 1 min read</p>
     </header>
     
     <article class="post-content"><p>pandas/lib.so: undefined symbol: is_complex_object</p>
 <p>先啰嗦两句，起因是最近更新到了ubuntu22，然后我司的python2项目安装了pandas后无法启动。报错如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
-Traceback <span style="color:#f92672">(</span>most recent call last<span style="color:#f92672">)</span>:
-  File <span style="color:#e6db74">&#34;main.py&#34;</span>, line 10, in &lt;module&gt;
-    import urls
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/urls.py&#34;</span>, line 5, in &lt;module&gt;
-    import auth.views
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/auth/views.py&#34;</span>, line 18, in &lt;module&gt;
-    from admin.admin_utils import CommerceEmailContactsDao
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/admin/admin_utils.py&#34;</span>, line 19, in &lt;module&gt;
-    from mailtask.utils import _base_get_model_data as base_get_model_data
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/mailtask/utils.py&#34;</span>, line 19, in &lt;module&gt;
-    from wj_tasks.tasks import send_wx_audit_msg
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/tasks.py&#34;</span>, line 8, in &lt;module&gt;
-    from wj_tasks.all_tasks.cron_tasks import *
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/all_tasks/cron_tasks.py&#34;</span>, line 7, in &lt;module&gt;
-    from tools.notify_new_member_rspd_count import main as notify_new_member_rspd_count_script
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/tools/notify_new_member_rspd_count.py&#34;</span>, line 12, in &lt;module&gt;
-    from report import report_utils
-  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/report/report_utils.py&#34;</span>, line 17, in &lt;module&gt;
-    import pandas as pd
-  File <span style="color:#e6db74">&#34;/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/__init__.py&#34;</span>, line 6, in &lt;module&gt;
-    from . import hashtable, tslib, lib
-ImportError: /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
-</code></pre></div><p>各种重装，重新build from source都无法解决。最后终于在相似的问题中找到了解决方案。主要原因是ubuntu 22中gcc默认使用新的标准，导致pands中inline函数编译不正确。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">CFLAGS<span style="color:#f92672">=</span>-fgnu89-inline pip install --force-reinstall --no-cache --only-binary :all: --global-option<span style="color:#f92672">=</span>build_ext pandas<span style="color:#f92672">==</span>0.11.0
-</code></pre></div><!-- raw HTML omitted --></article>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
+</span></span><span style="display:flex;"><span>Traceback <span style="color:#f92672">(</span>most recent call last<span style="color:#f92672">)</span>:
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;main.py&#34;</span>, line 10, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    import urls
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/urls.py&#34;</span>, line 5, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    import auth.views
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/auth/views.py&#34;</span>, line 18, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from admin.admin_utils import CommerceEmailContactsDao
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/admin/admin_utils.py&#34;</span>, line 19, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from mailtask.utils import _base_get_model_data as base_get_model_data
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/mailtask/utils.py&#34;</span>, line 19, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from wj_tasks.tasks import send_wx_audit_msg
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/tasks.py&#34;</span>, line 8, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from wj_tasks.all_tasks.cron_tasks import *
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/wj_tasks/all_tasks/cron_tasks.py&#34;</span>, line 7, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from tools.notify_new_member_rspd_count import main as notify_new_member_rspd_count_script
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/tools/notify_new_member_rspd_count.py&#34;</span>, line 12, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from report import report_utils
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/dev/idiaoyan/wenjuan/report/report_utils.py&#34;</span>, line 17, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    import pandas as pd
+</span></span><span style="display:flex;"><span>  File <span style="color:#e6db74">&#34;/home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/__init__.py&#34;</span>, line 6, in &lt;module&gt;
+</span></span><span style="display:flex;"><span>    from . import hashtable, tslib, lib
+</span></span><span style="display:flex;"><span>ImportError: /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pandas/lib.so: undefined symbol: is_complex_object
+</span></span></code></pre></div><p>各种重装，重新build from source都无法解决。最后终于在相似的问题中找到了解决方案。主要原因是ubuntu 22中gcc默认使用新的标准，导致pands中inline函数编译不正确。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>CFLAGS<span style="color:#f92672">=</span>-fgnu89-inline pip install --force-reinstall --no-cache --only-binary :all: --global-option<span style="color:#f92672">=</span>build_ext pandas<span style="color:#f92672">==</span>0.11.0
+</span></span></code></pre></div><!-- raw HTML omitted --></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
@@ -267,20 +259,14 @@ ImportError: /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pan
         
       </ul>
       
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/"> pve multi bridge: nat for Wlan and bridge for ethernet</a>
-      
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/"> ubuntu 22.04 build python 3.x missing openssl solution</a>
-      
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>552</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
       <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -301,9 +287,37 @@ ImportError: /home/wxp/.config/pyenv/versions/wj/lib/python2.7/site-packages/pan
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Tue Jun 28, 2022 </h4>
+      <h5 id="wordcount"> 134 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagspython3">python3</a> </li>
+      
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagspandas">pandas</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/"> pve multi bridge: nat for Wlan and bridge for ethernet</a>
+        
+        
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/python/build_python3_ubuntu22/"> ubuntu 22.04 build python 3.x missing openssl solution</a>
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
-  <p>© 2017-2022 simon&#39;s site</p>
+  <p>© 2017-2024 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>

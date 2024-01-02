@@ -53,7 +53,7 @@ bash中有两种命令替换的格式 `...` 和 $(...)
 
 
 
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.111.3">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/bash/command-substitution/">
@@ -214,22 +214,14 @@ bash中有两种命令替换的格式 `...` 和 $(...)
           <a href="//github.com/perfectnewer" rel="me" title="GitHub" aria-label="GitHub">
 	    <span class="icon icon-github" aria-hidden="true"></span>
           </a>
-        </li><li class="social-item">
-        <a rel="me" href="//blog.csdn.net//perfectnewer" title="csdn" aria-label="csdn">
-          <span class="csdnIcon" aria-hidden="true"> <p>csdn</p>
-        </a>
-      </li><li class="social-item">
-        <a rel="me" href="///perfectnewer.gitee.io" title="gitee" aria-label="gitee">
-          <span class="gitee" aria-hidden="true"> <p>gitee</p>
-        </a>
-      </li></ul>
+        </li></ul>
   </nav>
 </header>
 
   <section class="main post-detail">
     <header class="post-header">
       <h1 class="post-title">Bash 命令替换</h1>
-      <p class="post-meta">@Simon Wei · Sep 12, 2019 · 106 Words · 1 min read</p>
+      <p class="post-meta">@Simon Wei · Sep 12, 2019 · 1 min read</p>
     </header>
     
     <article class="post-content"><p>做灰度系统的时候，用到了nginx。在创建docker镜像的时候需要根据参数去渲染nginx配置。
@@ -237,32 +229,32 @@ bash中有两种命令替换的格式 `...` 和 $(...)
 <p>bash中有两种命令替换的格式 <code>`...`</code> 和 <code>$(...)</code></p>
 <h4 id="backtick-format---">backtick format <code>`...`</code></h4>
 <p>例子：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bash$ PWD<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>
-bash$ echo <span style="color:#e6db74">${</span>PWD<span style="color:#e6db74">}</span>
-</code></pre></div><h4 id="parentheses-format-">parentheses format <code>$(...)</code></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>bash$ PWD<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>pwd<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>bash$ echo <span style="color:#e6db74">${</span>PWD<span style="color:#e6db74">}</span>
+</span></span></code></pre></div><h4 id="parentheses-format-">parentheses format <code>$(...)</code></h4>
 <p>这种格式是用来替代<code>`...`</code>格式的。有以下不同点</p>
 <ul>
 <li>执行命令后不会转义结果中的<code>\</code>。</li>
 <li>支持嵌套命令替换(command substition)。</li>
 </ul>
 <p>例子：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bash$ echo <span style="color:#e6db74">`</span>echo <span style="color:#ae81ff">\\</span><span style="color:#e6db74">`</span>
-
-
-bash$ echo <span style="color:#66d9ef">$(</span>echo <span style="color:#ae81ff">\\</span><span style="color:#66d9ef">)</span>
-<span style="color:#ae81ff">\
-</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">word_count<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span> wc -w <span style="color:#66d9ef">$(</span>echo * | awk <span style="color:#e6db74">&#39;{print $8}&#39;</span><span style="color:#66d9ef">)</span> <span style="color:#66d9ef">)</span>
-</code></pre></div><h4 id="遇到的问题">遇到的问题</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>bash$ echo <span style="color:#e6db74">`</span>echo <span style="color:#ae81ff">\\</span><span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bash$ echo <span style="color:#66d9ef">$(</span>echo <span style="color:#ae81ff">\\</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">\
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>word_count<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span> wc -w <span style="color:#66d9ef">$(</span>echo * | awk <span style="color:#e6db74">&#39;{print $8}&#39;</span><span style="color:#66d9ef">)</span> <span style="color:#66d9ef">)</span>
+</span></span></code></pre></div><h4 id="遇到的问题">遇到的问题</h4>
 <p>使用sed将传入string变量中的<code>/</code>替换为<code>\/</code>,使用<code>`...`</code>方案时容易出错，阅读性差。示例代码:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">log<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/var/log/ngx.access.log upstream buffer=32k&#34;</span>
-echo <span style="color:#e6db74">&#34;origin: </span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-outp1<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>sed <span style="color:#e6db74">&#39;s/[&amp;/\]/\\&amp;/g&#39;</span> <span style="color:#f92672">&lt;&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
-echo <span style="color:#e6db74">&#34;use parentheses: </span><span style="color:#e6db74">${</span>outp1<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-outp2<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>sed <span style="color:#e6db74">&#39;s/[&amp;/\]/\\&amp;/g&#39;</span> <span style="color:#f92672">&lt;&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
-echo <span style="color:#e6db74">&#34;use backtick: </span><span style="color:#e6db74">${</span>outp2<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-outp3<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>sed <span style="color:#e6db74">&#39;s/[&amp;/\]/\\\\&amp;/g&#39;</span> <span style="color:#f92672">&lt;&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
-echo <span style="color:#e6db74">&#34;use backtick(wanted): </span><span style="color:#e6db74">${</span>outp3<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</code></pre></div><p>输出如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>log<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/var/log/ngx.access.log upstream buffer=32k&#34;</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;origin: </span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>outp1<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>sed <span style="color:#e6db74">&#39;s/[&amp;/\]/\\&amp;/g&#39;</span> <span style="color:#f92672">&lt;&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;use parentheses: </span><span style="color:#e6db74">${</span>outp1<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>outp2<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>sed <span style="color:#e6db74">&#39;s/[&amp;/\]/\\&amp;/g&#39;</span> <span style="color:#f92672">&lt;&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;use backtick: </span><span style="color:#e6db74">${</span>outp2<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>outp3<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>sed <span style="color:#e6db74">&#39;s/[&amp;/\]/\\\\&amp;/g&#39;</span> <span style="color:#f92672">&lt;&lt;&lt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>log<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;use backtick(wanted): </span><span style="color:#e6db74">${</span>outp3<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>输出如下：</p>
 <pre tabindex="0"><code>origin: /var/log/ngx.access.log upstream buffer=32k
 use parentheses: \/var\/log\/ngx.access.log upstream buffer=32k
 use backtick: &amp;var&amp;log&amp;ngx.access.log upstream buffer=32k
@@ -279,20 +271,14 @@ The remaining content of your post.</p></article>
         
       </ul>
       
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/"> 主板ph接口介绍</a>
-      
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
-      
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1021</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1573</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
       <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -313,9 +299,35 @@ The remaining content of your post.</p></article>
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Thu Sep 12, 2019 </h4>
+      <h5 id="wordcount"> 106 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagsbash">bash</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/hardware/mother-ph1-header/"> 主板ph接口介绍</a>
+        
+        
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
-  <p>© 2017-2022 simon&#39;s site</p>
+  <p>© 2017-2024 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>

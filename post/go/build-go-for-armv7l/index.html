@@ -50,7 +50,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.92.2" />
+<meta name="generator" content="Hugo 0.111.3">
 
 
 <link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/go/build-go-for-armv7l/">
@@ -211,22 +211,14 @@
           <a href="//github.com/perfectnewer" rel="me" title="GitHub" aria-label="GitHub">
 	    <span class="icon icon-github" aria-hidden="true"></span>
           </a>
-        </li><li class="social-item">
-        <a rel="me" href="//blog.csdn.net//perfectnewer" title="csdn" aria-label="csdn">
-          <span class="csdnIcon" aria-hidden="true"> <p>csdn</p>
-        </a>
-      </li><li class="social-item">
-        <a rel="me" href="///perfectnewer.gitee.io" title="gitee" aria-label="gitee">
-          <span class="gitee" aria-hidden="true"> <p>gitee</p>
-        </a>
-      </li></ul>
+        </li></ul>
   </nav>
 </header>
 
   <section class="main post-detail">
     <header class="post-header">
       <h1 class="post-title">Build Go for Armv7l</h1>
-      <p class="post-meta">@Simon Wei · Sep 19, 2019 · 419 Words · 2 min read</p>
+      <p class="post-meta">@Simon Wei · Sep 19, 2019 · 2 min read</p>
     </header>
     
       <nav id="TableOfContents">
@@ -252,102 +244,102 @@
 <p>我的编译机器是linux amd64，是有官方的预编译版本的go（同时也是编译程序，现在的go是可以编译go的），所以只需安装go，然后编译armv7版本的go就可以了。</p>
 <p>优点就是速度快，编译方便，缺点是生成的二进制文件被放到了特殊目标，pkg和tool目录会有两份（一份目标架构的，一份本机的）。</p>
 <p>假设下载好的go源码解压在了<code>/tmp/go</code>, 如果内存够大，放在tmpfs（虚拟磁盘）编译会快一些。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /tmp/go/src
-GOROOT_FINAL<span style="color:#f92672">=</span>/opt/goarm GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>arm GOARM<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> GOBIN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;\$HOME/go/bin&#34;</span> ./make.bash
-<span style="color:#75715e"># output</span>
-<span style="color:#75715e"># Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.</span>
-<span style="color:#75715e"># Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
-<span style="color:#75715e"># Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
-<span style="color:#75715e"># Building packages and commands for host, linux/amd64.</span>
-<span style="color:#75715e"># Building packages and commands for target, linux/arm.</span>
-<span style="color:#75715e"># ---</span>
-<span style="color:#75715e"># Installed Go for linux/arm in /tmp/go</span>
-<span style="color:#75715e"># Installed commands in /tmp/go/bin</span>
-<span style="color:#75715e"># </span>
-<span style="color:#75715e"># The binaries expect /tmp/go to be copied or moved to /opt/goarm</span>
-cd /tmp/go
-<span style="color:#75715e"># 删除编译机的版本，将arm版本的放好位置</span>
-mv bin/linux_arm/* bin/
-rmdir bin/linux_arm/
-<span style="color:#75715e"># 下面是为了减少体积, 大约减少230m</span>
-rm -fr pkg/linux_amd64/ pkg/tool/linux_amd64/
-<span style="color:#75715e"># 最后将生成的go目录拷贝到目标机器上，按照安装预编译版本的方式安装就好了</span>
-<span style="color:#75715e"># 将go运行目录加入PATH，设置GOPATH等等。</span>
-</code></pre></div><h4 id="跨平台编译go-compile编译程序在目标机器编译go">跨平台编译go compile(编译程序)，在目标机器编译go</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /tmp/go/src
+</span></span><span style="display:flex;"><span>GOROOT_FINAL<span style="color:#f92672">=</span>/opt/goarm GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>arm GOARM<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> GOBIN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;\$HOME/go/bin&#34;</span> ./make.bash
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># output</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building packages and commands for host, linux/amd64.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building packages and commands for target, linux/arm.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Installed Go for linux/arm in /tmp/go</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Installed commands in /tmp/go/bin</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The binaries expect /tmp/go to be copied or moved to /opt/goarm</span>
+</span></span><span style="display:flex;"><span>cd /tmp/go
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 删除编译机的版本，将arm版本的放好位置</span>
+</span></span><span style="display:flex;"><span>mv bin/linux_arm/* bin/
+</span></span><span style="display:flex;"><span>rmdir bin/linux_arm/
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 下面是为了减少体积, 大约减少230m</span>
+</span></span><span style="display:flex;"><span>rm -fr pkg/linux_amd64/ pkg/tool/linux_amd64/
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 最后将生成的go目录拷贝到目标机器上，按照安装预编译版本的方式安装就好了</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 将go运行目录加入PATH，设置GOPATH等等。</span>
+</span></span></code></pre></div><h4 id="跨平台编译go-compile编译程序在目标机器编译go">跨平台编译go compile(编译程序)，在目标机器编译go</h4>
 <h5 id="首先在编译机器编译go-compiler">首先在编译机器编译go compiler</h5>
 <p>假设下载好的go源码解压在了<code>/tmp/go</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /tmp/go/src
-GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>arm GOARM<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> ./bootstrap.bash
-<span style="color:#75715e"># output</span>
-<span style="color:#75715e">##### Copying to ../../go-linux-arm-bootstrap</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e">##### Cleaning ../../go-linux-arm-bootstrap</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e">##### Building ../../go-linux-arm-bootstrap</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e">#Building Go cmd/dist using /usr/local/go.</span>
-<span style="color:#75715e">#Building Go toolchain1 using /usr/local/go.</span>
-<span style="color:#75715e">#Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.</span>
-<span style="color:#75715e">#Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
-<span style="color:#75715e">#Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
-<span style="color:#75715e">#Building packages and commands for host, linux/amd64.</span>
-<span style="color:#75715e">#Building packages and commands for target, linux/arm.</span>
-<span style="color:#75715e">#----</span>
-<span style="color:#75715e">#Bootstrap toolchain for linux/arm installed in /tmp/go-linux-arm-bootstrap.</span>
-<span style="color:#75715e">#Building tbz.</span>
-<span style="color:#75715e">#-rw-rw-r-- 1 simon simon 110936506 Sep 19 14:21 /tmp/go-linux-arm-bootstrap.tbz</span>
-</code></pre></div><h6 id="在目标机器编译go">在目标机器编译go</h6>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /tmp/go/src
+</span></span><span style="display:flex;"><span>GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>arm GOARM<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> ./bootstrap.bash
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># output</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##### Copying to ../../go-linux-arm-bootstrap</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##### Cleaning ../../go-linux-arm-bootstrap</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##### Building ../../go-linux-arm-bootstrap</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building Go cmd/dist using /usr/local/go.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building Go toolchain1 using /usr/local/go.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building packages and commands for host, linux/amd64.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building packages and commands for target, linux/arm.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#----</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Bootstrap toolchain for linux/arm installed in /tmp/go-linux-arm-bootstrap.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Building tbz.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#-rw-rw-r-- 1 simon simon 110936506 Sep 19 14:21 /tmp/go-linux-arm-bootstrap.tbz</span>
+</span></span></code></pre></div><h6 id="在目标机器编译go">在目标机器编译go</h6>
 <p>将上一步中的编译好的go compiler<code>go-linux-arm-bootstrap.tbz</code>拷贝到目标机器并解压，假设解压在了<code>/tmp/go-linux-arm-bootstrap</code>, 同样假设go源码解压在了<code>/tmp/go</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /tmp/go/src
-export GOROOT_BOOTSTRAP<span style="color:#f92672">=</span>/tmp/go-linux-arm-bootstrap/
-GOROOT_FINAL<span style="color:#f92672">=</span>/opt/go GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>arm GOARM<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> GOBIN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;\$HOME/go/bin&#34;</span> ./make.bash
-<span style="color:#75715e"># 需要编译好后跑测试的可以用下面的命令，相当慢</span>
-<span style="color:#75715e"># GOROOT_FINAL=/opt/go GOOS=linux GOARCH=arm GOARM=7 GOBIN=&#34;\$HOME/go/bin&#34; ./all.bash</span>
-<span style="color:#75715e"># output</span>
-<span style="color:#75715e"># Building Go cmd/dist using /tmp/go-linux-arm-bootstrap/.</span>
-<span style="color:#75715e"># Building Go toolchain1 using /tmp/go-linux-arm-bootstrap/.</span>
-<span style="color:#75715e"># Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.</span>
-<span style="color:#75715e"># Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
-<span style="color:#75715e"># Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
-<span style="color:#75715e"># Building packages and commands for linux/arm.</span>
-<span style="color:#75715e"># </span>
-<span style="color:#75715e"># ##### Testing packages.</span>
-<span style="color:#75715e"># ok  	archive/tar	0.333s</span>
-<span style="color:#75715e"># ok  	archive/zip	0.491s</span>
-<span style="color:#75715e"># ok  	bufio	0.378s</span>
-<span style="color:#75715e"># ok  	bytes	1.737s</span>
-<span style="color:#75715e"># ok  	compress/bzip2	0.380s</span>
-<span style="color:#75715e"># Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
-<span style="color:#75715e"># Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
-<span style="color:#75715e"># Building packages and commands for linux/arm.ok  	compress/flate	4.111s</span>
-<span style="color:#75715e"># ok  	compress/gzip	0.200s</span>
-<span style="color:#75715e"># ok  	compress/lzw	0.071s</span>
-<span style="color:#75715e"># ...</span>
-<span style="color:#75715e"># ...</span>
-<span style="color:#75715e">###### API check</span>
-<span style="color:#75715e">#Go version is &#34;go1.13&#34;, ignoring -next /tmp/go/api/next.txt</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e">#ALL TESTS PASSED</span>
-<span style="color:#75715e">#---</span>
-<span style="color:#75715e">#Installed Go for linux/arm in /tmp/go</span>
-<span style="color:#75715e">#Installed commands in /tmp/go/bin</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e">#The binaries expect /tmp/go to be copied or moved to /opt/go</span>
-
-<span style="color:#75715e"># 清除编译过程中的cache文件</span>
-rm -fr pkg/obj/go-build/
-sudo mv /tmp/go /opt/go
-<span style="color:#75715e"># 如果不需要bootstrap了可以删除掉，留着已经没用了</span>
-rm -fr /tmp/go-linux-arm-bootstrap
-<span style="color:#75715e"># go编译过程中产生的文件，还有些测试文件</span>
-rm -fr go-* web-TestGetFileURL* 
-<span style="color:#75715e"># 添加环境go/bin到变量</span>
-<span style="color:#75715e"># echo &#39;export PATH=${PATH}:/opt/go/bin&#39; &gt;&gt; ~/.bashrc</span>
-</code></pre></div><p>跑测试的时候很可能会因为内存不足而导致失败，提前设置个2G大小的swap还是很有必要的。如果swap并没怎么使用还是oomkill了，那么就需要临时调整swapness的参数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 切换到root用户执行，编译成功后再改回去</span>
-cat /proc/sys/vm/swappiness
-echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
-</code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /tmp/go/src
+</span></span><span style="display:flex;"><span>export GOROOT_BOOTSTRAP<span style="color:#f92672">=</span>/tmp/go-linux-arm-bootstrap/
+</span></span><span style="display:flex;"><span>GOROOT_FINAL<span style="color:#f92672">=</span>/opt/go GOOS<span style="color:#f92672">=</span>linux GOARCH<span style="color:#f92672">=</span>arm GOARM<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span> GOBIN<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;\$HOME/go/bin&#34;</span> ./make.bash
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 需要编译好后跑测试的可以用下面的命令，相当慢</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># GOROOT_FINAL=/opt/go GOOS=linux GOARCH=arm GOARM=7 GOBIN=&#34;\$HOME/go/bin&#34; ./all.bash</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># output</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go cmd/dist using /tmp/go-linux-arm-bootstrap/.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain1 using /tmp/go-linux-arm-bootstrap/.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go bootstrap cmd/go (go_bootstrap) using Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building packages and commands for linux/arm.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ##### Testing packages.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	archive/tar	0.333s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	archive/zip	0.491s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	bufio	0.378s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	bytes	1.737s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	compress/bzip2	0.380s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain2 using go_bootstrap and Go toolchain1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building Go toolchain3 using go_bootstrap and Go toolchain2.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Building packages and commands for linux/arm.ok  	compress/flate	4.111s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	compress/gzip	0.200s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ok  	compress/lzw	0.071s</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">###### API check</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Go version is &#34;go1.13&#34;, ignoring -next /tmp/go/api/next.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ALL TESTS PASSED</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#---</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Installed Go for linux/arm in /tmp/go</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Installed commands in /tmp/go/bin</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#The binaries expect /tmp/go to be copied or moved to /opt/go</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 清除编译过程中的cache文件</span>
+</span></span><span style="display:flex;"><span>rm -fr pkg/obj/go-build/
+</span></span><span style="display:flex;"><span>sudo mv /tmp/go /opt/go
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如果不需要bootstrap了可以删除掉，留着已经没用了</span>
+</span></span><span style="display:flex;"><span>rm -fr /tmp/go-linux-arm-bootstrap
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># go编译过程中产生的文件，还有些测试文件</span>
+</span></span><span style="display:flex;"><span>rm -fr go-* web-TestGetFileURL* 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 添加环境go/bin到变量</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># echo &#39;export PATH=${PATH}:/opt/go/bin&#39; &gt;&gt; ~/.bashrc</span>
+</span></span></code></pre></div><p>跑测试的时候很可能会因为内存不足而导致失败，提前设置个2G大小的swap还是很有必要的。如果swap并没怎么使用还是oomkill了，那么就需要临时调整swapness的参数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 切换到root用户执行，编译成功后再改回去</span>
+</span></span><span style="display:flex;"><span>cat /proc/sys/vm/swappiness
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
+</span></span></code></pre></div><hr>
 <p>ok，至此编译部分已经完成了。</p>
 <p>参考资料：</p>
 <ul>
@@ -362,20 +354,14 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
         
       </ul>
       
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
-      
-      
-        <a class="link-item" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/"> 内存模型--对go内存模型深入展开</a>
-      
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1014</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>1566</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
       <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -396,9 +382,35 @@ echo <span style="color:#ae81ff">100</span> &gt; /proc/sys/vm/swappiness
       
     
   </section>
+
+  <aside id="meta">
+    <div>
+    <section>
+      <h4 id="date"> Thu Sep 19, 2019 </h4>
+      <h5 id="wordcount"> 419 Words </h5>
+    </section>
+    
+    
+    <ul id="tags">
+      
+        <li> <a href="https://perfectnewer.github.io/personal-note/tagsgo">go</a> </li>
+      
+    </ul>
+    
+    </div>
+    <div>
+        
+          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/hardware/acrh17/"> rt-acrh17</a>
+        
+        
+          <a class="next" href="https://perfectnewer.github.io/personal-note/post/hardware/memory-model/"> 内存模型--对go内存模型深入展开</a>
+        
+    </div>
+</aside>
+
   
 <footer class="site-footer">
-  <p>© 2017-2022 simon&#39;s site</p>
+  <p>© 2017-2024 simon&#39;s site</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank" rel="noopener">Nuo</a>.</p>
   
 </footer>
