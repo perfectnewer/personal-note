@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>pve on simon&#39;s site</title>
-    <link>https://perfectnewer.github.io/personal-note/tags/pve/</link>
-    <description>Recent content in pve on simon&#39;s site</description>
+    <title>lxc metric on simon&#39;s site</title>
+    <link>https://perfectnewer.github.io/personal-note/tags/lxc-metric/</link>
+    <description>Recent content in lxc metric on simon&#39;s site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Tue, 02 Jan 2024 17:09:28 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/pve/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>pve 内部网络：添加hostonly网络</title>
-      <link>https://perfectnewer.github.io/personal-note/post/pve/hostonly/</link>
-      <pubDate>Tue, 02 Jan 2024 17:09:28 +0800</pubDate>
-      
-      <guid>https://perfectnewer.github.io/personal-note/post/pve/hostonly/</guid>
-      <description>&lt;p&gt;pve nat network, host only, and set metric for lxc&lt;/p&gt;</description>
-    </item>
-    
+    <lastBuildDate>Sun, 19 Jun 2022 18:40:29 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/tags/lxc-metric/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>pve multi bridge: nat for Wlan and bridge for ethernet</title>
       <link>https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/</link>

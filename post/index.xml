@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Sun, 21 Aug 2022 16:30:28 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Jan 2024 17:09:28 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pve 内部网络：添加hostonly网络</title>
+      <link>https://perfectnewer.github.io/personal-note/post/pve/hostonly/</link>
+      <pubDate>Tue, 02 Jan 2024 17:09:28 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/pve/hostonly/</guid>
+      <description>&lt;p&gt;pve nat network, host only, and set metric for lxc&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Disable wifi log</title>
       <link>https://perfectnewer.github.io/personal-note/post/mac/disable_wifi_log/</link>

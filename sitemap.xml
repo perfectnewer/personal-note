@@ -5,6 +5,24 @@
     <loc>https://perfectnewer.github.io/personal-note/links/</loc>
     <lastmod>2021-09-20T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/tags/net/</loc>
+    <lastmod>2024-01-02T17:09:28+08:00</lastmod>
+  </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/post/</loc>
+    <lastmod>2024-01-02T17:09:28+08:00</lastmod>
+  </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/tags/pve/</loc>
+    <lastmod>2024-01-02T17:09:28+08:00</lastmod>
+  </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/post/pve/hostonly/</loc>
+    <lastmod>2024-01-02T17:09:28+08:00</lastmod>
+  </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/</loc>
+    <lastmod>2024-01-02T17:09:28+08:00</lastmod>
+  </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/tags/</loc>
+    <lastmod>2024-01-02T17:09:28+08:00</lastmod>
+  </url><url>
     <loc>https://perfectnewer.github.io/personal-note/post/mac/disable_wifi_log/</loc>
     <lastmod>2022-08-21T16:30:28+08:00</lastmod>
   </url><url>
@@ -12,15 +30,6 @@
     <lastmod>2022-08-21T16:30:28+08:00</lastmod>
   </url><url>
     <loc>https://perfectnewer.github.io/personal-note/tags/osx/</loc>
-    <lastmod>2022-08-21T16:30:28+08:00</lastmod>
-  </url><url>
-    <loc>https://perfectnewer.github.io/personal-note/post/</loc>
-    <lastmod>2022-08-21T16:30:28+08:00</lastmod>
-  </url><url>
-    <loc>https://perfectnewer.github.io/personal-note/</loc>
-    <lastmod>2022-08-21T16:30:28+08:00</lastmod>
-  </url><url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/</loc>
     <lastmod>2022-08-21T16:30:28+08:00</lastmod>
   </url><url>
     <loc>https://perfectnewer.github.io/personal-note/post/mac/spotlight_mds/</loc>
@@ -44,10 +53,13 @@
     <loc>https://perfectnewer.github.io/personal-note/tags/python3/</loc>
     <lastmod>2022-06-28T22:35:50+08:00</lastmod>
   </url><url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/nat/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/hostonly/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
-    <loc>https://perfectnewer.github.io/personal-note/tags/pve/</loc>
+    <loc>https://perfectnewer.github.io/personal-note/tags/lxc-metric/</loc>
+    <lastmod>2022-06-19T18:40:29+08:00</lastmod>
+  </url><url>
+    <loc>https://perfectnewer.github.io/personal-note/tags/nat/</loc>
     <lastmod>2022-06-19T18:40:29+08:00</lastmod>
   </url><url>
     <loc>https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/</loc>

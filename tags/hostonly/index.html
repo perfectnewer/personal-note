@@ -5,7 +5,11 @@
   <meta charset="utf-8" />
 
   
-  <title>Disable wifi log</title>
+  <title>
+  Tag → hostonly
+  
+   | simon&#39;s Blog
+</title>
 
   
   
@@ -26,25 +30,20 @@
 
   
   <meta name="author" content="Simon Wei">
-  <meta name="description" content="disable wifi log
-">
-
-  
-  
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@gohugoio">
-    <meta name="twitter:title" content="Disable wifi log">
-    <meta name="twitter:description" content="disable wifi log
-">
-    <meta name="twitter:image" content="/images/avatar.png">
   
 
   
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Disable wifi log">
-  <meta property="og:description" content="disable wifi log
-">
-  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/post/mac/disable_wifi_log/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@gohugoio">
+  <meta name="twitter:title" content="simon&#39;s Blog">
+  
+  <meta name="twitter:image" content="/images/avatar.png">
+
+  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="simon&#39;s Blog">
+  
+  <meta property="og:url" content="https://perfectnewer.github.io/personal-note/tags/hostonly/">
   <meta property="og:image" content="/images/avatar.png">
 
 
@@ -53,7 +52,8 @@
 <meta name="generator" content="Hugo 0.111.3">
 
 
-<link rel="canonical" href="https://perfectnewer.github.io/personal-note/post/mac/disable_wifi_log/">
+<link rel="canonical" href="https://perfectnewer.github.io/personal-note/tags/hostonly/">
+<link rel="alternate" type="application/rss+xml" href="https://perfectnewer.github.io/personal-note/tags/hostonly/index.xml" title="simon's site">
 
 <meta name="renderer" content="webkit">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -106,12 +106,8 @@
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.2/dist/medium-zoom.min.js"></script>
 
 
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.3.0/dist/video-js.min.css">
 
 
 
@@ -132,10 +128,6 @@
   <body>
     <div class="suspension">
       <a role="button" aria-label="Go to top" title="Go to top" class="to-top is-hide"><span class="icon icon-up" aria-hidden="true"></span></a>
-      
-        
-	<a role="button" aria-label="Go to comments" title="Go to comments" class="to-comment" href="#disqus_thread"><span class="icon icon-comment" aria-hidden="true"></span></a>
-        
       
     </div>
     
@@ -160,7 +152,7 @@
         <li class="menu-item
           
           
-           is-active">
+          ">
           <a href="https://perfectnewer.github.io/personal-note/post/">Home</a>
         </li>
       
@@ -215,90 +207,30 @@
   </nav>
 </header>
 
-  <section class="main post-detail">
-    <header class="post-header">
-      <h1 class="post-title">Disable wifi log</h1>
-      <p class="post-meta">@Simon Wei · Aug 21, 2022 · 1 min read</p>
+  <section class="main post-list">
+    <header class="list-header offscreen">
+      <h2 class="list-label">Posts List</h2>
     </header>
     
-    <article class="post-content"><p>disable wifi log</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources
-</span></span></code></pre></div><p>Then figure out which log settings are currently enabled by invoking:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ sudo ./airport debug
-</span></span><span style="display:flex;"><span>DriverWPA
-</span></span></code></pre></div><p>In this case only the DriverWPA setting is active. To disable that you just need to prefix it with a dash sign:
-<code>$ sudo ./airport debug -DriverWPA</code></p>
-<p>Last but not least, double check and confirm that the log setting is not active anymore:
-<code>sudo ./airport debug</code></p>
-<p>turn all off</p>
-<p><code>/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport debug -AllUserland -AllDriver -AllVendor</code></p>
-<!-- raw HTML omitted --></article>
-    <footer class="post-footer">
+    
       
-      <ul class="post-tags">
-        
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/mac"><span class="tag">Mac</span></a></li>
-        
-          <li><a href="https://perfectnewer.github.io/personal-note/tags/osx"><span class="tag">Osx</span></a></li>
-        
-      </ul>
+        <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/" class="post-link">pve multi bridge: nat for Wlan and bridge for ethernet</a></h3>
+    <p class="post-meta">@Simon Wei · Jun 19, 2022 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">本文主要介绍了pve在两个外部网络的情况下，使用两个bridge网络的方案。有线网络使用桥接模式，无线网络使用nat模式。
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://perfectnewer.github.io/personal-note/post/pve/nat-wlan/">Read More →</a>
+  </footer>
+</article>
+
       
-      <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>499</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
-      </p>
-    </footer>
     
-      <div id="disqus_thread"></div>
-<script type="application/javascript">
-    window.disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "simon_wei" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      
     
   </section>
-
-  <aside id="meta">
-    <div>
-    <section>
-      <h4 id="date"> Sun Aug 21, 2022 </h4>
-      <h5 id="wordcount"> 75 Words </h5>
-    </section>
-    
-    
-    <ul id="tags">
-      
-        <li> <a href="https://perfectnewer.github.io/personal-note/tagsmac">mac</a> </li>
-      
-        <li> <a href="https://perfectnewer.github.io/personal-note/tagsosx">osx</a> </li>
-      
-    </ul>
-    
-    </div>
-    <div>
-        
-          <a class="previous" href="https://perfectnewer.github.io/personal-note/post/mac/spotlight_mds/"> Spotlight, mds</a>
-        
-        
-          <a class="next" href="https://perfectnewer.github.io/personal-note/post/pve/hostonly/"> pve 内部网络：添加hostonly网络</a>
-        
-    </div>
-</aside>
-
   
 <footer class="site-footer">
   <p>© 2017-2024 simon&#39;s site</p>
@@ -311,33 +243,8 @@
 
 
 
-<script async src="https://cdn.jsdelivr.net/npm/video.js@7.3.0/dist/video.min.js"></script>
 
 
-
-
-<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [['$','$'], ['\\(','\\)']],
-      displayMath: [['$$','$$'], ['\\[','\\]']],
-      processEscapes: true,
-      processEnvironments: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
-      TeX: { equationNumbers: { autoNumber: "AMS" },
-      extensions: ["AMSmath.js", "AMSsymbols.js"] }
-    },
-  });
-</script>
-<script type="text/x-mathjax-config">
-  // Fix <code> tags after MathJax finishes running. This is a
-  // hack to overcome a shortcoming of Markdown. Discussion at
-  // https://github.com/mojombo/jekyll/issues/199
-  MathJax.Hub.Queue(() => {
-    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
-  });
-</script>
 
 
 
