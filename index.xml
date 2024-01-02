@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Tue, 02 Jan 2024 17:09:28 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Jan 2024 18:15:39 +0800</lastBuildDate><atom:link href="https://perfectnewer.github.io/personal-note/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Links</title>
       <link>https://perfectnewer.github.io/personal-note/links/</link>
@@ -15,6 +15,15 @@
       
       <guid>https://perfectnewer.github.io/personal-note/links/</guid>
       <description>我的github pages: perfectnewer.gitub.io 我的gitee pages: perfectnewer.gitub.io 我的csdn: https://blog.csdn.net/perfectnewer</description>
+    </item>
+    
+    <item>
+      <title>pve系列: amd显卡直通</title>
+      <link>https://perfectnewer.github.io/personal-note/post/pve/pci_passthrough_basic/</link>
+      <pubDate>Tue, 02 Jan 2024 18:15:39 +0800</pubDate>
+      
+      <guid>https://perfectnewer.github.io/personal-note/post/pve/pci_passthrough_basic/</guid>
+      <description>&lt;p&gt;记录了一下pci passthrough的基本操作，遇到的问题和一些经验&lt;/p&gt;</description>
     </item>
     
     <item>
