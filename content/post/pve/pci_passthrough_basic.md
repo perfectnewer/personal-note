@@ -9,7 +9,7 @@ keywords:
 - amd reset bug
 - BAR 1: can't reserve mem
 date: 2024-01-02T18:15:39+08:00
-draft: true
+draft: falseS
 ---
 
 记录了一下pci passthrough的基本操作，遇到的问题和一些经验
